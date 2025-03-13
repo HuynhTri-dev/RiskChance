@@ -2,7 +2,347 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+<main>
+    <!-- Home Media -->
+    <div class="rocket-container" id="rocket-container">
+        <h3 class="rocket-title text-white h3 fw-bold mb-4">
+            Welcome to Risk Chance
+        </h3>
+        <h4 class="rocket-desc text-white h4 fw-bold mb-3">
+            Stay ahead with the latest insights on technology, finance, and
+            startups.
+        </h4>
+
+        <h5 class="h5 rocket-desc text-white mb-3">
+            "Success favors those who dare to take risks. Are you ready for the
+            challenge?" – Huỳnh Minh Trí
+        </h5>
+
+        <button class="btn btn-primary fw-bold mb-3">Try Now</button>
+
+        <p class="rocket-desc text-white mb-3">Cooperators</p>
+        <ul class="rocket-desc list-group d-flex flex-row justify-content-left gap-3">
+            <li class="d-flex align-items-center bg-transparent border-0">
+                <img class="logo-cooperator me-2"
+                     src="~/assets/cooperators/ubs.png"
+                     alt="UBS Group Logo" />
+                <span class="text-white d-none d-sm-block">UBS Group</span>
+            </li>
+
+            <li class="d-flex align-items-center bg-transparent border-0">
+                <img class="logo-cooperator me-2"
+                     src="~/assets/cooperators/Allianz.png"
+                     alt="Allianz Logo" />
+                <span class="text-white d-none d-sm-block">Allianz</span>
+            </li>
+
+            <li class="d-flex align-items-center bg-transparent border-0">
+                <img class="logo-cooperator me-2"
+                     src="~/assets/cooperators/SSI.png"
+                     alt="SSI Logo" />
+                <span class="text-white d-none d-sm-block">SSI</span>
+            </li>
+
+            <li class="d-flex align-items-center bg-transparent border-0">
+                <img class="logo-cooperator me-2"
+                     src="~/assets/cooperators/TPS.png"
+                     alt="TPS Logo" />
+                <span class="text-white d-none d-sm-block">TPS</span>
+            </li>
+        </ul>
+
+        <img src="~/assets/home/rocket.png"
+             alt="Rocket"
+             class="rocket d-none d-lg-block"
+             id="rocket" />
+        <img src="~/assets/home/fire.png"
+             alt="fire"
+             class="fire d-none d-lg-block"
+             id="fire" />
+    </div>
+
+    <!-- Search Input -->
+    <!-- Search box -->
+    <div class="search-container container d-flex justify-content-center">
+        <div class="search-box">
+            <input type="text"
+                   class="form-control ps-4"
+                   placeholder="Tìm kiếm..." />
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
+    </div>
+
+    <!-- Danh sach cac tu khoa -->
+    <div class="keyword-container container mt-4 d-none d-lg-block">
+        <h3 class="text-center mb-3 fw-bold">Popular Keyword</h3>
+        <ul class="keyword-box d-flex flex-wrap justify-content-center gap-3">
+            <!-- Cái này sẽ dò trên lịch sử tìm kiếm để có thể in ra -->
+            <li class="keyword-item">Technology</li>
+            <li class="keyword-item">Biology</li>
+            <li class="keyword-item">Best Invest</li>
+            <li class="keyword-item">Chứng khoán</li>
+            <li class="keyword-item">New Investment</li>
+        </ul>
+    </div>
+
+    <!-- Startup nổi bật -->
+    <div class="startup-container container-fluid py-4 mb-4">
+        <div class="row mb-3 d-flex justify-content-center align-items-center">
+            <h2 class="h2 fw-bold mb-4 text-white col-lg-5">
+                High-potential startups
+            </h2>
+            <div class="intro-feature col-lg-7 text-white">
+                <h5 class="h5 mb-2 fw-bold">
+                    At Risk Chance, we highlight exceptional startups that are
+                    redefining industries and pushing the boundaries of innovation.
+                </h5>
+
+                <a class="see-more-link text-decoration-none fw-bold d-flex align-items-center"
+                   href="#">
+                    <span>See more startups </span>
+                    <i class="fa-solid fa-forward"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center">
+            <!-- thông tin chi tiết startup -->
+            <div class="startup-info col-12 col-lg-4 mb-3">
+                <div class="startup-main-info-box">
+                    <!-- Anh -->
+                    <img class="startup-main-img"
+                         src="https://picsum.photos/300/200"
+                         alt="anh minh hoa" />
+
+                    <!-- thong tin -->
+                    <div class="startup-main-desc">
+                        <h4 class="h4 fw-bold">Name</h4>
+                        <p>Lĩnh vực:</p>
+                        <p>Tiến độ đầu tư:</p>
+                        <div class="progress mb-2">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                        <p>Mô tả:</p>
+                        <div class="description-container text-justify mb-3">
+                            <p class="description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                Quia reprehenderit fuga sint ea cum. Consequatur. Lorem
+                                ipsum dolor sit amet consectetur adipisicing elit. Illo
+                                fugiat sunt architecto adipisci veniam ipsam sapiente quae
+                                excepturi totam, est sequi iure. Quibusdam ducimus deserunt
+                                dolore id nobis. Vero, molestiae?
+                            </p>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary">Read more</button>
+                            <button class="btn btn-success">Invest</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="startup-section col-12 col-lg-8">
+                <div class="d-flex justify-content-center align-items-center container-fluid">
+                    <!-- Nút Previous -->
+                    <button id="prevBtn"
+                            class="btn btn-outline-light me-3 d-none d-lg-block">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <!-- Khung hiển thị startup -->
+                    <div class="startup-box px-2" id="startup-box">
+                        <div class="startup-list row d-flex justify-content-center gap-2">
+                            <!-- Startup Item 1 -->
+                            <div class="startup-item card col-sm-6 col-md-4">
+                                <img src="https://picsum.photos/300/200"
+                                     alt="Startup 1"
+                                     class="startup-img card-img-top" />
+                                <div class="card-body">
+                                    <h4 class="text-center fw-bold card-title">Startup 1</h4>
+                                    <p class="card-text line-clamp-2">
+                                        Lorem ipsum dolor sit amet.
+                                    </p>
+                                </div>
+
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button href="#" class="btn btn-primary" type="button">
+                                        Read more
+                                    </button>
+                                    <button href="#" class="btn btn-success" type="button">
+                                        Invest
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Startup Item 2 -->
+                            <div class="startup-item card col-sm-6 col-md-4">
+                                <img src="https://picsum.photos/300/200"
+                                     alt="Startup 2"
+                                     class="startup-img card-img-top" />
+                                <div class="card-body">
+                                    <h4 class="text-center fw-bold card-title">Startup 2</h4>
+                                    <p class="card-text line-clamp-2">
+                                        Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
+                                        ea cum. Consequatur.
+                                    </p>
+                                </div>
+
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button href="#" class="btn btn-primary" type="button">
+                                        Read more
+                                    </button>
+                                    <button href="#" class="btn btn-success" type="button">
+                                        Invest
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Startup Item 3 -->
+                            <div class="startup-item card col-sm-6 col-md-4">
+                                <img src="https://picsum.photos/300/200"
+                                     alt="Startup 3"
+                                     class="startup-img card-img-top" />
+                                <div class="card-body">
+                                    <h4 class="text-center fw-bold card-title">Startup 3</h4>
+                                    <p class="card-text line-clamp-2">
+                                        Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
+                                        ea cum. Consequatur.
+                                    </p>
+                                </div>
+
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button href="#" class="btn btn-primary" type="button">
+                                        Read more
+                                    </button>
+                                    <button href="#" class="btn btn-success" type="button">
+                                        Invest
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút Next -->
+                    <button id="nextBtn"
+                            class="btn btn-outline-light ms-3 d-none d-lg-block">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Nút Xem Thêm (Mobile) -->
+                <div class="text-center mt-3">
+                    <button id="seeMoreBtn" class="btn btn-success d-md-none">
+                        Xem thêm
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- News -->
+    <div class="news-container container mb-4">
+        <h3 class="h3 fw-bold mb-4">Market News</h3>
+
+        <div class="news-box row">
+            <!-- Introduce news feature -->
+            <div class="intro-feature col-12 col-lg-3 p-3">
+                <h4 class="h4 fw-bold">Stay updated with the latest news</h4>
+                <p class="news-desc">
+                    At Risk Chance, we provide you with the latest news on technology,
+                    finance, and startups.
+                </p>
+                <a class="see-more-link text-decoration-none fw-bold d-flex align-items-center"
+                   href="#">
+                    <span>See more news </span>
+                    <i class="fa-solid fa-forward"></i>
+                </a>
+            </div>
+
+            <!-- News list -->
+            <section class="news-list container row gap-4 col-12 col-lg-9">
+                <!-- News 1 -->
+                <div class="news-item row align-items-center mb-2">
+                    <!-- Hình ảnh tin tức -->
+                    <div class="col-4">
+                        <a href="#">
+                            <img src="https://picsum.photos/300/200"
+                                 alt="News Image"
+                                 class="news-img img-fluid rounded-3 shadow" />
+                        </a>
+                    </div>
+
+                    <!-- Nội dung tin tức -->
+                    <div class="news-content-box col-8">
+                        <div class="news-content mb-2">
+                            <a href="#" class="text-decoration-none">
+                                <h4 class="fw-bold news-title text-black">Title</h4>
+                            </a>
+                            <p class="news-desc text-muted">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                Quia reprehenderit fuga sint ea cum. Consequatur.
+                            </p>
+                            <p class="news-date text-secondary small">
+                                <i class="fa-solid fa-calendar"></i>: 11/09/204
+                            </p>
+                        </div>
+
+                        <!-- Tác giả -->
+                        <a class="news-author d-flex align-items-center text-decoration-none"
+                           href="#">
+                            <img class="author-img rounded-circle me-2 border"
+                                 src="../assets/cooperators/TPS.png"
+                                 alt="Author"
+                                 width="40"
+                                 height="40" />
+                            <p class="author-name fw-bold text-dark">TPS</p>
+                        </a>
+                    </div>
+                </div>
+                <!-- News 2 -->
+                <div class="news-item row align-items-center mb-2">
+                    <!-- Hình ảnh tin tức -->
+                    <div class="col-4">
+                        <a href="#">
+                            <img src="https://picsum.photos/300/200"
+                                 alt="News Image"
+                                 class="news-img img-fluid rounded-3 shadow" />
+                        </a>
+                    </div>
+
+                    <!-- Nội dung tin tức -->
+                    <div class="news-content-box col-8">
+                        <div class="news-content mb-2">
+                            <a href="#" class="text-decoration-none">
+                                <h4 class="fw-bold news-title text-black">Title</h4>
+                            </a>
+                            <p class="news-desc text-muted">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                Quia reprehenderit fuga sint ea cum. Consequatur.
+                            </p>
+                            <p class="news-date text-secondary small">
+                                <i class="fa-solid fa-calendar"></i>: 11/09/204
+                            </p>
+                        </div>
+
+                        <!-- Tác giả -->
+                        <a class="news-author d-flex align-items-center text-decoration-none"
+                           href="#">
+                            <img class="author-img rounded-circle me-2 border"
+                                 src="../assets/cooperators/TPS.png"
+                                 alt="Author"
+                                 width="40"
+                                 height="40" />
+                            <p class="author-name fw-bold text-dark">TPS</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/js/animationHome.js" asp-append-version="true"></script>
+}

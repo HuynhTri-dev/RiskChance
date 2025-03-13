@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap");
+
+:root {
+  /* Primary Colors - Dùng cho các yếu tố chính như nút, tiêu đề */
+  --primary-color: #67ace7;
+  --primary-hover: #0056b3;
+  --primary-light: #d3e0f1;
+
+  /* Secondary Colors - Dùng để bổ trợ, làm nổi bật các yếu tố phụ */
+  --secondary-color: #28a745;
+  --secondary-hover: #1b6e2d;
+
+  /* Accent Colors - Dùng để nhấn mạnh một số phần đặc biệt */
+  --accent-color: #ffc107;
+  --accent-hover: #e0a800;
+
+  /* Background Colors */
+  --background-color: #f8f9fa;
+  --background-dark: #343a40;
+
+  /* Text Colors */
+  --text-color: #212529;
+  --text-blue-dark: #005792;
+  --text-light: #ffff;
+
+  /* Border and Shadow */
+  --border-color: #dee2e6;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.3);
+
+  /* Success, Warning, Error Colors */
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --error-color: #dc3545;
+
+  --success-bg: #d4edda;
+  --warning-bg: #fff3cd;
+  --error-bg: #f8d7da;
+}
+
+:root {
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "Poppins", sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-secondary);
+}
+
+a {
+  color: black !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: var(--text-light);
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-warning {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: var(--accent-hover);
+  color: var(--text-light);
+}
+
+.text-justify {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-hover);
+  color: var(--text-light);
+  border: 2px solid var(--primary-hover);
+}
+
+.btn-outline-success {
+  color: var(--secondary-color);
+  border: 2px solid var(--secondary-color);
+}
+
+.btn-outline-success:hover {
+  color: var(--secondary-hover);
+  border: 2px solid var(--secondary-hover);
+  color: var(--text-light);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-light {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-light:hover {
+  background-color: var(--primary-color);
+}
+
+@media (max-width: 992px) {
+  p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  p {
+    font-size: 14px;
+  }
+}

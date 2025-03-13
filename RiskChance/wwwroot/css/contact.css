@@ -1,0 +1,30 @@
+.contact-info-box {
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+.contract-paper {
+  background: #fff;
+  padding: 20px;
+  font-family: "Times New Roman", serif;
+}
+
+.contract-header {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.contract-content {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+p {
+  margin: 10px 0;
+}
+
+strong {
+  color: #333;
+}

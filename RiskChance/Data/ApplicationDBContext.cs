@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QuanLyStartup.Models;
+using RiskChance.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace RiskChance.Data

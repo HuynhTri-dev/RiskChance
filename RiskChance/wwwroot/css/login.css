@@ -1,0 +1,78 @@
+@import "./reset.css";
+@import "./variables.css";
+
+/* General styles */
+body {
+  background-color: var(--bg-light);
+}
+
+.register-box {
+    width: 50%;
+}
+
+.forgot-password-box h3,
+.register-box h3,
+#login-content h3 {
+    font-size: 28px;
+}
+
+/* Login box */
+.login-box {
+  width: 400px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* Tabs */
+.nav-pills .nav-link {
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--text-light);
+}
+
+.nav-pills .nav-link.investor:hover,
+.nav-pills .nav-link.active.investor {
+  color: var(--secondary-hover) !important;
+  border-color: var(--secondary-hover);
+  box-shadow: 0 0 2px var(--secondary-hover);
+}
+
+.nav-pills .nav-link.startup:hover,
+.nav-pills .nav-link.active.startup {
+  color: var(--primary-hover) !important;
+  border-color: var(--primary-hover);
+  box-shadow: 0 0 2px var(--primary-hover);
+}
+
+/* Form */
+form .form-control {
+  border-radius: 8px;
+}
+
+.btn-success {
+  background-color: var(--secondary-color);
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: var(--secondary-hover) !important;
+}
+
+.signIn-link:hover,
+.forget-link:hover {
+  text-decoration: underline !important;
+}
+
+.startup,
+.investor,
+.register-btn {
+  color: black !important;
+  border: 2px solid var(--text-color);
+}
+
+.register-btn:hover {
+  background-color: var(--border-color);
+}

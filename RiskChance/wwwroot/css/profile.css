@@ -1,0 +1,97 @@
+/* Profile */
+/* Avatar */
+#profileImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Menu */
+.menu-container .nav-link {
+  width: 100%;
+  color: var(--primary-color) !important;
+}
+
+.menu-container .nav-link:hover {
+  color: var(--primary-hover) !important;
+  border: 2px solid var(--primary-hover);
+}
+
+.menu-container .nav-link.active-feature {
+  background-color: var(--primary-hover);
+  color: var(--text-light) !important;
+  font-weight: bold;
+}
+
+/* Dashboard */
+/* Founder */
+.box {
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px 2px var(--shadow-light);
+}
+
+.logo-name-box .logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-right: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.desc-box {
+  height: fit-content;
+  max-height: 75px;
+  overflow: auto;
+}
+
+.desc-box::-webkit-scrollbar {
+  width: 0px;
+}
+
+.doc-list {
+  height: fit-content;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.doc-list::-webkit-scrollbar {
+  width: 0px;
+}
+
+.doc-item {
+  height: 40px;
+  padding: 5px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.doc-item:hover {
+  background-color: var(--border-color);
+}
+
+.success-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+}
+
+.update-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--warning-color);
+}
+
+.non-success-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--error-color);
+}
+
+/* Investor */
+.ex-pro-box {
+  color: var(--secondary-hover);
+}

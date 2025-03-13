@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuanLyStartup.Models
+namespace RiskChance.Models
 {
     [Table("LinhVuc")]
     public class LinhVuc

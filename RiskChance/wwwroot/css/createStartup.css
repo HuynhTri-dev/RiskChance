@@ -1,0 +1,49 @@
+.create-container {
+  width: 90%;
+}
+
+/* Hien thi anh */
+#logoPreview {
+  width: 40%;
+}
+
+/* Cac nut trong form */
+.submit-btn i {
+  transform: translate(-5px, 5px);
+  transition: transform 0.3s ease-in-out, margin-right 0.3s ease-in-out;
+}
+
+.submit-btn:hover i {
+  transform: translate(5px, -5px);
+  margin-right: 5px;
+}
+
+#nextStep i,
+#prevStep i {
+  transition: transform 0.3s ease-in-out;
+}
+
+#nextStep:hover i {
+  transform: translateX(5px);
+}
+
+#prevStep:hover i {
+  transform: translateX(-5px);
+}
+
+/* Startup Information */
+.startup-info {
+  width: 50%;
+}
+
+.startup-info .logo-img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+/* document list */
+.document-list-container .table tbody tr:hover td {
+  background-color: var(--primary-hover);
+  color: var(--text-light);
+}

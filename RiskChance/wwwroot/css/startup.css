@@ -1,0 +1,194 @@
+/* main {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  box-shadow: 5px 5px 20px 3px var(--shadow-dark);
+} */
+
+.main-container {
+  width: 95%;
+}
+
+.post-box {
+  width: 50%;
+  padding: 10px 30px;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+.user-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  background-color: var(--background-color);
+  margin-right: 10px;
+}
+
+.post-box .btn-primary {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.post-box .btn-primary:hover {
+  background-color: var(--primary-light);
+}
+/* 
+Outstanding startup */
+.outstanding-list {
+  width: 80%;
+}
+.startup-card {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.info-link {
+  max-width: 400px;
+}
+
+.outstanding-list .info-link:hover {
+  transform: scale(1.05);
+}
+
+/* Search */
+.search-box {
+  position: relative;
+  width: 60%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  padding-left: 40px;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  background-color: var(--primary-light);
+  transition: 0.3s;
+}
+
+.search-input::placeholder {
+  color: #bbb;
+  font-style: italic;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-hover);
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.search-box:hover .search-icon {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Startup list */
+.startup-card {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--primary-light);
+}
+
+.startup-list .startup-image {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+
+/* Aside */
+/* top fields */
+.top-fields-container {
+  margin-top: 100px;
+  width: 90%;
+  border: 2px solid var(--primary-light);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.top-fields-list {
+  background-color: var(--primary-light);
+  border-radius: 5px;
+  padding: 10px 0;
+}
+
+.field-card {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.field-card:hover {
+  background-color: var(--primary-hover);
+  color: var(--text-light);
+}
+
+.user-link {
+  padding: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.user-link:hover {
+  background-color: var(--primary-color);
+}
+
+/* detail */
+.startup-sidebar {
+  position: fixed;
+  top: 100px;
+  right: -500px; /* Ẩn ban đầu */
+  width: 30%;
+  min-width: 300px;
+  height: 80%;
+  background: white;
+  padding: 0px 20px 20px 20px;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.5s ease-in-out;
+  overflow-y: auto;
+}
+
+.startup-sidebar.active {
+  right: 3%;
+}
+
+#startup-img {
+  width: 100%;
+}
+
+.modal-feature {
+  justify-content: right;
+}
+
+.modal-feature button {
+  margin-right: 5px;
+}
+
+.startup-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modal-header {
+  background-color: white;
+  width: 100%;
+  padding: 10px;
+}
+
+.description-container {
+  width: 95%;
+  height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f9f9f9;
+}
+
+.description-container::-webkit-scrollbar {
+  width: 5px;
+}

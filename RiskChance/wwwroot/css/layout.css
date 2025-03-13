@@ -1,0 +1,165 @@
+@import "./reset.css";
+@import "./variables.css";
+
+/*! Header */
+.header {
+  height: 80px;
+}
+
+.logo-img {
+  max-height: 100px;
+}
+
+.menu-dropdown,
+.signIn-btn {
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.4s ease-in-out;
+}
+
+.signIn-btn h1 {
+  font-size: 24px;
+}
+
+@media (max-width: 768px) {
+  .signIn-btn {
+    padding: 5px 7px;
+  }
+
+  .signIn-btn h1 {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .signIn-btn {
+    padding: 3px 5px;
+  }
+
+  .signIn-btn h1 {
+    font-size: 0.75rem;
+  }
+}
+
+.menu-dropdown:hover,
+.signIn-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.navbar-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 20px;
+  position: relative;
+  text-decoration: none;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 2px var(--primary-color);
+}
+
+.menu-container .dropdown-menu {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.menu-container .dropdown-item {
+  white-space: nowrap;
+  padding: 10px 12px;
+}
+.dropdown-item.active {
+  background-color: var(--primary-hover);
+  color: white !important;
+}
+
+.account-container {
+  margin-left: 20px;
+}
+
+.notification .dropdown-menu {
+  width: 400px;
+  padding: 20px 10px;
+  max-height: 600px;
+}
+
+@media (max-width: 552px) {
+  .notification .dropdown-menu {
+    width: 200px;
+    padding: 5px;
+    max-height: 400px;
+  }
+}
+
+.user-img {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-color);
+  object-fit: cover;
+}
+
+.account .dropdown-item:focus {
+  background-color: var(--border-color);
+}
+
+.account-dropdown:focus {
+  border: 1px solid transparent;
+}
+
+.avatar-box {
+  margin-right: 5px;
+}
+
+.notify-box {
+  cursor: pointer;
+}
+
+.notify-box:hover {
+  background-color: var(--border-color);
+}
+
+.status {
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-color);
+}
+
+/* !Footer */
+footer {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+footer h5 {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+footer p,
+footer a {
+  font-size: 16px;
+}
+
+footer a:hover {
+  color: var(--accent-hover) !important;
+  text-decoration: underline !important;
+}
+
+footer .fa-brands {
+  font-size: 30px;
+}

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace QuanLyStartup.Models
+namespace RiskChance.Models
 {
     [Table("TinNhan")]
     public class TinNhan

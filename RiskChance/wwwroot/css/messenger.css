@@ -1,0 +1,32 @@
+.modal-dialog {
+  width: 40%;
+  box-shadow: 5px 5px 10px 5px var(--shadow-light);
+  border-radius: 5px;
+}
+
+.mess-container {
+  max-height: 200px;
+}
+
+.mess-container::-webkit-scrollbar {
+  display: none; /* Ẩn thanh cuộn trên Chrome & Edge */
+}
+
+.mess-box {
+  display: flex;
+}
+
+.receive div {
+  max-width: 70%;
+  background-color: var(--border-color);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.sender div {
+  max-width: 70%;
+  background-color: var(--primary-light);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}

@@ -155,7 +155,7 @@ namespace RiskChance.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.DanhGiaStartup", b =>
+            modelBuilder.Entity("RiskChance.Models.DanhGiaStartup", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -188,7 +188,7 @@ namespace RiskChance.Migrations
                     b.ToTable("DanhGiaStartup");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.GiayTo", b =>
+            modelBuilder.Entity("RiskChance.Models.GiayTo", b =>
                 {
                     b.Property<int>("IDGiayTo")
                         .ValueGeneratedOnAdd()
@@ -223,7 +223,7 @@ namespace RiskChance.Migrations
                     b.ToTable("GiayTo");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.Hashtag", b =>
+            modelBuilder.Entity("RiskChance.Models.Hashtag", b =>
                 {
                     b.Property<int>("IDHashtag")
                         .ValueGeneratedOnAdd()
@@ -240,7 +240,7 @@ namespace RiskChance.Migrations
                     b.ToTable("Hashtag");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.HopDongDauTu", b =>
+            modelBuilder.Entity("RiskChance.Models.HopDongDauTu", b =>
                 {
                     b.Property<int>("IDHopDong")
                         .ValueGeneratedOnAdd()
@@ -283,7 +283,7 @@ namespace RiskChance.Migrations
                     b.ToTable("HopDongDauTu");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.LinhVuc", b =>
+            modelBuilder.Entity("RiskChance.Models.LinhVuc", b =>
                 {
                     b.Property<int>("IDLinhVuc")
                         .ValueGeneratedOnAdd()
@@ -300,7 +300,7 @@ namespace RiskChance.Migrations
                     b.ToTable("LinhVuc");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.NguoiDung", b =>
+            modelBuilder.Entity("RiskChance.Models.NguoiDung", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -380,7 +380,7 @@ namespace RiskChance.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.Startup", b =>
+            modelBuilder.Entity("RiskChance.Models.Startup", b =>
                 {
                     b.Property<int>("IDStartup")
                         .ValueGeneratedOnAdd()
@@ -423,7 +423,7 @@ namespace RiskChance.Migrations
                     b.ToTable("Startup");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.ThongBao", b =>
+            modelBuilder.Entity("RiskChance.Models.ThongBao", b =>
                 {
                     b.Property<int>("IDNoti")
                         .ValueGeneratedOnAdd()
@@ -452,7 +452,7 @@ namespace RiskChance.Migrations
                     b.ToTable("ThongBao");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinNhan", b =>
+            modelBuilder.Entity("RiskChance.Models.TinNhan", b =>
                 {
                     b.Property<int>("IDTinNhan")
                         .ValueGeneratedOnAdd()
@@ -487,7 +487,7 @@ namespace RiskChance.Migrations
                     b.ToTable("TinNhan");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinTuc", b =>
+            modelBuilder.Entity("RiskChance.Models.TinTuc", b =>
                 {
                     b.Property<int>("IDTinTuc")
                         .ValueGeneratedOnAdd()
@@ -517,7 +517,7 @@ namespace RiskChance.Migrations
                     b.ToTable("TinTuc");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinTucHashtag", b =>
+            modelBuilder.Entity("RiskChance.Models.TinTucHashtag", b =>
                 {
                     b.Property<int>("IDTinTuc")
                         .HasColumnType("int");
@@ -543,7 +543,7 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", null)
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -552,7 +552,7 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", null)
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -567,7 +567,7 @@ namespace RiskChance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", null)
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -576,31 +576,31 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", null)
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.DanhGiaStartup", b =>
+            modelBuilder.Entity("RiskChance.Models.DanhGiaStartup", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", null)
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuanLyStartup.Models.Startup", null)
+                    b.HasOne("RiskChance.Models.Startup", null)
                         .WithMany()
                         .HasForeignKey("IDStartup")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.GiayTo", b =>
+            modelBuilder.Entity("RiskChance.Models.GiayTo", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.Startup", "Startup")
+                    b.HasOne("RiskChance.Models.Startup", "Startup")
                         .WithMany("GiayTos")
                         .HasForeignKey("IDStartup")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -609,15 +609,15 @@ namespace RiskChance.Migrations
                     b.Navigation("Startup");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.HopDongDauTu", b =>
+            modelBuilder.Entity("RiskChance.Models.HopDongDauTu", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiDung")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
                         .WithMany("HopDongDauTus")
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuanLyStartup.Models.Startup", "Startup")
+                    b.HasOne("RiskChance.Models.Startup", "Startup")
                         .WithMany("HopDongDauTus")
                         .HasForeignKey("IDStartup")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -628,14 +628,14 @@ namespace RiskChance.Migrations
                     b.Navigation("Startup");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.Startup", b =>
+            modelBuilder.Entity("RiskChance.Models.Startup", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.LinhVuc", "LinhVuc")
+                    b.HasOne("RiskChance.Models.LinhVuc", "LinhVuc")
                         .WithMany("Startups")
                         .HasForeignKey("IDLinhVuc")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiDung")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
                         .WithMany("Startups")
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -646,9 +646,9 @@ namespace RiskChance.Migrations
                     b.Navigation("NguoiDung");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.ThongBao", b =>
+            modelBuilder.Entity("RiskChance.Models.ThongBao", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiDung")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
                         .WithMany()
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -657,13 +657,13 @@ namespace RiskChance.Migrations
                     b.Navigation("NguoiDung");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinNhan", b =>
+            modelBuilder.Entity("RiskChance.Models.TinNhan", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiGui")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiGui")
                         .WithMany()
                         .HasForeignKey("IDNguoiGui");
 
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiNhan")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiNhan")
                         .WithMany()
                         .HasForeignKey("IDNguoiNhan");
 
@@ -672,9 +672,9 @@ namespace RiskChance.Migrations
                     b.Navigation("NguoiNhan");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinTuc", b =>
+            modelBuilder.Entity("RiskChance.Models.TinTuc", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.NguoiDung", "NguoiDung")
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
                         .WithMany()
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -683,15 +683,15 @@ namespace RiskChance.Migrations
                     b.Navigation("NguoiDung");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinTucHashtag", b =>
+            modelBuilder.Entity("RiskChance.Models.TinTucHashtag", b =>
                 {
-                    b.HasOne("QuanLyStartup.Models.Hashtag", "Hashtag")
+                    b.HasOne("RiskChance.Models.Hashtag", "Hashtag")
                         .WithMany("TinTucHashtags")
                         .HasForeignKey("IDHashtag")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuanLyStartup.Models.TinTuc", "TinTuc")
+                    b.HasOne("RiskChance.Models.TinTuc", "TinTuc")
                         .WithMany("TinTucHashtags")
                         .HasForeignKey("IDTinTuc")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -702,31 +702,31 @@ namespace RiskChance.Migrations
                     b.Navigation("TinTuc");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.Hashtag", b =>
+            modelBuilder.Entity("RiskChance.Models.Hashtag", b =>
                 {
                     b.Navigation("TinTucHashtags");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.LinhVuc", b =>
+            modelBuilder.Entity("RiskChance.Models.LinhVuc", b =>
                 {
                     b.Navigation("Startups");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.NguoiDung", b =>
+            modelBuilder.Entity("RiskChance.Models.NguoiDung", b =>
                 {
                     b.Navigation("HopDongDauTus");
 
                     b.Navigation("Startups");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.Startup", b =>
+            modelBuilder.Entity("RiskChance.Models.Startup", b =>
                 {
                     b.Navigation("GiayTos");
 
                     b.Navigation("HopDongDauTus");
                 });
 
-            modelBuilder.Entity("QuanLyStartup.Models.TinTuc", b =>
+            modelBuilder.Entity("RiskChance.Models.TinTuc", b =>
                 {
                     b.Navigation("TinTucHashtags");
                 });
