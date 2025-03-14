@@ -21,12 +21,12 @@ namespace RiskChance.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<NguoiDung> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public LoginModel(SignInManager<NguoiDung> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _signInManager = signInManager;
-            _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -61,6 +61,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            public string Role { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -106,35 +107,39 @@ namespace RiskChance.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                if (user != null)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    // Kiểm tra nếu vai trò nhập vào có khớp với vai trò thực sự của user
+                    if (roles.Contains(Input.Role))
+                    {
+                        var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                        if (result.Succeeded)
+                        {
+                            return LocalRedirect(returnUrl);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "You do not have permission to access this role.");
+                    }
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

@@ -14,21 +14,20 @@ namespace RiskChance.Models
 
         public DateTime? NgayKyKet { get; set; }
 
-        [Required]
-        public decimal TongTien { get; set; }
+        public decimal? TongTien { get; set; }
 
         public double? PhanTramLoiNhuan { get; set; }
 
         public string? NoiDungHopDong { get; set; }
 
-        public string TrangThai { get; set; }
+        public string? TrangThai { get; set; }
 
         // Khóa ngoại
         public int IDStartup { get; set; }
         [ForeignKey("IDStartup")]
         public Startup? Startup { get; set; }
 
-        public string IDNguoiDung { get; set; }
+        public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
     }

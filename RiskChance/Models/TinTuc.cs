@@ -11,12 +11,11 @@ namespace RiskChance.Models
 
         public string? ImgTinTuc { get; set; } = string.Empty;
 
-        [Required, MaxLength(int.MaxValue)]
         public string NoiDung { get; set; } = string.Empty;
 
         public DateTime NgayDang { get; set; } = DateTime.Now;
 
-        public string IDNguoiDung { get; set; }
+        public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
 

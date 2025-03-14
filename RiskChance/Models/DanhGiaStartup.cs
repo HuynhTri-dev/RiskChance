@@ -14,7 +14,7 @@ namespace RiskChance.Models
 
         // Chỉ giữ lại ID, không có navigation properties
         public int IDStartup { get; set; }
-        public string IDNguoiDung { get; set; }
+        public string? IDNguoiDung { get; set; }
 
     }
 }

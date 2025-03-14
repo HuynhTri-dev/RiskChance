@@ -9,15 +9,26 @@ namespace QuanLyStartup.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDBContext _db;
-    public HomeController(ILogger<HomeController> logger)
+    private readonly ApplicationDBContext _context;
+
+    public HomeController(ApplicationDBContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var topHashtags = await _context.Hashtags
+            .Select(h => new
+            {
+                Name = h.TenHashtag,
+                Count = h.TinTucHashtags.Count()
+            })
+            .OrderByDescending(h => h.Count)
+            .Take(5)
+            .ToListAsync();
+
+        ViewBag.TopHashtags = topHashtags;
         ViewBag.ActivePage = "home";
         return View();
     }

@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Create News";
+}
+
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@model RiskChance.Models.ViewModel.TinTucViewModel;
+
+<div class="container mt-4" style="max-width: 1000px">
+    <h2 class="h2 text-center fw-bold">POST NEWS</h2>
+    <form asp-action="Add" id="postForm" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label asp-for="NoiDung" class="form-label">Content:</label>
+            <textarea asp-for="NoiDung" 
+                      id="postContent"
+                      class="form-control"
+                      rows="4"
+                      required></textarea>
+            <span asp-validation-for="NoiDung" class="text-danger"></span>
+        </div>
+
+        <!-- Hashtags -->
+        <div class="mb-3">
+            <label class="form-label">Hashtag:</label>
+            <input type="text"
+                   id="hashtagInput"
+                   class="form-control"
+                   placeholder="Nhập hashtag và nhấn Enter" />
+            <div id="hashtagList" class="mt-2"></div>
+        </div>
+
+        <!-- Input ẩn để lưu danh sách hashtag -->
+        <input type="hidden" id="hiddenHashtags" asp-for="Hashtags" />
+
+        <!-- Thêm hình ảnh -->
+        <div class="mb-3 mx-auto">
+            <label asp-for="ImgTinTuc" class="form-label">Picture:</label>
+            <input type="file"
+                   asp-for="ImgTinTuc"
+                   id="postImage"
+                   class="form-control"
+                   accept="image/*" />
+            <div class="mt-2 mx-auto d-flex justify-content-center">
+                <img id="imagePreview"
+                     src=""
+                     class="img-fluid d-none"
+                     style="max-height: 200px" />
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button
+                    class="btn btn-primary fw-bold"
+                    style="width: 100px">
+                Post
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/addHashtags.js" asp-append-version="true"></script>
+}

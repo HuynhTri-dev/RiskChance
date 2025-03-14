@@ -78,14 +78,16 @@
 
     <!-- Danh sach cac tu khoa -->
     <div class="keyword-container container mt-4 d-none d-lg-block">
-        <h3 class="text-center mb-3 fw-bold">Popular Keyword</h3>
+        <h3 class="text-center mb-3 fw-bold">Popular HashTag</h3>
         <ul class="keyword-box d-flex flex-wrap justify-content-center gap-3">
             <!-- Cái này sẽ dò trên lịch sử tìm kiếm để có thể in ra -->
-            <li class="keyword-item">Technology</li>
-            <li class="keyword-item">Biology</li>
-            <li class="keyword-item">Best Invest</li>
-            <li class="keyword-item">Chứng khoán</li>
-            <li class="keyword-item">New Investment</li>
+            @if (ViewBag.TopHashtags != null)
+            {
+                @foreach (var hashtag in ViewBag.TopHashtags)
+                {
+                    <li class="keyword-item">#@hashtag.Name (@hashtag.Count)</li>
+                }
+            }
         </ul>
     </div>
 

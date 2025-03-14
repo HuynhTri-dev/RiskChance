@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RiskChance.Models;
 using RiskChance.Data;
+using RiskChance.Models;
 
 [assembly: HostingStartup(typeof(RiskChance.Areas.Identity.IdentityHostingStartup))]
 namespace RiskChance.Areas.Identity

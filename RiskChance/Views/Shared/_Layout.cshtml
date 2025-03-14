@@ -33,8 +33,7 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <!-- Logo -->
             <div class="logo-container">
-                <a href="../page/home.html"
-                   class="text-decoration-none d-flex align-items-center gap-2">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
                     <img class="logo-img rounded-circle"
                          src="~/assets/home/logo.png"
                          alt="logo"
@@ -161,10 +160,9 @@
                             <span id="notifBadge"
                                   class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
+                        <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
                             <h5 class="h5 fw-bold">Thông báo</h5>
                             <hr />
-
                             <div class="container-fluid notify-box d-flex align-items-center">
                                 <div class="avatar-box d-none d-sm-block">
                                     <img class="rounded-circle user-img"
@@ -186,7 +184,7 @@
                                     <div class="status rounded-circle"></div>
                                 </div>
                             </div>
-                        </ul>
+                        </div>
                     </div>
 
                     <a href="../page/postnew.html"
@@ -200,43 +198,8 @@
 
                 <!-- Thong tin ca nhan -->
                 <div class="account-container d-flex align-items-center justify-content-center">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <!-- Nếu đã đăng nhập -->
-                        <div id="userDropdown" class="dropdown">
-                            <button class="account-dropdown btn dropdown-toggle d-flex align-items-center"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <img id="userAvatar"
-                                     src="@ViewBag.UserAvatar"
-                                     alt="User Avatar"
-                                     class="user-img rounded-circle me-2" />
-                                <span id="userName" class="d-none d-md-block">@ViewBag.UserName</span>
-                            </button>
-                            <ul class="account dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="/Account/Profile">
-                                        <i class="fa-solid fa-user me-2"></i> Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
-                                        <i class="fa-solid fa-sign-out-alt me-2"></i> Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    }
-                    else
-                    {
-                        <!-- Nếu chưa đăng nhập -->
-                        <a id="signInBtn"
-                           class="signIn-btn text-white fw-bold btn btn-primary d-flex align-items-center justify-content-center"
-                           asp-controller="Account" asp-action="Login">
-                            Sign In
-                        </a>
-                    }
+                    @await Html.PartialAsync("~/Views/Shared/_LoginPartial.cshtml")
+
                 </div>
             </div>
         </div>

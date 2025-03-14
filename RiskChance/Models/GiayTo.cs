@@ -9,8 +9,8 @@ namespace RiskChance.Models
         [Key]
         public int IDGiayTo { get; set; }
 
-        public string FileGiayTo { get; set; } = string.Empty;
-        public string LoaiFile { get; set; } = string.Empty;
+        public string? FileGiayTo { get; set; }
+        public string? LoaiFile { get; set; }
         public string? NoiDung { get; set; }
         public DateTime NgayTao { get; set; } = DateTime.Now;
         public string? TenGiayTo { get; set; }

@@ -4,23 +4,58 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
-
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="register-box shadow rounded p-4">
         <h3 class="text-center fw-bold mb-4">Register</h3>
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <label asp-for="Input.FullName" class="form-label">Full Name</label>
+        <form id="register-form" asp-route-returnUrl="@Model.ReturnUrl" method="post">            
+            <div class="mb-3">
+                <label asp-for="Input.HoTen" class="form-label">Full Name</label>
                 <input type="text"
                        class="form-control"
-                       asp-for="Input.FullName"
+                       asp-for="Input.HoTen"
                        placeholder="Enter your full name"
-                       autocomplete="fullname" aria-required="true"
                        />
-                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                <span asp-validation-for="Input.HoTen" class="text-danger"></span>
             </div>
+            <div class="mb-3">
+                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="Input.Role">Chọn Vai Trò</label>
+                @Html.DropDownListFor(model => model.Input.Role, Model.Roles, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Input.Role, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div>
+                <button id="registerSubmit" type="submit" class="btn btn-primary w-100">Register</button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            Already have an account?
+            <a class="signIn-link text-decoration-none" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </div>
+    </div>
+</div>
+
+
+@* <div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
@@ -70,7 +105,7 @@
         </section>
     </div>
 </div>
-
+ *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

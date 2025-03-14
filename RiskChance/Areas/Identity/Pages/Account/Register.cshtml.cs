@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -15,7 +16,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
@@ -27,23 +27,24 @@ namespace RiskChance.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<NguoiDung> _signInManager;
-        private readonly RoleManager<NguoiDung> _roleManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IUserStore<NguoiDung> _userStore;
         private readonly IUserEmailStore<NguoiDung> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<NguoiDung> userManager,
-            RoleManager<NguoiDung> roleManager,
             IUserStore<NguoiDung> userStore,
             SignInManager<NguoiDung> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
+
         {
-            _userManager = userManager;
             _roleManager = roleManager;
+            _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
@@ -57,6 +58,8 @@ namespace RiskChance.Areas.Identity.Pages.Account
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
+
+        public List<SelectListItem> Roles { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -76,8 +79,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [Required]
-            public string FullName { get; set; }
+            public string HoTen { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -106,14 +108,19 @@ namespace RiskChance.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public string? Role { get; set; }
-            [ValidateNever]
-            public IEnumerable<SelectListItem> RoleList { get; set; }
+            [Required]
+            public string Role { get; set; }
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            Roles = new List<SelectListItem>();
+            var roles = _roleManager.Roles;
+            foreach (var role in roles)
+            {
+                Roles.Add(new SelectListItem { Value = role.Name, Text = role.Name });
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -133,6 +140,11 @@ namespace RiskChance.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    if (await _roleManager.RoleExistsAsync(Input.Role))
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

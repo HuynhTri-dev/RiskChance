@@ -10,7 +10,9 @@ namespace RiskChance.Models
         public int IDStartup { get; set; }
 
         [Required]
-        public string TenStartup { get; set; } = string.Empty;
+        public string? TenStartup { get; set; } = string.Empty;
+
+        public string? LogoUrl { get; set; }
 
         public string? MoTa { get; set; } 
 
@@ -29,7 +31,7 @@ namespace RiskChance.Models
 
         // IDNguoiDung là khóa ngoại, bắt buộc
         [Required]
-        public string IDNguoiDung { get; set; }
+        public string? IDNguoiDung { get; set; }
 
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }

@@ -18,7 +18,7 @@ namespace RiskChance.Models
         public TrangThaiThongBao TrangThai { get; set; } = TrangThaiThongBao.ChuaDoc;
 
         // Khóa ngoại
-        public string IDNguoiDung { get; set; }
+        public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
     }

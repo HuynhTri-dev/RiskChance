@@ -143,117 +143,14 @@
         <!-- Startup list -->
         <div class="startup-list-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Startup List</h3>
-            <section class="startup-list row g-3">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="startup-card">
-                        <img class="startup-image"
-                             src="../assets/rocket.png"
-                             alt="anh minh hoa" />
-
-                        <div class="startup-info">
-                            <h5 class="fw-bold">Startup A</h5>
-                            <p class="text-muted mb-2">Công nghệ AI</p>
-                            <button class="btn btn-outline-primary btn-sm fw-bold"
-                                    onclick="showDetails()">
-                                Read more
-                            </button>
-
-                            <button class="btn btn-outline-success btn-sm fw-bold">
-                                Invest
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="startup-card">
-                        <img class="startup-image"
-                             src="../assets/rocket.png"
-                             alt="anh minh hoa" />
-
-                        <div class="startup-info">
-                            <h5 class="fw-bold">Startup A</h5>
-                            <p class="text-muted mb-2">Công nghệ AI</p>
-                            <button class="btn btn-outline-primary btn-sm fw-bold"
-                                    onclick="showDetails()">
-                                Read more
-                            </button>
-
-                            <button class="btn btn-outline-success btn-sm fw-bold">
-                                Invest
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="startup-card">
-                        <img class="startup-image"
-                             src="../assets/rocket.png"
-                             alt="anh minh hoa" />
-
-                        <div class="startup-info">
-                            <h5 class="fw-bold">Startup A</h5>
-                            <p class="text-muted mb-2">Công nghệ AI</p>
-                            <button class="btn btn-outline-primary btn-sm fw-bold"
-                                    onclick="showDetails()">
-                                Read more
-                            </button>
-
-                            <button class="btn btn-outline-success btn-sm fw-bold">
-                                Invest
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="startup-card">
-                        <img class="startup-image"
-                             src="../assets/rocket.png"
-                             alt="anh minh hoa" />
-
-                        <div class="startup-info">
-                            <h5 class="fw-bold">Startup A</h5>
-                            <p class="text-muted mb-2">Công nghệ AI</p>
-                            <button class="btn btn-outline-primary btn-sm fw-bold"
-                                    onclick="showDetails()">
-                                Read more
-                            </button>
-
-                            <button class="btn btn-outline-success btn-sm fw-bold">
-                                Invest
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="startup-card">
-                        <img class="startup-image"
-                             src="../assets/rocket.png"
-                             alt="anh minh hoa" />
-
-                        <div class="startup-info">
-                            <h5 class="fw-bold">Startup A</h5>
-                            <p class="text-muted mb-2">Công nghệ AI</p>
-                            <button class="btn btn-outline-primary btn-sm fw-bold"
-                                    onclick="showDetails()">
-                                Read more
-                            </button>
-
-                            <button class="btn btn-outline-success btn-sm fw-bold">
-                                Invest
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Loading more -->
-                <div id="load-more-trigger" class="mt-3 text-center">
-                    <div class="spinner-border"></div>
-                </div>
+            <section class="startup-list row g-3" id="startup-container">
+                <!-- Dữ liệu từ AJAX sẽ load vào đây -->
             </section>
+
+            <!-- Loading more -->
+            <div id="load-more-trigger" class="mt-3 text-center">
+                <div class="spinner-border"></div>
+            </div>
         </div>
     </div>
     <!-- Sidebar -->
@@ -324,5 +221,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/showStartupDetailPopUp.js" asp-append-version="true"></script>
+    <script src="~/js/loadStartup.js" asp-append-version="true"></script>
 }
