@@ -4,7 +4,7 @@
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
 
-<ul class="navbar-nav">
+<dic class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
         <!-- Nếu đã đăng nhập -->
@@ -42,4 +42,4 @@ else
             Sign In
         </a>
 }
-</ul>
+</dic>

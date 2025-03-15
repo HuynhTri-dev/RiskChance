@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QuanLyStartup</title>
+    <title>@ViewData["Title"] - RiskChance</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="~/assets/home/logo.png" type="image/x-icon">
@@ -28,37 +28,55 @@
 
     @RenderSection("Styles", required: false)
 </head>
-<body>
-    <header class="header container-fluid bg-light d-flex align-items-center justify-content-between shadow-sm">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <!-- Logo -->
-            <div class="logo-container">
-                <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
-                    <img class="logo-img rounded-circle"
-                         src="~/assets/home/logo.png"
-                         alt="logo"
-                         width="50"
-                         height="50" />
-                    <h1 class="fw-bold d-none d-sm-block"
-                        style="color: var(--primary-color)">
-                        Risk Chance
-                    </h1>
-                </a>
-            </div>
+<body >
+    <header class="sticky-top">
+        <div class="header container-fluid bg-light d-flex align-items-center justify-content-between shadow-sm">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
+                        <img class="logo-img rounded-circle"
+                             src="~/assets/home/logo.png"
+                             alt="logo"
+                             width="50"
+                             height="50" />
+                        <h1 class="fw-bold d-none d-sm-block"
+                            style="color: var(--primary-color)">
+                            Risk Chance
+                        </h1>
+                    </a>
+                </div>
 
-            <!-- Navigation -->
-            <nav class="navbar navbar-light bg-light">
-                <div class="container">
-                    <div class="d-lg-none">
-                        <div class="menu-container dropdown w-100">
-                            <button class="menu-dropdown d-flex"
-                                    type="button"
-                                    id="mobileMenuButton"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <i class="fa-solid fa-house"></i>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="mobileMenuButton">
+                <!-- Navigation -->
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container">
+                        <div class="d-lg-none">
+                            <div class="menu-container dropdown w-100">
+                                <button class="menu-dropdown d-flex"
+                                        type="button"
+                                        id="mobileMenuButton"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-house"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="mobileMenuButton">
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "home" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "startup" ? "active" : "")" asp-controller="Startup" asp-action="Index">Startup</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-controller="News" asp-action="Index">News</a>
+                                    </li>
+                                    <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Menu ngang cho desktop (màn hình lg trở lên) -->
+                        <div class="d-none d-lg-block w-100">
+                            <ul class="navbar-nav d-flex gap-3 justify-content-center w-100 flex-row">
                                 <li class="nav-item">
                                     <a class="nav-link fw-bold @(ViewBag.ActivePage == "home" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
@@ -72,138 +90,123 @@
                             </ul>
                         </div>
                     </div>
+                </nav>
 
-                    <!-- Menu ngang cho desktop (màn hình lg trở lên) -->
-                    <div class="d-none d-lg-block w-100">
-                        <ul class="navbar-nav d-flex gap-3 justify-content-center w-100 flex-row">
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold @(ViewBag.ActivePage == "home" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+                <!-- Tài khoản và các chức năng cần thiết -->
+                <div class="d-flex align-items-center justify-content-between p-2">
+                    <!-- Dropdown menu khi thu nhỏ -->
+                    <div class="dropdown d-lg-none">
+                        <button class="btn btn-primary text-light d-flex align-center"
+                                type="button"
+                                id="menuDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="fa-solid fa-bars fs-4"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="menuDropdown">
+                            <li>
+                                <button type="button"
+                                        class="dropdown-item text-dark position-relative"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#messengerModal">
+                                    <i class="fa-brands fa-signal-messenger"></i> Messenger
+                                    <span id="msgBadge"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                                </button>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold @(ViewBag.ActivePage == "startup" ? "active" : "")" asp-controller="Startup" asp-action="Index">Startup</a>
+                            <li>
+                                <button type="button"
+                                        class="dropdown-item text-dark position-relative"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-bell"></i> Notifications
+                                    <span id="notifBadge"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" id="notifDropdown">
+                                    <li><h5 class="h5 fw-bold">Thông báo</h5></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-controller="News" asp-action="Index">News</a>
+                            <li>
+                                <a href="#" class="dropdown-item text-dark">
+                                    <i class="fa-solid fa-pen"></i> Create Post
+                                </a>
                             </li>
-                            <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                            <li>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                </div>
-            </nav>
 
-            <!-- Tài khoản và các chức năng cần thiết -->
-            <div class="d-flex align-items-center justify-content-between p-2">
-                <!-- Dropdown menu khi thu nhỏ -->
-                <div class="dropdown d-lg-none">
-                    <button class="btn btn-primary text-light d-flex align-center"
-                            type="button"
-                            id="menuDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <i class="fa-solid fa-bars fs-4"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="menuDropdown">
-                        <li>
+                    <!-- Các icon chỉ hiện trên màn hình lớn -->
+                    <div class="d-none d-lg-flex align-items-center gap-3">
+                        <button type="button"
+                                class="text-dark position-relative btn btn-light"
+                                data-bs-toggle="modal"
+                                data-bs-target="#messengerModal">
+                            <i class="fa-brands fa-signal-messenger fs-4"></i>
+                            <span id="msgBadge"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                        </button>
+
+                        <div class="notification dropdown">
                             <button type="button"
-                                    class="dropdown-item text-dark position-relative"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#messengerModal">
-                                <i class="fa-brands fa-signal-messenger"></i> Messenger
-                                <span id="msgBadge"
-                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button"
-                                    class="dropdown-item text-dark position-relative"
+                                    class="text-dark position-relative btn btn-light"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                <i class="fa-solid fa-bell"></i> Notifications
+                                <i class="fa-solid fa-bell fs-4"></i>
                                 <span id="notifBadge"
                                       class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end" id="notifDropdown">
-                                <li><h5 class="h5 fw-bold">Thông báo</h5></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item text-dark">
-                                <i class="fa-solid fa-pen"></i> Create Post
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item">
-                                <i class="fa-solid fa-chart-line"></i> Dashboard
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                            <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
+                                <h5 class="h5 fw-bold">Thông báo</h5>
+                                <hr />
+                                <div class="container-fluid notify-box d-flex align-items-center">
+                                    <div class="avatar-box d-none d-sm-block">
+                                        <img class="rounded-circle user-img"
+                                             src="../assets/user/tri lor.jpg"
+                                             alt="" />
+                                    </div>
 
-                <!-- Các icon chỉ hiện trên màn hình lớn -->
-                <div class="d-none d-lg-flex align-items-center gap-3">
-                    <button type="button"
-                            class="text-dark position-relative btn btn-light"
-                            data-bs-toggle="modal"
-                            data-bs-target="#messengerModal">
-                        <i class="fa-brands fa-signal-messenger fs-4"></i>
-                        <span id="msgBadge"
-                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                    </button>
+                                    <div class="notify-content">
+                                        <p class="line-clamp-2">
+                                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde
+                                            culpa a ratione blanditiis dolor porro molestias aliquam?
+                                            Temporibus a esse, fugiat similique eligendi ipsum soluta
+                                            accusamus. Officiis, magnam? Voluptatibus, odit!
+                                        </p>
+                                        <p>Date:</p>
+                                    </div>
 
-                    <div class="notification dropdown">
-                        <button type="button"
-                                class="text-dark position-relative btn btn-light"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            <i class="fa-solid fa-bell fs-4"></i>
-                            <span id="notifBadge"
-                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
-                            <h5 class="h5 fw-bold">Thông báo</h5>
-                            <hr />
-                            <div class="container-fluid notify-box d-flex align-items-center">
-                                <div class="avatar-box d-none d-sm-block">
-                                    <img class="rounded-circle user-img"
-                                         src="../assets/user/tri lor.jpg"
-                                         alt="" />
-                                </div>
-
-                                <div class="notify-content">
-                                    <p class="line-clamp-2">
-                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde
-                                        culpa a ratione blanditiis dolor porro molestias aliquam?
-                                        Temporibus a esse, fugiat similique eligendi ipsum soluta
-                                        accusamus. Officiis, magnam? Voluptatibus, odit!
-                                    </p>
-                                    <p>Date:</p>
-                                </div>
-
-                                <div class="notify-status d-none d-sm-block">
-                                    <div class="status rounded-circle"></div>
+                                    <div class="notify-status d-none d-sm-block">
+                                        <div class="status rounded-circle"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <a href="../page/postnew.html"
+                           class="text-dark btn btn-light"
+                           id="postIcon">
+                            <i class="fa-solid fa-pen fs-4"></i>
+                        </a>
+
+                        <button class="btn btn-primary fw-bold">Dashboard</button>
                     </div>
 
-                    <a href="../page/postnew.html"
-                       class="text-dark btn btn-light"
-                       id="postIcon">
-                        <i class="fa-solid fa-pen fs-4"></i>
-                    </a>
+                    <!-- Thong tin ca nhan -->
+                    <div class="account-container d-flex align-items-center justify-content-center">
+                        @await Html.PartialAsync("~/Views/Shared/_LoginPartial.cshtml")
 
-                    <button class="btn btn-primary fw-bold">Dashboard</button>
-                </div>
-
-                <!-- Thong tin ca nhan -->
-                <div class="account-container d-flex align-items-center justify-content-center">
-                    @await Html.PartialAsync("~/Views/Shared/_LoginPartial.cshtml")
-
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+    
 
     <main role="main" class="pb-3">
         @RenderBody()

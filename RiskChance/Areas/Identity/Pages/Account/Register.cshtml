@@ -7,7 +7,7 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="register-box shadow rounded p-4">
         <h3 class="text-center fw-bold mb-4">Register</h3>
-        <form id="register-form" asp-route-returnUrl="@Model.ReturnUrl" method="post">            
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">            
             <div class="mb-3">
                 <label asp-for="Input.HoTen" class="form-label">Full Name</label>
                 <input type="text"
@@ -23,9 +23,11 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="Input.Role">Chọn Vai Trò</label>
-                @Html.DropDownListFor(model => model.Input.Role, Model.Roles, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Input.Role, "", new { @class = "text-danger" })
+                <label asp-for="Input.Role">Chọn Vai Trò</label>
+                <select asp-for="Input.Role" asp-items="Model.Roles" class="form-control">
+                    <option value="">-- Chọn vai trò --</option>
+                </select>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
@@ -38,6 +40,19 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
             <div>
                 <button id="registerSubmit" type="submit" class="btn btn-primary w-100">Register</button>
             </div>

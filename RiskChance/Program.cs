@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlSer
 
 builder.Services.AddIdentity<NguoiDung, IdentityRole>()
 .AddDefaultTokenProviders()
+.AddRoles<IdentityRole>()
  .AddDefaultUI()
  .AddEntityFrameworkStores<ApplicationDBContext>();
 
