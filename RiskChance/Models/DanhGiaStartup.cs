@@ -8,13 +8,19 @@ namespace RiskChance.Models
     {
         [Key]
         public int ID { get; set; }
-        public int DiemDanhGia { get; set; }
+        public float DiemDanhGia { get; set; }
         public string? NhanXet { get; set; }
         public DateTime NgayDanhGia { get; set; } = DateTime.Now;
 
         // Chỉ giữ lại ID, không có navigation properties
+        [Required]
         public int IDStartup { get; set; }
+        [ForeignKey("IDStartup")]
+        public Startup? Startup { get; set; }
+        [Required]
         public string? IDNguoiDung { get; set; }
+        [ForeignKey("IDNguoiDung")]
+        public NguoiDung? NguoiDung { get; set; }
 
     }
 }

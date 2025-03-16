@@ -7,34 +7,42 @@
 //  document.getElementById("startupSidebar").classList.remove("active");
 //}
 
-var page = 1;
-var isLoading = false;
+let page = 1;
+let loading = false;
 
-function loadMore() {
-    if (isLoading) return;
-    isLoading = true;
-    $("#load-more-trigger .spinner-border").show();
+async function loadMoreStartups() {
+    if (loading) return;
+    loading = true;
+    page++;
 
-    $.get("/Startup/LoadMore?page=" + page, function (data) {
-        if (data.trim() === "") {
-            $("#load-more-trigger").hide(); // Ẩn nếu không còn dữ liệu
-        } else {
-            $("#startup-container").append(data);
-            page++;
+    try {
+        const response = await fetch(`/Startup/LoadMore?page=${page}`);
+        const data = await response.json();
+
+        if (data.startups.length > 0) {
+            data.startups.forEach(startup => {
+                const startupHtml = `<div class="startup-item">
+                    <img src="${startup.logoUrl}" alt="${startup.tenStartup}">
+                    <h3>${startup.tenStartup}</h3>
+                    <p>${startup.moTa}</p>
+                </div>`;
+                document.getElementById("startup-list").innerHTML += startupHtml;
+            });
+
+            if (!data.hasMore) {
+                document.getElementById("load-more").style.display = "none";
+            }
         }
-        isLoading = false;
-        $("#load-more-trigger .spinner-border").hide();
-    });
+    } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+    }
+
+    loading = false;
 }
 
-// Load dữ liệu lần đầu
-$(document).ready(function () {
-    loadMore();
-});
-
-// Khi cuộn đến cuối trang, tự động tải thêm
-$(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-        loadMore();
+// Sự kiện cuộn trang
+window.addEventListener("scroll", function () {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+        loadMoreStartups();
     }
 });

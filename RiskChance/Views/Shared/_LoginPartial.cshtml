@@ -4,9 +4,15 @@
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
 
-<dic class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
+@{
+    var currentUser = await UserManager.GetUserAsync(User); // Lấy thông tin user đang đăng nhập
+    var userAvatar = currentUser?.AvatarUrl ?? Url.Content("~/assets/user/image.png");
+    var userName = currentUser?.HoTen ?? "User";
+}
+
+<div class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
         <!-- Nếu đã đăng nhập -->
         <div id="userDropdown" class="dropdown">
             <button class="account-dropdown btn dropdown-toggle d-flex align-items-center"
@@ -14,10 +20,10 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false">
                 <img id="userAvatar"
-                     src="@(ViewBag.UserAvatar ?? Url.Content("~/assets/user/image.png"))"
+                     src="@userAvatar"
                      alt="User Avatar"
                      class="user-img rounded-circle me-2" />
-                <span id="userName" class="d-none d-md-block">@ViewBag.UserName</span>
+                <span id="userName" class="d-none d-md-block">@userName</span>
             </button>
             <ul class="account dropdown-menu dropdown-menu-end">
                 <li>
@@ -26,20 +32,22 @@
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item text-danger" asp-area="Identity" asp-page="/Account/Logout">
-                        <i class="fa-solid fa-sign-out-alt me-2"></i> Logout
-                    </a>
+                    <form method="post" asp-area="Identity" asp-page="/Account/Logout">
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="fa-solid fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>
-}
-else
-{
+    }
+    else
+    {
         <!-- Nếu chưa đăng nhập -->
         <a id="signInBtn"
            class="signIn-btn text-white fw-bold btn btn-primary d-flex align-items-center justify-content-center"
            asp-area="Identity" asp-page="/Account/Login">
             Sign In
         </a>
-}
-</dic>
+    }
+</div>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiskChance.Data;
 
@@ -11,9 +12,11 @@ using RiskChance.Data;
 namespace RiskChance.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250315132816_UpdateDBStartup2")]
+    partial class UpdateDBStartup2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,11 +166,10 @@ namespace RiskChance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<float>("DiemDanhGia")
-                        .HasColumnType("real");
+                    b.Property<int>("DiemDanhGia")
+                        .HasColumnType("int");
 
                     b.Property<string>("IDNguoiDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("IDStartup")
@@ -176,24 +178,14 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayDanhGia")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("NguoiDungId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("NhanXet")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StartupIDStartup")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("IDNguoiDung");
 
                     b.HasIndex("IDStartup");
-
-                    b.HasIndex("NguoiDungId");
-
-                    b.HasIndex("StartupIDStartup");
 
                     b.ToTable("DanhGiaStartup");
                 });
@@ -590,26 +582,13 @@ namespace RiskChance.Migrations
                     b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("IDNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("RiskChance.Models.Startup", null)
                         .WithMany()
                         .HasForeignKey("IDStartup")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
-                        .WithMany()
-                        .HasForeignKey("NguoiDungId");
-
-                    b.HasOne("RiskChance.Models.Startup", "Startup")
-                        .WithMany()
-                        .HasForeignKey("StartupIDStartup");
-
-                    b.Navigation("NguoiDung");
-
-                    b.Navigation("Startup");
                 });
 
             modelBuilder.Entity("RiskChance.Models.GiayTo", b =>

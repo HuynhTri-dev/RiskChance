@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Create Startup";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/createStartup.css" asp-append-version="true" />
+}
+
+@using RiskChance.Models.ViewModel
+@using RiskChance.Models.ViewModel.StartupViewModel
+@model StartupFormViewModel
+
+<div class="create-container py-5 mx-auto">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-lg p-4">
+                <!-- Step 1: Information startup -->
+                <div id="step-1">
+                    <h2 class="h2 text-center fw-bold mb-4">Create Your Startup</h2>
+
+                    <form id="startupForm" method="post" enctype="multipart/form-data">
+                        <!-- Startup Name -->
+                        <div class="mb-3">
+                            <label asp-for="TenStartup" class="form-label fw-bold">Startup Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="TenStartup"
+                                   placeholder="Enter your startup name"
+                                   required />
+                            <span asp-validation-for="TenStartup" class="text-danger"></span>
+                        </div>
+
+                        <!-- Industry -->
+                        <div class="mb-3">
+                            <label asp-for="IDLinhVuc" class="form-label fw-bold">Business</label>
+                            
+                            @Html.DropDownListFor(model => model.IDLinhVuc,
+                                     (SelectList)ViewBag.LinhVuc,
+                                     "Select a business",
+                                     new { @class = "form-select", id = "Business", onchange = "toggleOtherInput()" }
+                                     )
+
+                            <!-- Input nhập nếu chọn Other -->
+                            <input asp-for="TenLinhVuc" type="text"
+                                   class="form-control mt-2 d-none"
+                                   id="otherBusiness"
+                                   placeholder="Enter your business" />
+                            <span asp-validation-for="IDLinhVuc" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label asp-for="MoTa" class="form-label fw-bold">Description</label>
+                            <textarea asp-for="MoTa" class="form-control"
+                                      id="MoTa"
+                                      rows="3"
+                                      placeholder="Describe your startup"></textarea>
+
+                            <span asp-validation-for="MoTa" class="text-danger"></span>
+                        </div>
+
+                        <!-- Funding Goal -->
+                        <div class="mb-3">
+                            <label asp-for="MucTieu" class="form-label fw-bold">Funding Goal (VNĐ)</label>
+                            <input asp-for="MucTieu" type="number"
+                                   class="form-control"
+                                   id="MucTieu"
+                                   placeholder="Enter target funding amount"
+                                   min="0"
+                                   required />
+                            <span asp-validation-for="MucTieu" class="text-danger"></span>
+                        </div>
+
+                        <!-- Equity Offered -->
+                        <div class="mb-3">
+                            <label asp-for="PhanTramCoPhan" class="form-label fw-bold">Equity Offered (%)</label>
+                            <input asp-for="PhanTramCoPhan" type="number"
+                                   class="form-control"
+                                   id="PhanTramCoPhan"
+                                   min="0"
+                                   max="100"
+                                   placeholder="Percentage of equity offered" />
+                            <span asp-validation-for="PhanTramCoPhan" class="text-danger"></span>
+                        </div>
+
+                        <!-- Upload Logo -->
+                        <div class="mb-3">
+                            <label asp-for="LogoUrl" class="form-label fw-bold">Startup Logo</label>
+                            <input asp-for="LogoUrl" type="file"
+                                   class="form-control"
+                                   id="logoUpload"
+                                   accept="image/*" />
+                            <div class="mt-3 text-center">
+                                <img id="logoPreview" class="rounded shadow-sm d-none" />
+                            </div>
+                            <span asp-validation-for="LogoUrl" class="text-danger"></span>
+                        </div>
+                        <div class="text-center mt-4">
+                            <!-- Save Button -->
+                            <button id="createStartup"
+                                    type="submit"
+                                    class="submit-btn btn btn-success fw-bold">
+                                <i class="fa-solid fa-rocket"></i> Create Startup
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Next -->
+                    <div class="text-center mt-4">
+                        <a type="button"
+                                class="btn btn-primary fw-bold"
+                                id="nextStep">
+                            Next <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/featureCreateStartup.js" asp-append-version="true"></script>
+}

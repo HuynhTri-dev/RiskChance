@@ -1,27 +1,27 @@
 $(document).ready(function () {
-  $("#step-2").hide();
-  $("#review-container").hide();
+  //$("#step-2").hide();
+  //$("#review-container").hide();
 
-  // Next Step
-  $("#nextStep").click(function () {
-    $("#step-1").hide();
-    $("#step-2").fadeIn();
-    $("#review-container").fadeIn();
-  });
+  //// Next Step
+  //$("#nextStep").click(function () {
+  //  $("#step-1").hide();
+  //  $("#step-2").fadeIn();
+  //  $("#review-container").fadeIn();
+  //});
 
-  // Previous Step
-  $("#prevStep").click(function () {
-    $("#step-2").hide();
-    $("#review-container").hide();
-    $("#step-1").fadeIn();
-  });
+  //// Previous Step
+  //$("#prevStep").click(function () {
+  //  $("#step-2").hide();
+  //  $("#review-container").hide();
+  //  $("#step-1").fadeIn();
+  //});
 
   // Active input for other business
   $("#Business").change(function () {
-    if ($(this).val() === "Other") {
-      $("#otherBusiness").removeClass("d-none").focus();
+      if ($(this).val() === "1") {
+        $("#otherBusiness").removeClass("d-none").focus();
     } else {
-      $("#otherBusiness").addClass("d-none").val("");
+        $("#otherBusiness").addClass("d-none").val("");
     }
   });
 

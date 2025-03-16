@@ -9,19 +9,21 @@ namespace RiskChance.Models
         [Key]
         public int IDStartup { get; set; }
 
-        [Required]
-        public string? TenStartup { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Tên startup không được để trống")]
+        public string TenStartup { get; set; } = string.Empty;
 
         public string? LogoUrl { get; set; }
 
-        public string? MoTa { get; set; } 
+        public string? MoTa { get; set; }
 
-        public int? IDLinhVuc { get; set; }
+        [Required]
+        public int IDLinhVuc { get; set; }
 
         [ForeignKey("IDLinhVuc")]
         public LinhVuc? LinhVuc { get; set; }
 
-        public decimal? MucTieu { get; set; }
+        [Required]
+        public decimal MucTieu { get; set; }
         public double? PhanTramCoPhan { get; set; } 
 
         public DateTime NgayTao { get; set; } = DateTime.Now;

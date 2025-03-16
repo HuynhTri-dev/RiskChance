@@ -3,130 +3,70 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/startup.css" asp-append-version="true" />
 }
+
+@using Microsoft.AspNetCore.Identity
+@using RiskChance.Models.ViewModel.StartupViewModel
+                
+
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+@model StartupPageViewModel
 
 <div class="main-container row mt-4 mb-4 mx-auto">
     <!-- Startup -->
     <div class="startup-container col-md-8">
         <!-- Create poster startup -->
         <!-- Chỉ có startup mới hiện khung này -->
-        <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
-            <div class="post-box d-flex justify-content-between align-items-center">
-                <a href="#" class="text-decoration-none">
-                    <div class="user-info d-flex justify-content-center align-items-center">
-                        <img src="../assets/user/image.png"
-                             alt="anh dai dien"
-                             class="user-image rounded-circle" />
-                        <p class="d-none d-lg-block">Name</p>
-                    </div>
-                </a>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
+                <div class="post-box d-flex justify-content-between align-items-center">
+                    <a href="#" class="text-decoration-none">
+                        <div class="user-info d-flex justify-content-center align-items-center">
+                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
+                                 alt="anh dai dien"
+                                 class="user-image rounded-circle" />
+                            <p class="d-none d-lg-block">@ViewBag.User.HoTen</p>
+                        </div>
+                    </a>
 
-                <a href="./createStartup.html" class="btn btn-primary fw-bold">
-                    <p>Create Startup</p>
-                </a>
+                    @if (User.IsInRole("Founder"))
+                    {
+                        <a asp-action="Add" class="btn btn-primary fw-bold">
+                            <p>Create Startup</p>
+                        </a>
+                    }
+                </div>
             </div>
-        </div>
-
+            
+        }
         <!-- Outstanding startup -->
         <div class="outstanding-startups-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Outstanding Startups</h3>
             <section class="outstanding-list row mx-auto">
-                <a href="#"
-                   class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
-                    <div class="startup-card text-white"
-                         style="
+                @foreach (var topStartup in Model.TopStartups)
+                {
+                    <a href="#"
+                       class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
+                        <div class="startup-card text-white"
+                             style="
                   background-image: linear-gradient(
                       rgba(0, 0, 0, 0.5),
                       rgba(0, 0, 0, 0.5)
                     ),
-                    url('https://picsum.photos/300/200');
-                ">
-                        <h5 class="fw-bold">Name</h5>
-                        <p class="line-clamp-2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Consequatur nemo voluptates dolor quas in voluptatibus omnis
-                            assumenda modi? Inventore veritatis culpa corrupti, a
-                            consequuntur excepturi eum fuga ea quidem alias. Tenetur unde
-                            assumenda accusantium illo repudiandae necessitatibus
-                            molestias tempore sequi, numquam totam quos voluptatum nisi
-                            itaque adipisci fugit quod ipsam doloremque? Animi incidunt
-                            doloribus consectetur voluptate eos. Porro, vitae esse.
-                        </p>
-                    </div>
-                </a>
-
-                <a href="#"
-                   class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
-                    <div class="startup-card text-white"
-                         style="
-                  background-image: linear-gradient(
-                      rgba(0, 0, 0, 0.5),
-                      rgba(0, 0, 0, 0.5)
-                    ),
-                    url('https://picsum.photos/300/200');
-                ">
-                        <h5 class="fw-bold">Name</h5>
-                        <p class="line-clamp-2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Consequatur nemo voluptates dolor quas in voluptatibus omnis
-                            assumenda modi? Inventore veritatis culpa corrupti, a
-                            consequuntur excepturi eum fuga ea quidem alias. Tenetur unde
-                            assumenda accusantium illo repudiandae necessitatibus
-                            molestias tempore sequi, numquam totam quos voluptatum nisi
-                            itaque adipisci fugit quod ipsam doloremque? Animi incidunt
-                            doloribus consectetur voluptate eos. Porro, vitae esse.
-                        </p>
-                    </div>
-                </a>
-
-                <a href="#"
-                   class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
-                    <div class="startup-card text-white"
-                         style="
-                  background-image: linear-gradient(
-                      rgba(0, 0, 0, 0.5),
-                      rgba(0, 0, 0, 0.5)
-                    ),
-                    url('https://picsum.photos/300/200');
-                ">
-                        <h5 class="fw-bold">Name</h5>
-                        <p class="line-clamp-2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Consequatur nemo voluptates dolor quas in voluptatibus omnis
-                            assumenda modi? Inventore veritatis culpa corrupti, a
-                            consequuntur excepturi eum fuga ea quidem alias. Tenetur unde
-                            assumenda accusantium illo repudiandae necessitatibus
-                            molestias tempore sequi, numquam totam quos voluptatum nisi
-                            itaque adipisci fugit quod ipsam doloremque? Animi incidunt
-                            doloribus consectetur voluptate eos. Porro, vitae esse.
-                        </p>
-                    </div>
-                </a>
-
-                <a href="#"
-                   class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
-                    <div class="startup-card text-white"
-                         style="
-                  background-image: linear-gradient(
-                      rgba(0, 0, 0, 0.5),
-                      rgba(0, 0, 0, 0.5)
-                    ),
-                    url('https://picsum.photos/300/200');
-                ">
-                        <h5 class="fw-bold">Name</h5>
-                        <p class="line-clamp-2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Consequatur nemo voluptates dolor quas in voluptatibus omnis
-                            assumenda modi? Inventore veritatis culpa corrupti, a
-                            consequuntur excepturi eum fuga ea quidem alias. Tenetur unde
-                            assumenda accusantium illo repudiandae necessitatibus
-                            molestias tempore sequi, numquam totam quos voluptatum nisi
-                            itaque adipisci fugit quod ipsam doloremque? Animi incidunt
-                            doloribus consectetur voluptate eos. Porro, vitae esse.
-                        </p>
-                    </div>
-                </a>
+                    url('@topStartup.LogoUrl');
+                    ">
+                            <h5 class="fw-bold">@topStartup.TenStartup</h5>
+                            <p class="line-clamp-2">
+                                @topStartup.MoTa
+                            </p>
+                        </div>
+                    </a>
+                }
+                
             </section>
         </div>
 
@@ -144,13 +84,34 @@
         <div class="startup-list-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Startup List</h3>
             <section class="startup-list row g-3" id="startup-container">
-                <!-- Dữ liệu từ AJAX sẽ load vào đây -->
+                @foreach (var startup in Model.StartupList)
+                {
+                    <div class="col-lg-4 col-md-6 col-12 startup-item">
+                        <div class="startup-card">
+                            <img class="startup-image"
+                                 src="@startup.LogoUrl"
+                                 alt="Startup Image" />
+
+                            <div class="startup-info">
+                                <h5 class="fw-bold">@startup.TenStartup</h5>
+                                <p class="text-muted mb-2">@startup.LinhVuc.TenLinhVuc</p>
+                                <a class="btn btn-outline-primary btn-sm fw-bold">
+                                    Startup
+                                </a>
+
+                                <a class="btn btn-outline-success btn-sm fw-bold">
+                                    Invest
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
             </section>
 
             <!-- Loading more -->
-            <div id="load-more-trigger" class="mt-3 text-center">
+            @* <div id="load-more-trigger" class="mt-3 text-center">
                 <div class="spinner-border"></div>
-            </div>
+            </div> *@
         </div>
     </div>
     <!-- Sidebar -->
@@ -159,23 +120,17 @@
         <div class="top-fields-container mx-auto">
             <h4 class="h4 mb-3 fw-bold">Top Business</h4>
             <section class="top-fields-list">
-                <a href="#" class="field-link text-decoration-none">
-                    <div class="field-card d-flex justify-content-between">
-                        <h5 class="fw-bold">Công nghệ AI</h5>
-                        <p class="text-muted d-block d-md-none d-lg-none d-xl-block">
-                            100 startups
-                        </p>
-                    </div>
-                </a>
-
-                <a href="#" class="field-link text-decoration-none">
-                    <div class="field-card d-flex justify-content-between">
-                        <h5 class="fw-bold">Công nghệ AI</h5>
-                        <p class="text-muted d-md-none d-lg-none d-xl-block">
-                            100 startups
-                        </p>
-                    </div>
-                </a>
+                @foreach (var business in Model.TopBusiness)
+                {
+                    <a href="#" class="field-link text-decoration-none">
+                        <div class="field-card d-flex justify-content-between">
+                            <h5 class="fw-bold">@business.NameBusiness</h5>
+                            <p class="text-muted d-block d-md-none d-lg-none d-xl-block">
+                                @business.NumberOfStartup
+                            </p>
+                        </div>
+                    </a>
+                }
             </section>
         </div>
 
@@ -183,35 +138,24 @@
         <div class="top-investors-container mb-4 mt-4 mx-auto">
             <h4 class="h4 fw-bold">Top Investors</h4>
             <section class="top-investor-list">
-                <a href="#"
-                   class="user-link text-decoration-none d-flex align-items-center justify-content-between">
-                    <div class="user-container d-flex justify-content-center align-items-center">
-                        <img class="user-image rounded-circle"
-                             src="../assets/user/image.png"
-                             alt="user img" />
-                        <p>Name</p>
-                    </div>
+                @foreach (var investor in Model.TopInvestors)
+                {
+                    <a href="#"
+                       class="user-link text-decoration-none d-flex align-items-center justify-content-between">
+                        <div class="user-container d-flex justify-content-center align-items-center">
+                            <img class="user-image rounded-circle"
+                                 src="@(investor.AvatartUrl ?? Url.Content("~/assets/user/image.png"))"
+                                 alt="user img" />
 
-                    <div class="d-md-none d-lg-none d-xl-block">
-                        <p>Number of projects: 5</p>
-                        <p>Profit: 100.000.000 VND</p>
-                    </div>
-                </a>
+                            <p>@investor.FullName</p>
+                        </div>
 
-                <a href="#"
-                   class="user-link text-decoration-none d-flex align-items-center justify-content-between">
-                    <div class="user-container d-flex justify-content-center align-items-center">
-                        <img class="user-image rounded-circle"
-                             src="../assets/user/image.png"
-                             alt="user img" />
-                        <p>Name</p>
-                    </div>
-
-                    <div class="d-md-none d-lg-none d-xl-block">
-                        <p>Number of projects: 5</p>
-                        <p>Profit: 100.000.000 VND</p>
-                    </div>
-                </a>
+                        <div class="d-md-none d-lg-none d-xl-block">
+                            <p>Number of contract: @investor.NumberOfContract</p>
+                            <p>Profit: @investor.Profit VND</p>
+                        </div>
+                    </a>
+                }
             </section>
         </div>
 
@@ -220,6 +164,6 @@
     </aside>
 </div>
 
-@section Scripts {
+@* @section Scripts {
     <script src="~/js/loadStartup.js" asp-append-version="true"></script>
-}
+} *@

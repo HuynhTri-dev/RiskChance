@@ -11,9 +11,7 @@ namespace RiskChance.Models
     {
         public string HoTen { get; set; } = string.Empty;
 
-        public string AvatarUrl { get; set; } = "~/assets/user/image.png"; // Ảnh mặc định
-
-        public string VaiTro { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = "/assets/user/image.png"; // Ảnh mặc định
 
         public DateTime NgayTao { get; set; } = DateTime.Now;
 
