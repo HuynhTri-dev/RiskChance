@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Thống kê quan trọng -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Startup đang chờ xét duyệt</h6>
+                <p class="count">15</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Tin tức đang chờ xét duyệt</h6>
+                <p class="count">8</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Lượt truy cập hôm nay</h6>
+                <p class="count">1024</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Yêu cầu chỉnh sửa</h6>
+                <p class="count">5</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ thống kê -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h6>Thống kê truy cập</h6>
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6>Tỉ lệ loại hình startup</h6>
+                <canvas id="startupPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Placeholder cho dữ liệu thống kê
+    var ctx1 = document.getElementById('trafficChart').getContext('2d');
+    var trafficChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'],
+            datasets: [{
+                label: 'Lượt truy cập',
+                data: [100, 200, 150, 300, 250, 400, 350],
+                borderColor: 'blue',
+                fill: false
+            }]
+        }
+    });
+
+    var ctx2 = document.getElementById('startupPieChart').getContext('2d');
+    var startupPieChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: ['Công nghệ', 'Giáo dục', 'Y tế', 'Dịch vụ'],
+            datasets: [{
+                data: [40, 30, 20, 10],
+                backgroundColor: ['red', 'blue', 'green', 'orange']
+            }]
+        }
+    });
+</script>

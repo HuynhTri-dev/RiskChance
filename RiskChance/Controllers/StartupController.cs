@@ -35,7 +35,7 @@ namespace QuanLyStartup.Controllers
                                 })
                                 .OrderByDescending(s => s.DiemTrungBinh)
                                 .Take(4)
-                                .Join(_context.Startups,//.Where(st => st.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet),
+                                .Join(_context.Startups.Where(st => st.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet),
                                       dg => dg.IDStartup,
                                       st => st.IDStartup,
                                       (dg, st) => new TopStartupModelView
@@ -48,7 +48,7 @@ namespace QuanLyStartup.Controllers
                                       })
                                 .ToListAsync();
 
-            model.StartupList = await _context.Startups.Include(s => s.LinhVuc).ToListAsync();//.Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet).ToListAsync();
+            model.StartupList = await _context.Startups.Include(s => s.LinhVuc).Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet).ToListAsync();
 
             model.TopBusiness = await _context.Startups
                                              .GroupBy(s => s.IDLinhVuc)

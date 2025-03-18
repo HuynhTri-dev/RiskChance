@@ -3,6 +3,7 @@ using RiskChance.Data;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Models;
 using Microsoft.Extensions.DependencyInjection;
+using RiskChance.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Bắt buộc cookie hoạt động
 });
 
+// Build SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 
@@ -34,7 +38,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var roles = new string[] { "Admin", "Founder", "Investor" };
 
     foreach (var role in roles)
@@ -42,19 +45,6 @@ using (var scope = app.Services.CreateScope())
         if (!roleManager.RoleExistsAsync(role).Result)
         {
             roleManager.CreateAsync(new IdentityRole(role)).Wait();
-        }
-    }
-
-    var adminEmail = "admin@gmail.com";
-    var adminPassword = "Admin@1109";
-
-    if (await userManager.FindByEmailAsync(adminEmail) == null)
-    {
-        var adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail };
-        var createAdmin = await userManager.CreateAsync(adminUser, adminPassword);
-        if (createAdmin.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
         }
     }
 }
@@ -77,10 +67,19 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapAreaControllerRoute(
+    name: "Admins",
+    areaName: "Admins",
+    pattern: "Admins/{controller=Dashboard}/{action=Index}/{id?}"
+);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+// Cau hinh signalR
+app.MapHub<StatusStartupHub>("/statusStartupHub");
 
 app.Run();

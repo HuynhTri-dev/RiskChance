@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Manage Startup";
+}
+@using RiskChance.Models;
+
+@model IEnumerable<RiskChance.Models.Startup>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped w-100">
+            <thead>
+                <tr>
+                    <th class="checkbox-column"><input type="checkbox"></th>
+                    <th class="id-column">ID</th>
+                    <th>Tên Startup</th>
+                    <th>Lĩnh vực</th>
+                    <th class="image-column">Ảnh</th>
+                    <th class="date-column">Ngày đăng</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="startupTable">
+                @foreach (var startup in Model)
+                {
+                    <tr id="row-@startup.IDStartup">
+                        <td class="checkbox-column"><input type="checkbox"></td>
+                        <td class="id-column">@startup.IDStartup</td>
+                        <td><a href="#" class="table-link">@startup.TenStartup</a></td>
+                        <td>Công nghệ</td>
+                        <td class="image-column"><img src="@startup.LogoUrl" alt="Startup A" width="50" height="50" class="rounded-circle"></td>
+                        <td class="date-column">@startup.NgayTao.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <button class="btn @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "btn-warning":
+                                                startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "btn-success" : "btn-danger") btn-sm status-btn text-white fw-bold"
+                                    data-id="@startup.IDStartup"
+                                    data-status="@((int)startup.TrangThaiXetDuyet)"
+                                    onclick="updateStatus(this)">
+                                @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Chờ duyệt" :
+                                    startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@startup.IDStartup" onclick="deleteStartup(this)">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Kết nối SignalR
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/statusStartupHub")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.start()
+        .then(() => console.log("SignalR connected"))
+        .catch(err => console.error("SignalR error:", err.toString()));
+
+    // Nhận sự kiện từ Server và cập nhật trạng thái button
+    connection.on("ReceiveStatusUpdate", function (id, newStatus) {
+        let button = document.querySelector(`button[data-id='${id}']`);
+        if (button) {
+            updateButtonUI(button, newStatus);
+        }
+    });
+
+    // Gọi API để cập nhật trạng thái startup
+    function updateStatus(button) {
+        let id = button.dataset.id;
+
+        $.post("/Admins/ManagerStartup/UpdateStatus", { id: id }, function (result) {
+            if (result.success) {
+                updateButtonUI(button, result.newStatus);
+            } else {
+                alert("Lỗi khi cập nhật trạng thái!");
+            }
+        }).fail(function () {
+            alert("Lỗi kết nối đến server!");
+        });
+    }
+
+    // Cập nhật UI của button theo trạng thái
+    function updateButtonUI(button, newStatus) {
+        button.dataset.status = newStatus;
+        if (newStatus === 0) {
+            button.textContent = "Chờ duyệt";
+            button.className = "btn btn-warning btn-sm status-btn text-white fw-bold";
+        } else if (newStatus === 1) {
+            button.textContent = "Đã duyệt";
+            button.className = "btn btn-success btn-sm status-btn text-white fw-bold";
+        } else {
+            button.textContent = "Từ chối";
+            button.className = "btn btn-danger btn-sm status-btn text-white fw-bold";
+        }
+    }
+
+    // Gọi API để xóa startup
+    function deleteStartup(button) {
+        let id = button.dataset.id;
+
+        if (confirm("Bạn có chắc chắn muốn xóa startup này?")) {
+            $.post("/Admins/ManagerStartup/DeleteStartup", { id: id }, function (result) {
+                if (result.success) {
+                    document.getElementById("row-" + id).remove();
+                } else {
+                    alert("Lỗi khi xóa startup!");
+                }
+            }).fail(function () {
+                alert("Lỗi kết nối đến server!");
+            });
+        }
+    }
+</script>

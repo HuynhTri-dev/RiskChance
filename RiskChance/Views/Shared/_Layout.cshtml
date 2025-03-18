@@ -72,7 +72,7 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <li class="nav-item">
-                                            <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Identity" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                            <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                         </li>
                                     }
                                     <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
@@ -95,7 +95,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Identity" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                     </li>
                                 }
                                 <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
