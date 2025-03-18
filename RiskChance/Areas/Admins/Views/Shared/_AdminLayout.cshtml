@@ -80,14 +80,14 @@
                 </a>
             </li>
 
-            <li class="nav-item @(ViewBag.ActivePage == "dashboard" ? "active" : "")">
+            <li class="nav-item @(ViewBag.ActiveFeature == "dashboard" ? "active" : "")">
                 <a class="nav-link" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
 
-            <li class="nav-item @(ViewBag.ActivePage == "manageStartup" ? "active" : "")">
+            <li class="nav-item @(ViewBag.ActiveFeature == "manageStartup" ? "active" : "")">
                 <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManagerStartup" asp-action="Index">
                     <i class="fas fa-fw fa-newspaper"></i>
                     <span>Quản lý Startup</span>
