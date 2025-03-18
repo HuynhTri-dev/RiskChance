@@ -18,7 +18,7 @@ $(document).ready(function () {
 
   // Active input for other business
   $("#Business").change(function () {
-      if ($(this).val() === "1") {
+      if ($(this).val() === "0") {
         $("#otherBusiness").removeClass("d-none").focus();
     } else {
         $("#otherBusiness").addClass("d-none").val("");

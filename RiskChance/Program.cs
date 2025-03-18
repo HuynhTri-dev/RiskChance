@@ -2,6 +2,7 @@
 using RiskChance.Data;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,14 @@ builder.Services.AddIdentity<NguoiDung, IdentityRole>()
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddDistributedMemoryCache(); // Bộ nhớ tạm
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian hết hạn session
+    options.Cookie.HttpOnly = true; // Chỉ truy cập qua HTTP
+    options.Cookie.IsEssential = true; // Bắt buộc cookie hoạt động
+});
+
 var app = builder.Build();
 
 
@@ -25,13 +34,27 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = { "Admin", "Founder", "Investor" };
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var roles = new string[] { "Admin", "Founder", "Investor" };
 
     foreach (var role in roles)
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        if (!roleManager.RoleExistsAsync(role).Result)
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            roleManager.CreateAsync(new IdentityRole(role)).Wait();
+        }
+    }
+
+    var adminEmail = "admin@gmail.com";
+    var adminPassword = "Admin@1109";
+
+    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    {
+        var adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail };
+        var createAdmin = await userManager.CreateAsync(adminUser, adminPassword);
+        if (createAdmin.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
         }
     }
 }
@@ -50,6 +73,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

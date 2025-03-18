@@ -2,42 +2,29 @@
 {
     public class DocumentUtil
     {
-        private async Task<string> SaveAsync(IFormFile file)
+        public static async Task<string> SaveAsync(IFormFile image)
         {
-            if (file == null || file.Length == 0)
-            {
-                throw new ArgumentException("File không hợp lệ.");
-            }
+            if (image == null || image.Length == 0)
+                throw new ArgumentException("Ảnh không hợp lệ.");
 
-            // Chỉ cho phép các định dạng PDF, DOC, DOCX
-            var allowedExtensions = new[] { ".pdf", ".doc", ".docx" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            var allowedExtensions = new[] { ".doc", ".pdf", ".docx" };
+            var extension = Path.GetExtension(image.FileName).ToLower();
+            if (!allowedExtensions.Contains(extension))
+                throw new ArgumentException("Chỉ hỗ trợ các file doc, pdf, docx");
 
-            if (!allowedExtensions.Contains(fileExtension))
-            {
-                throw new ArgumentException("Chỉ hỗ trợ các file có định dạng PDF, DOC, DOCX.");
-            }
-
-            // Tạo thư mục nếu chưa có
             var uploadsFolder = Path.Combine("wwwroot", "upload", "documents");
-
             if (!Directory.Exists(uploadsFolder))
-            {
                 Directory.CreateDirectory(uploadsFolder);
-            }
 
-            // Đổi tên file để tránh trùng
-            var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // Lưu file vào thư mục
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(fileStream);
+                await image.CopyToAsync(fileStream);
             }
 
-            // Trả về đường dẫn file để lưu vào DB (đường dẫn tương đối)
-            return $"/upload/documents/{uniqueFileName}";
+            return $"/upload/documents/{uniqueFileName}"; // Đường dẫn tương đối
         }
 
     }

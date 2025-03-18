@@ -127,6 +127,7 @@ namespace QuanLyStartup.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
                 return View(startup);
             }
 
@@ -149,6 +150,7 @@ namespace QuanLyStartup.Controllers
                 if (linhVuc == null)
                 {
                     ModelState.AddModelError("IDLinhVuc", "Lĩnh vực không hợp lệ.");
+                    ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
                     return View(startup);
                 }
             }
@@ -178,7 +180,9 @@ namespace QuanLyStartup.Controllers
             _context.Startups.Add(newStartup);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            HttpContext.Session.SetInt32("StartupID", newStartup.IDStartup);
+
+            return RedirectToAction("Create", "GiayToes");
         }
 
         // Update

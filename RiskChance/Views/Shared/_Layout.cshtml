@@ -69,6 +69,12 @@
                                     <li class="nav-item">
                                         <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-controller="News" asp-action="Index">News</a>
                                     </li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Identity" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                        </li>
+                                    }
                                     <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
                                 </ul>
                             </div>
@@ -86,6 +92,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-controller="News" asp-action="Index">News</a>
                                 </li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Identity" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                    </li>
+                                }
                                 <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
                             </ul>
                         </div>

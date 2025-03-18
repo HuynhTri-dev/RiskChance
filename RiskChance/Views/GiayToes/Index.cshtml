@@ -1,0 +1,66 @@
+﻿@model IEnumerable<RiskChance.Models.GiayTo>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FileGiayTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoaiFile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoiDung)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NgayTao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TenGiayTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Startup)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileGiayTo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoaiFile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoiDung)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayTao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenGiayTo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Startup.IDNguoiDung)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IDGiayTo">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IDGiayTo">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IDGiayTo">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

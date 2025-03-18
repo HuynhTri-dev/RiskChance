@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Data;
 using RiskChance.Models;
-using RiskChance.Models.ViewModel;
+using RiskChance.Models.ViewModel.TinTucViewModel;
+using RiskChance.Utils;
 
 namespace QuanLyStartup.Controllers
 {
     public class NewsController : Controller
     {
         private readonly ApplicationDBContext _context;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public NewsController(ApplicationDBContext context)
+        public NewsController(ApplicationDBContext context, UserManager<NguoiDung> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -34,25 +38,25 @@ namespace QuanLyStartup.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> LoadNews(int page = 1, int pageSize = 6)
-        {
-            var news = await _context.TinTucs
-                .OrderByDescending(t => t.NgayDang)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(t => new
-                {
-                    t.IDTinTuc,
-                    t.NoiDung,
-                    t.ImgTinTuc,
-                    t.NgayDang,
-                    NguoiDang = t.NguoiDung != null ? t.NguoiDung.HoTen : "Ẩn danh" // Lấy tên người đăng
-                })
-                .ToListAsync();
+        //[HttpGet]
+        //public async Task<IActionResult> LoadNews(int page = 1, int pageSize = 6)
+        //{
+        //    var news = await _context.TinTucs
+        //        .OrderByDescending(t => t.NgayDang)
+        //        .Skip((page - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Select(t => new
+        //        {
+        //            t.IDTinTuc,
+        //            t.NoiDung,
+        //            t.ImgTinTuc,
+        //            t.NgayDang,
+        //            NguoiDang = t.NguoiDung != null ? t.NguoiDung.HoTen : "Ẩn danh" // Lấy tên người đăng
+        //        })
+        //        .ToListAsync();
 
-            return Json(news);
-        }
+        //    return Json(news);
+        //}
 
 
         // Them
@@ -63,13 +67,13 @@ namespace QuanLyStartup.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(TinTucViewModel model, IFormFile imageUrl)
+        public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile imageUrl)
         {
             if (ModelState.IsValid)
             {
                 if (imageUrl != null)
                 {
-                    model.ImgTinTuc = await SaveImage(imageUrl);
+                    model.ImgTinTuc = await ImageUtil.SaveAsync(imageUrl);
                 }
 
                 var tinTuc = new TinTuc()
@@ -77,7 +81,7 @@ namespace QuanLyStartup.Controllers
                     ImgTinTuc = model.ImgTinTuc,
                     NoiDung = model.NoiDung,
                     NgayDang = DateTime.Now,
-                    IDNguoiDung = "1", // Sua sau
+                    IDNguoiDung = (await _userManager.GetUserAsync(User))?.Id,
                 };
 
                 // cap nhat hashtag va hashtag tin tuc
@@ -108,17 +112,6 @@ namespace QuanLyStartup.Controllers
             }
             
             return View(model);
-        }
-
-        private async Task<string> SaveImage(IFormFile image)
-        {
-        
-            var savePath = Path.Combine("wwwroot/upload/images", image.FileName);
-            using (var fileStream = new FileStream(savePath, FileMode.Create))
-            {
-                await image.CopyToAsync(fileStream);
-            }
-            return "/upload/images/" + image.FileName; // Trả về đường dẫn tương đối
         }
 
         // Sua

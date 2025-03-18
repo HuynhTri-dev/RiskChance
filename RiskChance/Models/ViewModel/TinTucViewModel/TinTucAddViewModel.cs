@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RiskChance.Models.ViewModel
+namespace RiskChance.Models.ViewModel.TinTucViewModel
 {
-    public class TinTucViewModel
+    public class TinTucAddViewModel
     {
         public string? ImgTinTuc { get; set; } = string.Empty;
 

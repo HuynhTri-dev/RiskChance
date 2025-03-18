@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/css/news.css" asp-append-version="true" />
 }
 
+<div class="main-container row mt-4 mb-4 mx-auto"> 
 <!-- News container -->
 <div class="news-container col-md-8">
     <!-- Dang bai -->
@@ -79,8 +80,51 @@
     </div>
 </div>
 <!-- aside -->
-<aside class="sidebar-container col-md-4"></aside>
+<aside class="sidebar-container col-md-4">
+    <div class="top-posts card p-3 mb-3">
+        <h5 class="card-title" style="color: var(--primary-color)">
+            <i class="fa-solid fa-thumbtack"></i> Top News
+        </h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center"
+                each="post in Model.TopPosts">
+                <img src="../assets/univer-background.png"
+                     alt="Thumbnail"
+                     class="rounded me-2"
+                     width="50"
+                     height="50" />
+                <div>
+                    <a href="/post/post.Id"
+                       class="fw-bold text-dark text-decoration-none">post.Title</a>
+                    <small class="text-muted d-block">post.Author</small>
+                    <small class="text-muted d-block">post.SoLuotBinhLuan</small>
+                </div>
+            </li>
+        </ul>
+    </div>
 
+    <div class="latest-news card p-3 mb-3">
+        <h5 class="card-title" style="color: var(--secondary-color)">
+            <i class="fa-solid fa-clock"></i> Tin Tức Mới Nhất
+        </h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center"
+                each="news in Model.LatestNews">
+                <img src="../assets/univer-background.png"
+                     alt="News Thumbnail"
+                     class="rounded me-2"
+                     width="60"
+                     height="60" />
+                <div>
+                    <a href="/news/news.Id"
+                       class="fw-bold text-dark text-decoration-none">news.Title</a>
+                    <small class="text-muted d-block">news.Date </small>
+                </div>
+            </li>
+        </ul>
+    </div>
+</aside>
+</div>
 <script>
 
 </script>
