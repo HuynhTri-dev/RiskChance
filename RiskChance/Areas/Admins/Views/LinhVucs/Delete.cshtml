@@ -1,0 +1,70 @@
+﻿@model RiskChance.Models.LinhVuc
+
+@{
+    ViewData["Title"] = "Delete Confirm Business";
+}
+
+<style>
+    .delete-container {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+        .delete-container h2 {
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .delete-container p {
+            margin-bottom: 20px;
+        }
+
+    .btn-danger {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        background-color: #dc3545;
+        color: white;
+        transition: 0.3s;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .btn-secondary {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        background-color: #6c757d;
+        color: white;
+        transition: 0.3s;
+        margin-left: 10px;
+    }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+</style>
+
+<div class="delete-container">
+    <h2>⚠️ Xóa Lĩnh Vực</h2>
+    <p>Bạn có chắc muốn xóa lĩnh vực: <strong>@Model.TenLinhVuc</strong>?</p>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="IDLinhVuc" />
+        <button type="submit" class="btn-danger">🗑️ Xóa</button>
+        <a asp-action="Index" class="btn-secondary">🔙 Quay lại</a>
+    </form>
+</div>

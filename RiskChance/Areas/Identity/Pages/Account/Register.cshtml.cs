@@ -115,7 +115,10 @@ namespace RiskChance.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            Roles = _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToList();
+            Roles = _roleManager.Roles
+                                .Where(r => r.Name != "Admin")
+                                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                                .ToList();
             ReturnUrl = returnUrl;  
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -135,7 +138,10 @@ namespace RiskChance.Areas.Identity.Pages.Account
                         _logger.LogError($"Field: {error.Key}, Error: {subError.ErrorMessage}");
                     }
                 }
-                Roles = _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToList();
+                Roles = _roleManager.Roles
+                                .Where(r => r.Name != "Admin")
+                                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                                .ToList();
                 return Page();
             }
 
@@ -153,9 +159,10 @@ namespace RiskChance.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                Roles = _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToList();
-
-
+                Roles = _roleManager.Roles
+                                .Where(r => r.Name != "Admin")
+                                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                                .ToList();
                 return Page();
             }
 
@@ -166,22 +173,22 @@ namespace RiskChance.Areas.Identity.Pages.Account
                 await _userManager.AddToRoleAsync(user, Input.Role);
             }
 
-            var userId = await _userManager.GetUserIdAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                protocol: Request.Scheme);
+            //var userId = await _userManager.GetUserIdAsync(user);
+            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            //var callbackUrl = Url.Page(
+            //    "/Account/ConfirmEmail",
+            //    pageHandler: null,
+            //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+            //    protocol: Request.Scheme);
 
-            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-            {
-                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-            }
+            //if (_userManager.Options.SignIn.RequireConfirmedAccount)
+            //{
+            //    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+            //}
 
             await _signInManager.SignInAsync(user, isPersistent: false);
             return LocalRedirect(returnUrl);

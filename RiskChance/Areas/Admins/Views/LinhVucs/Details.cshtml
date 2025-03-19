@@ -1,0 +1,118 @@
+﻿@model RiskChance.Models.LinhVuc
+
+@{
+    ViewData["Title"] = "Details Business";
+}
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .details {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .table-container {
+        margin-top: 15px;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table-custom th, .table-custom td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table-custom thead {
+            background-color: #f8f9fa;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .btn-container {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-back {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        background-color: #6c757d;
+        color: white;
+        transition: 0.3s;
+    }
+
+        .btn-back:hover {
+            background-color: #545b62;
+        }
+</style>
+
+<div class="container">
+    <div class="header">
+        🔍 Chi tiết lĩnh vực: @Model.TenLinhVuc
+    </div>
+
+    <div class="details">
+        <strong>ID:</strong> @Model.IDLinhVuc
+    </div>
+
+    <div class="table-container">
+        <h3>🚀 Danh sách Startup trong lĩnh vực này</h3>
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Startup</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Startups.Any())
+                {
+                    @foreach (var startup in Model.Startups)
+                    {
+                        <tr>
+                            <td>@startup.IDStartup</td>
+                            <td>@startup.TenStartup</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center">Không có startup nào trong lĩnh vực này.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="btn-container">
+        <a asp-action="Index" class="btn-back">🔙 Quay lại danh sách</a>
+    </div>
+</div>

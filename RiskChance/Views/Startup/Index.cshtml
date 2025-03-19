@@ -20,29 +20,28 @@
     <div class="startup-container col-md-8">
         <!-- Create poster startup -->
         <!-- Chỉ có startup mới hiện khung này -->
-        @if (SignInManager.IsSignedIn(User))
-        {
+        
             <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
-                <div class="post-box d-flex justify-content-between align-items-center">
-                    <a href="#" class="text-decoration-none">
-                        <div class="user-info d-flex justify-content-center align-items-center">
-                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
-                                 alt="anh dai dien"
-                                 class="user-image rounded-circle" />
-                            <p class="d-none d-lg-block">@ViewBag.User.HoTen</p>
-                        </div>
-                    </a>
-
-                    @if (User.IsInRole("Founder"))
+                <div class="post-box d-flex justify-content-center align-items-center">
+                    @if (SignInManager.IsSignedIn(User))
                     {
+                        <a href="#" class="text-decoration-none" style="margin-right: 10px">
+                            <div class="user-info d-flex justify-content-center align-items-center">
+                                <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
+                                     alt="anh dai dien"
+                                     class="user-image rounded-circle" />
+                                <p class="d-none d-lg-block">@ViewBag.User.HoTen</p>
+                            </div>
+                        </a>
+                    }
                         <a asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
                             <p>Create Startup</p>
                         </a>
-                    }
+                    
                 </div>
             </div>
             
-        }
+        
         <!-- Outstanding startup -->
         <div class="outstanding-startups-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Outstanding Startups</h3>

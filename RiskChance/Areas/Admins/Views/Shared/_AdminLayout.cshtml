@@ -90,35 +90,28 @@
             <li class="nav-item @(ViewBag.ActiveFeature == "manageStartup" ? "active" : "")">
                 <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManagerStartup" asp-action="Index">
                     <i class="fas fa-fw fa-newspaper"></i>
-                    <span>Quản lý Startup</span>
+                    <span>Manager Startups</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link menu-link" href="/Admin/DocumentsValidation">
                     <i class="fas fa-fw fa-file-alt"></i>
-                    <span>Kiểm tra giấy tờ</span>
+                    <span>Checking Documents</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link menu-link" href="/Admin/FieldManagement">
+            <li class="nav-item @(ViewBag.ActiveFeature == "manageBusiness" ? "active" : "")">
+                <a class="nav-link menu-link" asp-area="Admins" asp-controller="LinhVucs" asp-action="Index">
                     <i class="fas fa-fw fa-list"></i>
-                    <span>Quản lý lĩnh vực</span>
+                    <span>Manage Businesses</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link menu-link" href="/Admin/HashtagManagement">
                     <i class="fas fa-fw fa-hashtag"></i>
-                    <span>Quản lý Hashtag</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link menu-link" href="/Admin/Traffic">
-                    <i class="fas fa-fw fa-chart-bar"></i>
-                    <span>Lượng truy cập</span>
+                    <span>Manage Hashtags</span>
                 </a>
             </li>
 

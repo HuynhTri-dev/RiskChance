@@ -23,6 +23,8 @@ namespace QuanLyStartup.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var model = new StartupPageViewModel();
@@ -116,6 +118,7 @@ namespace QuanLyStartup.Controllers
 
         // Add
         [HttpGet]
+        [Authorize(Roles = "Founder, Admin")]
         public async Task<IActionResult> Add()
         {
             ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
@@ -123,6 +126,7 @@ namespace QuanLyStartup.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Founder, Admin")]
         public async Task<IActionResult> Add(StartupFormViewModel startup, IFormFile logoUrl)
         {
             if (!ModelState.IsValid)

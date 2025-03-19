@@ -15,10 +15,19 @@ namespace RiskChance.Models
 
         public DateTime NgayDang { get; set; } = DateTime.Now;
 
+        public TrangThaiXetDuyetEnum TrangThaiXetDuyet { get; set; } = TrangThaiXetDuyetEnum.ChoDuyet;
+
         public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
 
         public ICollection<TinTucHashtag> TinTucHashtags { get; set; } = new List<TinTucHashtag>();
+    }
+
+    public enum TrangThaiXetDuyetEnum
+    {
+        ChoDuyet = 0,
+        DaDuyet = 1,
+        TuChoi = 2
     }
 }

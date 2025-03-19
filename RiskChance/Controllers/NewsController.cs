@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,10 @@ namespace QuanLyStartup.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            // Top hahstag
             var topHashtags = await _context.Hashtags
             .Select(h => new
             {
@@ -61,12 +64,14 @@ namespace QuanLyStartup.Controllers
 
         // Them
         [HttpGet]
+        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile imageUrl)
         {
             if (ModelState.IsValid)
@@ -115,6 +120,77 @@ namespace QuanLyStartup.Controllers
         }
 
         // Sua
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var tinTuc = await _context.TinTucs.Include(t => t.TinTucHashtags).ThenInclude(th => th.Hashtag).FirstOrDefaultAsync(t => t.IDTinTuc == id);
+            if (tinTuc == null) return NotFound();
+
+            return View(new TinTucAddViewModel
+            {
+                NoiDung = tinTuc.NoiDung,
+                ImgTinTuc = tinTuc.ImgTinTuc,
+                Hashtags = tinTuc.TinTucHashtags.Select(h => h.Hashtag.TenHashtag).ToList()
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(TinTucAddViewModel model, IFormFile? imageUrl)
+        {
+            var tinTuc = await _context.TinTucs.Include(t => t.TinTucHashtags).FirstOrDefaultAsync(t => t.IDTinTuc == model.IDTinTuc);
+            if (tinTuc == null) return NotFound();
+
+            tinTuc.NoiDung = model.NoiDung;
+            if (imageUrl != null) tinTuc.ImgTinTuc = await ImageUtil.SaveAsync(imageUrl);
+
+            tinTuc.TinTucHashtags.Clear();
+            if (model.Hashtags?.Any() == true)
+            {
+                foreach (var tag in model.Hashtags)
+                {
+                    var existingTag = await _context.Hashtags.FirstOrDefaultAsync(h => h.TenHashtag == tag)
+                                     ?? new Hashtag { TenHashtag = tag };
+
+                    _context.Hashtags.Add(existingTag);
+                    await _context.SaveChangesAsync();
+
+                    tinTuc.TinTucHashtags.Add(new TinTucHashtag { IDHashtag = existingTag.IDHashtag });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
         // Xoa
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tinTuc = await _context.TinTucs.FindAsync(id);
+            if (tinTuc == null) return NotFound();
+
+            _context.TinTucs.Remove(tinTuc);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        //Search
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string keyword)
+        {
+            var query = _context.TinTucs
+                .Include(t => t.NguoiDung)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(t => t.NoiDung.Contains(keyword));
+            }
+
+            var result = await query.ToListAsync();
+            return View("Index", result); // Load lại trang Index với kết quả tìm kiếm
+        }
     }
 }

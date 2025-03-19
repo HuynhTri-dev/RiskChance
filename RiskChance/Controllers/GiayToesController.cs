@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace RiskChance.Controllers
         }
 
         // GET: GiayToes
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDBContext = _context.GiayTos.Include(g => g.Startup);
@@ -33,6 +35,7 @@ namespace RiskChance.Controllers
         }
 
         // GET: GiayToes/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,6 +55,7 @@ namespace RiskChance.Controllers
         }
 
         // GET: GiayToes/Create
+        [Authorize(Roles = "Founder, Admin")]
         public async Task<IActionResult> Create()
         {
             int? startupId = HttpContext.Session.GetInt32("StartupID");
@@ -78,6 +82,7 @@ namespace RiskChance.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Founder, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GiayToPageViewModel model)
         {

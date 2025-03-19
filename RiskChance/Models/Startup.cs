@@ -42,11 +42,4 @@ namespace RiskChance.Models
         public ICollection<GiayTo> GiayTos { get; set; } = new List<GiayTo>();
         public ICollection<HopDongDauTu> HopDongDauTus { get; set; } = new List<HopDongDauTu>();
     }
-
-    public enum TrangThaiXetDuyetEnum
-    {
-        ChoDuyet = 0,
-        DaDuyet = 1,
-        TuChoi = 2
-    }
 }
