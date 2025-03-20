@@ -12,7 +12,8 @@ namespace RiskChance.Models
 
         public string? AnhXacNhan { get; set; }
 
-        public DateTime? NgayKyKet { get; set; }
+        [Required]
+        public DateTime NgayKyKet { get; set; } = DateTime.Now;
 
         public decimal? TongTien { get; set; }
 
@@ -20,15 +21,23 @@ namespace RiskChance.Models
 
         public string? NoiDungHopDong { get; set; }
 
-        public string? TrangThai { get; set; }
+        [Required]
+        public TrangThaiKyKetEnum TrangThaiKyKet { get; set; } = TrangThaiKyKetEnum.DaGui;
 
         // Khóa ngoại
-        public int IDStartup { get; set; }
+        public int? IDStartup { get; set; }
         [ForeignKey("IDStartup")]
         public Startup? Startup { get; set; }
 
         public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
+    }
+
+    public enum TrangThaiKyKetEnum
+    {
+        DaGui = 0,    // Hợp đồng đã gửi cho đối tác và chờ duyệt
+        DaDuyet = 1,   // Hợp đồng đã được duyệt và có hiệu lực
+        BiTuChoi = 2   // Hợp đồng đã bị từ chối
     }
 }

@@ -25,19 +25,17 @@
                 <div class="post-box d-flex justify-content-center align-items-center">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <a href="#" class="text-decoration-none" style="margin-right: 10px">
+                        <a href="#" class="text-decoration-none" style="margin-right: 20px">
                             <div class="user-info d-flex justify-content-center align-items-center">
-                                <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
+                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
                                      alt="anh dai dien"
                                      class="user-image rounded-circle" />
-                                <p class="d-none d-lg-block">@ViewBag.User.HoTen</p>
                             </div>
                         </a>
                     }
                         <a asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
                             <p>Create Startup</p>
                         </a>
-                    
                 </div>
             </div>
             
@@ -73,8 +71,10 @@
         <div class="search-container d-flex justify-content-center mt-4 mb-4 container">
             <div class="search-box position-relative">
                 <input type="text"
+                       id="searchInput"
                        class="form-control search-input"
-                       placeholder="Tên startup bạn cần tìm" />
+                       placeholder="Name startup or business..." 
+                       onkeyup="searchStartup(event)" />
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
             </div>
         </div>
@@ -82,29 +82,8 @@
         <!-- Startup list -->
         <div class="startup-list-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Startup List</h3>
-            <section class="startup-list row g-3" id="startup-container">
-                @foreach (var startup in Model.StartupList)
-                {
-                    <div class="col-lg-4 col-md-6 col-12 startup-item">
-                        <div class="startup-card">
-                            <img class="startup-image"
-                                 src="@startup.LogoUrl"
-                                 alt="Startup Image" />
-
-                            <div class="startup-info">
-                                <h5 class="fw-bold">@startup.TenStartup</h5>
-                                <p class="text-muted mb-2">@startup.LinhVuc.TenLinhVuc</p>
-                                <a class="btn btn-outline-primary btn-sm fw-bold">
-                                    Startup
-                                </a>
-
-                                <a class="btn btn-outline-success btn-sm fw-bold">
-                                    Invest
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                }
+            <section id="startupResults" class="startup-list row g-3">
+                @await Html.PartialAsync("_StartupListPartial", Model.StartupList)
             </section>
 
             <!-- Loading more -->
@@ -118,7 +97,7 @@
         <!-- Các lĩnh vực top đầu -->
         <div class="top-fields-container mx-auto">
             <h4 class="h4 mb-3 fw-bold">Top Business</h4>
-            <section class="top-fields-list">
+            <section class="top-fields-list">            
                 @foreach (var business in Model.TopBusiness)
                 {
                     <a href="#" class="field-link text-decoration-none">
@@ -162,6 +141,33 @@
         <div id="detailStartup"></div>
     </aside>
 </div>
+
+<script>
+    function searchStartup(event) {
+        let keyword = document.getElementById("searchInput").value.trim();
+
+        // Nếu ô input trống -> Tự động tải lại toàn bộ danh sách
+        if (keyword === "") {
+            fetch(`/Startup/SearchStartups?query=`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("startupResults").innerHTML = data;
+                })
+                .catch(error => console.error("Lỗi tải danh sách startup:", error));
+            return;
+        }
+
+        // Nếu nhấn phím Enter, thực hiện tìm kiếm
+        if (event.key === "Enter") {
+            fetch(`/Startup/SearchStartups?query=${encodeURIComponent(keyword)}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("startupResults").innerHTML = data;
+                })
+                .catch(error => console.error("Lỗi tìm kiếm:", error));
+        }
+    }
+</script>
 
 @* @section Scripts {
     <script src="~/js/loadStartup.js" asp-append-version="true"></script>

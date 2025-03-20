@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiskChance.Data;
 
@@ -11,9 +12,11 @@ using RiskChance.Data;
 namespace RiskChance.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250320033346_ChangeReferencesBinhLuanAndTinTuc")]
+    partial class ChangeReferencesBinhLuanAndTinTuc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,6 +178,9 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayBinhLuan")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("NhanXet")
                         .HasColumnType("nvarchar(max)");
 
@@ -183,6 +189,8 @@ namespace RiskChance.Migrations
                     b.HasIndex("IDNguoiDung");
 
                     b.HasIndex("IDTinTuc");
+
+                    b.HasIndex("NguoiDungId");
 
                     b.ToTable("BinhLuanTinTuc");
                 });
@@ -199,7 +207,7 @@ namespace RiskChance.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("IDNguoiDung")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IDStartup")
                         .HasColumnType("int");
@@ -207,14 +215,17 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayDanhGia")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("NhanXet")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IDDanhGia");
 
-                    b.HasIndex("IDNguoiDung");
-
                     b.HasIndex("IDStartup");
+
+                    b.HasIndex("NguoiDungId");
 
                     b.ToTable("DanhGiaStartup");
                 });
@@ -463,6 +474,9 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayGui")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("NoiDung")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -473,6 +487,8 @@ namespace RiskChance.Migrations
                     b.HasKey("IDNoti");
 
                     b.HasIndex("IDNguoiDung");
+
+                    b.HasIndex("NguoiDungId");
 
                     b.ToTable("ThongBao");
                 });
@@ -489,6 +505,9 @@ namespace RiskChance.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IDNguoiNhan")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NguoiGuiId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NoiDung")
@@ -508,6 +527,8 @@ namespace RiskChance.Migrations
                     b.HasIndex("IDNguoiGui");
 
                     b.HasIndex("IDNguoiNhan");
+
+                    b.HasIndex("NguoiGuiId");
 
                     b.ToTable("TinNhan");
                 });
@@ -529,6 +550,9 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayDang")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("NoiDung")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -539,6 +563,8 @@ namespace RiskChance.Migrations
                     b.HasKey("IDTinTuc");
 
                     b.HasIndex("IDNguoiDung");
+
+                    b.HasIndex("NguoiDungId");
 
                     b.ToTable("TinTuc");
                 });
@@ -551,9 +577,17 @@ namespace RiskChance.Migrations
                     b.Property<int>("IDHashtag")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TinTucHashtagIDHashtag")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TinTucHashtagIDTinTuc")
+                        .HasColumnType("int");
+
                     b.HasKey("IDTinTuc", "IDHashtag");
 
                     b.HasIndex("IDHashtag");
+
+                    b.HasIndex("TinTucHashtagIDTinTuc", "TinTucHashtagIDHashtag");
 
                     b.ToTable("TinTucHashtag");
                 });
@@ -611,8 +645,8 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("RiskChance.Models.BinhLuanTinTuc", b =>
                 {
-                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
-                        .WithMany("BinhLuanTinTucs")
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
+                        .WithMany()
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -622,6 +656,10 @@ namespace RiskChance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
+                        .WithMany()
+                        .HasForeignKey("NguoiDungId");
+
                     b.Navigation("NguoiDung");
 
                     b.Navigation("TinTuc");
@@ -629,15 +667,15 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("RiskChance.Models.DanhGiaStartup", b =>
                 {
-                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
-                        .WithMany()
-                        .HasForeignKey("IDNguoiDung");
-
                     b.HasOne("RiskChance.Models.Startup", "Startup")
                         .WithMany("DanhGiaStartups")
                         .HasForeignKey("IDStartup")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
+                        .WithMany()
+                        .HasForeignKey("NguoiDungId");
 
                     b.Navigation("NguoiDung");
 
@@ -693,22 +731,32 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("RiskChance.Models.ThongBao", b =>
                 {
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
+                        .WithMany()
+                        .HasForeignKey("IDNguoiDung")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
                         .WithMany()
-                        .HasForeignKey("IDNguoiDung");
+                        .HasForeignKey("NguoiDungId");
 
                     b.Navigation("NguoiDung");
                 });
 
             modelBuilder.Entity("RiskChance.Models.TinNhan", b =>
                 {
-                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiGui")
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
                         .WithMany()
-                        .HasForeignKey("IDNguoiGui");
+                        .HasForeignKey("IDNguoiGui")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("RiskChance.Models.NguoiDung", "NguoiNhan")
                         .WithMany()
                         .HasForeignKey("IDNguoiNhan");
+
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiGui")
+                        .WithMany()
+                        .HasForeignKey("NguoiGuiId");
 
                     b.Navigation("NguoiGui");
 
@@ -717,10 +765,14 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("RiskChance.Models.TinTuc", b =>
                 {
-                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
-                        .WithMany("TinTucs")
+                    b.HasOne("RiskChance.Models.NguoiDung", null)
+                        .WithMany()
                         .HasForeignKey("IDNguoiDung")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("RiskChance.Models.NguoiDung", "NguoiDung")
+                        .WithMany()
+                        .HasForeignKey("NguoiDungId");
 
                     b.Navigation("NguoiDung");
                 });
@@ -739,6 +791,10 @@ namespace RiskChance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RiskChance.Models.TinTucHashtag", null)
+                        .WithMany("TinTucHashtags")
+                        .HasForeignKey("TinTucHashtagIDTinTuc", "TinTucHashtagIDHashtag");
+
                     b.Navigation("Hashtag");
 
                     b.Navigation("TinTuc");
@@ -756,13 +812,9 @@ namespace RiskChance.Migrations
 
             modelBuilder.Entity("RiskChance.Models.NguoiDung", b =>
                 {
-                    b.Navigation("BinhLuanTinTucs");
-
                     b.Navigation("HopDongDauTus");
 
                     b.Navigation("Startups");
-
-                    b.Navigation("TinTucs");
                 });
 
             modelBuilder.Entity("RiskChance.Models.Startup", b =>
@@ -778,6 +830,11 @@ namespace RiskChance.Migrations
                 {
                     b.Navigation("BinhLuanTinTucs");
 
+                    b.Navigation("TinTucHashtags");
+                });
+
+            modelBuilder.Entity("RiskChance.Models.TinTucHashtag", b =>
+                {
                     b.Navigation("TinTucHashtags");
                 });
 #pragma warning restore 612, 618

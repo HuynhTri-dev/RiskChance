@@ -101,6 +101,22 @@ namespace QuanLyStartup.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchStartups(string query)
+        {
+            var startups = await _context.Startups
+                .Include(s => s.LinhVuc)
+                .Where(s => s.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet &&
+                            (string.IsNullOrEmpty(query) ||
+                             s.TenStartup.Contains(query) ||
+                             (s.LinhVuc != null && s.LinhVuc.TenLinhVuc.Contains(query)))) // Tìm theo tên startup hoặc lĩnh vực
+                .ToListAsync();
+
+            return PartialView("_StartupListPartial", startups);
+        }
+
+
+
         //[HttpGet]
         //public async Task<IActionResult> LoadMore(int page = 1)
         //{

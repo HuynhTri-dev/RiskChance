@@ -15,6 +15,7 @@ namespace RiskChance.Models
 
         public DateTime NgayDang { get; set; } = DateTime.Now;
 
+        [Required]
         public TrangThaiXetDuyetEnum TrangThaiXetDuyet { get; set; } = TrangThaiXetDuyetEnum.ChoDuyet;
 
         public string? IDNguoiDung { get; set; }
@@ -22,6 +23,9 @@ namespace RiskChance.Models
         public NguoiDung? NguoiDung { get; set; }
 
         public ICollection<TinTucHashtag> TinTucHashtags { get; set; } = new List<TinTucHashtag>();
+
+        public ICollection<BinhLuanTinTuc> BinhLuanTinTucs { get; set; } = new List<BinhLuanTinTuc>();
+
     }
 
     public enum TrangThaiXetDuyetEnum

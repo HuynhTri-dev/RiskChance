@@ -18,5 +18,8 @@ namespace RiskChance.Models
         // Quan hệ 1-N
         public ICollection<Startup> Startups { get; set; } = new List<Startup>();
         public ICollection<HopDongDauTu> HopDongDauTus { get; set; } = new List<HopDongDauTu>();
+        public ICollection<BinhLuanTinTuc> BinhLuanTinTucs { get; set; } = new List<BinhLuanTinTuc>();
+        public ICollection<TinTuc> TinTucs { get; set; } = new List<TinTuc>();
+
     }
 }

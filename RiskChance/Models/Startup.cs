@@ -41,5 +41,6 @@ namespace RiskChance.Models
         // Quan hệ 1 - N với GiayTo
         public ICollection<GiayTo> GiayTos { get; set; } = new List<GiayTo>();
         public ICollection<HopDongDauTu> HopDongDauTus { get; set; } = new List<HopDongDauTu>();
+        public ICollection<DanhGiaStartup> DanhGiaStartups { get; set; } = new List<DanhGiaStartup>();
     }
 }
