@@ -33,7 +33,7 @@
                             </div>
                         </a>
                     }
-                        <a asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
+                        <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
                             <p>Create Startup</p>
                         </a>
                 </div>
@@ -46,7 +46,7 @@
             <section class="outstanding-list row mx-auto">
                 @foreach (var topStartup in Model.TopStartups)
                 {
-                    <a href="#"
+                    <a asp-area="" asp-controller="Startup" asp-action="Details" asp-route-id="@topStartup.IDStartup"
                        class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
                         <div class="startup-card text-white"
                              style="
@@ -58,7 +58,10 @@
                     ">
                             <h5 class="fw-bold">@topStartup.TenStartup</h5>
                             <p class="line-clamp-2">
-                                @topStartup.MoTa
+                                    @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
+                                    {
+                                        <i class="fa-solid fa-star star-color"></i>
+                                    }
                             </p>
                         </div>
                     </a>
@@ -167,6 +170,21 @@
                 .catch(error => console.error("Lỗi tìm kiếm:", error));
         }
     }
+
+        // Kết nối SignalR
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/statusStartupHub")
+        .build();
+
+        // Nhận sự kiện cập nhật từ Admin
+        connection.on("ReceiveStatusUpdate", function () {
+            console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+            location.reload();
+        });
+
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR error:", err));
 </script>
 
 @* @section Scripts {

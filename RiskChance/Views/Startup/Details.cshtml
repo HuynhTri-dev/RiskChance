@@ -1,0 +1,126 @@
+﻿@model RiskChance.Models.ViewModel.StartupViewModel.DetailOfStartupViewModel;
+
+@{
+    var progress = Model.Target > 0 ? (Model.AmountInvested / Model.Target * 100) : 0;
+    ViewData["Title"] = @Model.Name;
+}
+
+
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Ảnh sản phẩm -->
+        <div class="name-logo-box col-md-3 d-flex flex-column align-items-center text-center">
+            <img src="@(Model.LogoUrl ?? "../assets/logo startup/bnb_crypto_icon_264371.ico")"
+                 id="startupLogo"
+                 class="img-fluid rounded"
+                 alt="Logo Startup" />
+            <h4 class="h4 fw-bold">@Model.Name</h4>
+        </div>
+
+        <!-- Thông tin startup -->
+        <div class="col-md-9">
+            <p><span class="fw-bold">Business:</span> @Model.Business</p>
+            <p class="fw-bold">Description:</p>
+            <p class="text-justify p-2">
+                @Model.Description
+            </p>
+            <p><span class="fw-bold">Target:</span> @Model.Target?.ToString("N0") VNĐ</p>
+            <p><span class="fw-bold">Percentage of shares:</span> (@Model.PercentOfCompany)%</p>
+            <div class="target-box mb-3">
+                <p><span class="fw-bold">Amount Invented:</span> @Model.AmountInvested?.ToString("N0") VNĐ</p>
+                <div class="progress mt-2" style="height: 20px">
+                    <div class="progress-bar" style="width: @(progress)">
+                        <p class="fw-bold">@(progress)%</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Nut -->
+            <div class="d-flex justify-content-center align-items-center">
+                <button data-bs-toggle="modal"
+                        data-bs-target="#messengerModal"
+                        class="btn btn-primary fw-bold"
+                        style="margin-right: 10px">
+                    Contact
+                </button>
+                <a href="./createContact.html"
+                   class="btn btn-success fw-bold text-white">Invest</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách giấy tờ pháp lý -->
+    <h3 class="h3 fw-bold mt-4">List of Documents</h3>
+    <div id="legalDocs" class="container mx-auto mt-3 mb-3">
+        <section class="row">
+            @foreach (var doc in Model.DocumentList)
+            {
+                <div class="card shadow-sm p-2 col-md-6">
+                    <div class="card-body">
+                        <div class="doc-info">
+                            <h4 class="h4 card-title mb-1 fw-bold">@doc.TenGiayTo</h4>
+                            <p class="card-text text-muted">
+                                @doc.LoaiFile
+                            </p>
+                            <p class="card-text text-muted">
+                                @doc.NoiDung
+                            </p>
+                            <p class="card-text text-muted">
+                                @doc.NgayTao.ToString("dd/MM/yyyy HH:mm")
+                            </p>
+                        </div>
+                        <div class="download-btn mt-3 d-flex justify-content-end">
+                            
+                            <a href="@doc.FileGiayTo"
+                               class="btn btn-primary fw-bold text-white"
+                               target="_blank">
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+
+    <!-- Binh luan -->
+    <h3 class="h3 fw-bold mt-4">Comments</h3>
+    <div id="commentSection" class="row mt-3 mb-3">
+        <!-- Khu vực nhập bình luận -->
+        <div class="col-md-6 p-3">
+            @await Component.InvokeAsync("CommentStartup", Model.IDStartup)
+        </div>
+
+        <!-- Khu vực hiển thị bình luận -->
+        <div id="commentsList"
+             class="border rounded p-3 shadow-sm bg-light mt-3 col-md-6 p-3"
+             style="max-height: 500px; overflow-y: auto">
+            @await Component.InvokeAsync("CommentEachStartup", Model.IDStartup)
+        </div>
+    </div>
+</div>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/postCommentStartupHub")
+        .build();
+
+    connection.on("ReceiveComment", function () {
+        console.log("Nhận cập nhật từ SignalR, tải lại danh sách bình luận...");
+        loadComments();
+    });
+
+    connection.start()
+        .then(() => console.log("SignalR connected"))
+        .catch(err => console.error("SignalR error:", err));
+
+    function loadComments() {
+        fetch('/CommentStartup/GetComments?idStartup=@Model.IDStartup')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("commentsList").innerHTML = data;
+            })
+            .catch(error => console.error("Lỗi khi tải lại bình luận:", error));
+    }
+
+</script>

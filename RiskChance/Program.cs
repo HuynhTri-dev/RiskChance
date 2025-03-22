@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RiskChance.Data;
 using Microsoft.EntityFrameworkCore;
-using RiskChance.Models;
-using Microsoft.Extensions.DependencyInjection;
+using RiskChance.Data;
 using RiskChance.Hubs;
+using RiskChance.Models;
+using RiskChance.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +22,7 @@ builder.Services.AddIdentity<NguoiDung, IdentityRole>()
 
 builder.Services.AddRazorPages();
 
+// Gây ra hiện tượng bị đè dữ liệu khi chung 1 tab
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -33,6 +34,10 @@ builder.Services.AddSession(options =>
 
 // Build SignalR
 builder.Services.AddSignalR();
+
+//builder.WebHost.UseUrls("http://0.0.0.0:7078");
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(TRepository<>));
 
 var app = builder.Build();
 
@@ -68,22 +73,31 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+// sử dụng pattern : là tên đường dẫn. còn defaults: new {} : là tên điwonfg dẫn
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
       name: "areas",
-      pattern: "{area:exists}/{controller=Login}/{action=Login}/{id?}"
+      pattern: "{area:exists}/{controller}/{action}/{id?}"
     );
+
+    //endpoints.MapControllerRoute(
+    //    name: "DetailStartup",
+    //    pattern: "Details/{name:alpha}",
+    //    defaults: new { controller = "Startup", action = "Details" }
+    //);
+
+    // Mạc định
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapHub<StatusStartupHub>("/statusStartupHub").RequireAuthorization();
+    endpoints.MapHub<PostCommentStartupHub>("/postCommentStartupHub").RequireAuthorization();
 });
 
-// Định nghĩa route cho User
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-
 app.MapRazorPages();
-app.MapHub<StatusStartupHub>("/statusStartupHub");
+
 
 app.Run();

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using RiskChance.Data;
 using Microsoft.AspNetCore.Identity;
 using RiskChance.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RiskChance.Areas.Admins.Controllers
 {

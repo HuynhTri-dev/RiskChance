@@ -115,24 +115,29 @@ namespace RiskChance.Areas.Identity.Pages.Account
                 {
                     var roles = await _userManager.GetRolesAsync(user);
 
-                    // Kiểm tra nếu vai trò nhập vào có khớp với vai trò thực sự của user
-                    if (roles.Contains(Input.Role))
-                    {
-                        var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
+                    var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                         if (result.Succeeded)
                         {
-                            return LocalRedirect(returnUrl);
+                            // Kiểm tra nếu user có vai trò Admin thì chuyển hướng
+                            if (await _userManager.IsInRoleAsync(user, "Admin"))
+                            {
+                                returnUrl = Url.Content("~/Admins/Dashboard/Index");
+                                return LocalRedirect(returnUrl);
+                        }
+                            if (roles.Contains(Input.Role))
+                            {
+                                 return LocalRedirect(returnUrl);
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(string.Empty, "You do not have permission to access this role.");
+                            }
                         }
                         else
                         {
-                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                            ModelState.AddModelError(string.Empty, "Wrong email or password");
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "You do not have permission to access this role.");
-                    }
+                    
                 }
                 else
                 {

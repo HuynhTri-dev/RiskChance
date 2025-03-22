@@ -9,6 +9,7 @@ using RiskChance.Models.ViewModel;
 using System.Drawing;
 using RiskChance.Utils;
 using RiskChance.Models.ViewModel.StartupViewModel;
+using RiskChance.Repositories;
 
 namespace QuanLyStartup.Controllers
 {
@@ -16,11 +17,24 @@ namespace QuanLyStartup.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IRepository<Startup> _startupRepo;
+        private readonly IRepository<GiayTo> _docRepo;
+        private readonly IRepository<DanhGiaStartup> _comStartupRepo;
+        private readonly IRepository<HopDongDauTu> _contractRepo;
 
-        public StartupController(ApplicationDBContext context, UserManager<NguoiDung> userManager)
+        public StartupController(ApplicationDBContext context, 
+                                 UserManager<NguoiDung> userManager,
+                                 IRepository<Startup> startupRepo,
+                                 IRepository<GiayTo> docRepo,
+                                 IRepository<DanhGiaStartup> comStartupRepo,
+                                 IRepository<HopDongDauTu> contractRepo)
         {
             _context = context;
             _userManager = userManager;
+            _startupRepo = startupRepo;
+            _docRepo = docRepo;
+            _comStartupRepo = comStartupRepo;
+            _contractRepo = contractRepo;
         }
 
         [HttpGet]
@@ -44,7 +58,6 @@ namespace QuanLyStartup.Controllers
                                       {
                                           IDStartup = st.IDStartup,
                                           TenStartup = st.TenStartup,
-                                          MoTa = st.MoTa,
                                           DiemTrungBinh = dg.DiemTrungBinh,
                                           LogoUrl = st.LogoUrl
                                       })
@@ -53,6 +66,7 @@ namespace QuanLyStartup.Controllers
             model.StartupList = await _context.Startups.Include(s => s.LinhVuc).Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet).ToListAsync();
 
             model.TopBusiness = await _context.Startups
+                                             .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
                                              .GroupBy(s => s.IDLinhVuc)
                                              .Select(g => new
                                              {
@@ -72,16 +86,16 @@ namespace QuanLyStartup.Controllers
                                              .ToListAsync();
 
             model.TopInvestors = await _context.HopDongDauTus
-                                                 .GroupBy(x => x.IDNguoiDung) 
+                                                 .GroupBy(x => x.IDNguoiDung)
                                                  .Select(g => new
                                                  {
                                                      IDNguoiDung = g.Key,
                                                      TongSoTien = g.Sum(x => x.TongTien),
                                                      NumberOfContract = g.Count()
                                                  })
-                                                 .OrderByDescending(x => x.TongSoTien) 
-                                                 .Take(5) 
-                                                 .Join(_context.NguoiDungs, 
+                                                 .OrderByDescending(x => x.TongSoTien)
+                                                 .Take(5)
+                                                 .Join(_context.NguoiDungs,
                                                        top => top.IDNguoiDung,
                                                        nd => nd.Id,
                                                        (top, nd) => new TopInvestorViewModel
@@ -102,6 +116,7 @@ namespace QuanLyStartup.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> SearchStartups(string query)
         {
             var startups = await _context.Startups
@@ -134,78 +149,51 @@ namespace QuanLyStartup.Controllers
 
         // Add
         [HttpGet]
-        [Authorize(Roles = "Founder, Admin")]
-        public async Task<IActionResult> Add()
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
         {
-            ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Founder, Admin")]
-        public async Task<IActionResult> Add(StartupFormViewModel startup, IFormFile logoUrl)
-        {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
-                return View(startup);
+                return NotFound();
             }
 
-            // Kiểm tra nếu lĩnh vực mới được nhập
-            LinhVuc linhVuc;
-            if (!string.IsNullOrEmpty(startup.TenLinhVuc))
-            {
-                linhVuc = await _context.LinhVucs.FirstOrDefaultAsync(x => x.TenLinhVuc == startup.TenLinhVuc);
+            var startup = await _context.Startups.Include(x => x.LinhVuc).FirstOrDefaultAsync(x => x.IDStartup == id);
 
-                if (linhVuc == null)
-                {
-                    linhVuc = new LinhVuc { TenLinhVuc = startup.TenLinhVuc };
-                    _context.LinhVucs.Add(linhVuc);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            else
+            if (startup == null)
             {
-                linhVuc = await _context.LinhVucs.FindAsync(startup.IDLinhVuc);
-                if (linhVuc == null)
-                {
-                    ModelState.AddModelError("IDLinhVuc", "Lĩnh vực không hợp lệ.");
-                    ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
-                    return View(startup);
-                }
+                return NotFound();
             }
 
-            // Lưu ảnh nếu có
-            string? logoPath = null;
-            if (logoUrl != null)
-            {
-                logoPath = await ImageUtil.SaveAsync(logoUrl);
-            }
+            var doc = (await _docRepo.GetAllAsync())
+                        .Where(x => x.IDStartup == startup.IDStartup)
+                        .ToList();
 
-            // Tạo đối tượng Startup
-            var newStartup = new Startup
-            {
-                TenStartup = startup.TenStartup,
-                LogoUrl = logoPath,
-                MoTa = startup.MoTa,
-                IDLinhVuc = linhVuc.IDLinhVuc, // Gán ID lĩnh vực
-                MucTieu = startup.MucTieu ?? 0,
-                PhanTramCoPhan = startup.PhanTramCoPhan ?? 0,
-                IDNguoiDung = (await _userManager.GetUserAsync(User))?.Id,
-                NgayTao = DateTime.Now,
-                TrangThaiXetDuyet = TrangThaiXetDuyetEnum.ChoDuyet
+            //var comStartup = await _context.DanhGiaStartups
+            //            .Include(x => x.NguoiDung)
+            //            .Where(x => x.IDStartup == startup.IDStartup)
+            //            .ToListAsync();
+
+            var amount = (await _contractRepo.GetAllAsync())
+                        .Where(x => x.IDStartup == startup.IDStartup)
+                        .Sum(x => x.TongTien);
+            
+
+            DetailOfStartupViewModel model = new DetailOfStartupViewModel(){
+                IDStartup = startup.IDStartup,
+                LogoUrl = startup.LogoUrl,
+                Business = startup.LinhVuc?.TenLinhVuc,
+                Name = startup.TenStartup,
+                Description = startup.MoTa,
+                Target = startup.MucTieu,
+                PercentOfCompany = startup.PhanTramCoPhan,
+                AmountInvested = amount
             };
 
-            // Lưu vào DB
-            _context.Startups.Add(newStartup);
-            await _context.SaveChangesAsync();
+            model.DocumentList = doc;
 
-            HttpContext.Session.SetInt32("StartupID", newStartup.IDStartup);
+            //model.CommentList = comStartup;
 
-            return RedirectToAction("Create", "GiayToes");
+            return View(model);
         }
-
-        // Update
-        // Delete
     }
 }

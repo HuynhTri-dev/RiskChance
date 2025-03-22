@@ -12,12 +12,12 @@
                 <tr>
                     <th class="checkbox-column"><input type="checkbox"></th>
                     <th class="id-column">ID</th>
-                    <th>Tên Startup</th>
-                    <th>Lĩnh vực</th>
-                    <th class="image-column">Ảnh</th>
-                    <th class="date-column">Ngày đăng</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
+                    <th>Name Startup</th>
+                    <th>Business</th>
+                    <th class="image-column">Logo</th>
+                    <th class="date-column">Target</th>
+                    <th>Status</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="startupTable">
@@ -27,9 +27,9 @@
                         <td class="checkbox-column"><input type="checkbox"></td>
                         <td class="id-column">@startup.IDStartup</td>
                         <td><a href="#" class="table-link">@startup.TenStartup</a></td>
-                        <td>Công nghệ</td>
+                        <td>@startup.LinhVuc?.TenLinhVuc</td>
                         <td class="image-column"><img src="@startup.LogoUrl" alt="Startup A" width="50" height="50" class="rounded-circle"></td>
-                        <td class="date-column">@startup.NgayTao.ToString("dd/MM/yyyy")</td>
+                        <td>@startup.MucTieu.ToString("N0")</td>
                         <td>
                             <button class="btn @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "btn-warning":
                                                 startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "btn-success" : "btn-danger") btn-sm status-btn text-white fw-bold"
@@ -40,7 +40,14 @@
                                     startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
                             </button>
                         </td>
-                        <td>
+                        <td class="d-flex align-items-center justify-content-around">
+                            <a asp-area="" 
+                                asp-controller="Startup" 
+                                asp-action="Details"
+                                asp-route-id="@startup.IDStartup"
+                                class="btn btn-primary text-decoration none">
+                                Detail
+                            </a>
                             <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@startup.IDStartup" onclick="deleteStartup(this)">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
@@ -56,12 +63,7 @@
     // Kết nối SignalR
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/statusStartupHub")
-        .withAutomaticReconnect()
         .build();
-
-    connection.start()
-        .then(() => console.log("SignalR connected"))
-        .catch(err => console.error("SignalR error:", err.toString()));
 
     // Nhận sự kiện từ Server và cập nhật trạng thái button
     connection.on("ReceiveStatusUpdate", function (id, newStatus) {
@@ -70,6 +72,10 @@
             updateButtonUI(button, newStatus);
         }
     });
+
+    connection.start()
+        .then(() => console.log("SignalR connected"))
+        .catch(err => console.error("SignalR error:", err.toString()));
 
     // Gọi API để cập nhật trạng thái startup
     function updateStatus(button) {

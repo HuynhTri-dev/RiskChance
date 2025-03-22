@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using RiskChance.Models;
 namespace RiskChance.Areas.Admins.Controllers
 {
     [Area("Admins")]
+    [Authorize(Roles = "Admin")]
     public class LinhVucsController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -128,11 +130,11 @@ namespace RiskChance.Areas.Admins.Controllers
                 _context.LinhVucs.Remove(linhVuc);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "🗑️ Xóa lĩnh vực thành công!";
+                TempData["SuccessMessage"] = "🗑Xóa lĩnh vực thành công!";
             }
             catch (DbUpdateException ex)
             {
-                TempData["ErrorMessage"] = "❌ Không thể xóa lĩnh vực do có dữ liệu liên quan.";
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction(nameof(Index));
             }
 

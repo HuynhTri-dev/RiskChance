@@ -19,7 +19,7 @@ $(document).ready(function () {
                 updateHiddenInput();
             }
         }
-    });
+    }
 
     window.removeTag = function (tag, element) {
         $(element).parent().remove();

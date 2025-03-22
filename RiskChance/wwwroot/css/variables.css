@@ -36,6 +36,12 @@
   --success-bg: #d4edda;
   --warning-bg: #fff3cd;
   --error-bg: #f8d7da;
+
+  --star: #ffd700;
+}
+
+.star-color {
+    color: var(--star);
 }
 
 :root {

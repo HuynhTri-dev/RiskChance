@@ -26,6 +26,5 @@
 
             return $"/upload/documents/{uniqueFileName}"; // Đường dẫn tương đối
         }
-
     }
 }

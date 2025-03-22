@@ -11,8 +11,9 @@
 
                 <div class="startup-info">
                     <h5 class="fw-bold">@startup.TenStartup</h5>
-                    <p class="text-muted mb-2">@startup.LinhVuc.TenLinhVuc</p>
-                    <a class="btn btn-outline-primary btn-sm fw-bold">
+                    <p class="text-muted mb-2">@startup.LinhVuc?.TenLinhVuc</p>
+
+                    <a asp-controller="Startup" asp-action="Details" asp-route-id="@startup.IDStartup" class="btn btn-outline-primary btn-sm fw-bold">
                         Startup
                     </a>
 
