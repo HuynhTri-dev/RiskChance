@@ -107,7 +107,6 @@ namespace RiskChance.Areas.Founder.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error saving to DB: " + ex.Message);
                 ModelState.AddModelError("", "Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: " + ex.Message);
                 return View(model);
             }

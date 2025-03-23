@@ -10,7 +10,8 @@ namespace RiskChance.Models
         [Key]
         public int IDHopDong { get; set; }
 
-        public string? AnhXacNhan { get; set; }
+        [Url(ErrorMessage = "Vui lòng nhập URL hợp lệ.")]
+        public string? FileUrl { get; set; }
 
         [Required]
         public DateTime NgayKyKet { get; set; } = DateTime.Now;
@@ -19,7 +20,7 @@ namespace RiskChance.Models
 
         public double? PhanTramLoiNhuan { get; set; }
 
-        public string? NoiDungHopDong { get; set; }
+        public string? NoiDung { get; set; }
 
         [Required]
         public TrangThaiKyKetEnum TrangThaiKyKet { get; set; } = TrangThaiKyKetEnum.DaGui;

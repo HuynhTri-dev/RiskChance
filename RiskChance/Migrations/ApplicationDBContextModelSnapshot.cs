@@ -277,7 +277,7 @@ namespace RiskChance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDHopDong"));
 
-                    b.Property<string>("AnhXacNhan")
+                    b.Property<string>("FileUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IDNguoiDung")
@@ -289,7 +289,7 @@ namespace RiskChance.Migrations
                     b.Property<DateTime>("NgayKyKet")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("NoiDungHopDong")
+                    b.Property<string>("NoiDung")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("PhanTramLoiNhuan")
@@ -530,6 +530,10 @@ namespace RiskChance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TieuDe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

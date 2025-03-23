@@ -10,14 +10,13 @@ namespace RiskChance.Models
         public int IDTinTuc { get; set; }
 
         public string? ImgTinTuc { get; set; } = string.Empty;
-
+        [Required]
+        public string TieuDe { get;set; } = string.Empty;
+        [Required]
         public string NoiDung { get; set; } = string.Empty;
-
         public DateTime NgayDang { get; set; } = DateTime.Now;
-
         [Required]
         public TrangThaiXetDuyetEnum TrangThaiXetDuyet { get; set; } = TrangThaiXetDuyetEnum.ChoDuyet;
-
         public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }

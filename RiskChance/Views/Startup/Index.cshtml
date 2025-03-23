@@ -133,7 +133,7 @@
 
                         <div class="d-md-none d-lg-none d-xl-block">
                             <p>Number of contract: @investor.NumberOfContract</p>
-                            <p>Profit: @investor.Profit VND</p>
+                            <p>Profit: @investor.Profit?.ToString("N0") VND</p>
                         </div>
                     </a>
                 }

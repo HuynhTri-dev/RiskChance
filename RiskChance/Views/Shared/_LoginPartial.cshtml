@@ -27,7 +27,10 @@
             </button>
             <ul class="account dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="/Account/Profile">
+                    <a  asp-area="User"
+                        asp-controller="Profile"
+                        asp-action="Index"
+                        class="dropdown-item">
                         <i class="fa-solid fa-user me-2"></i> Profile
                     </a>
                 </li>

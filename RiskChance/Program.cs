@@ -82,11 +82,12 @@ app.UseEndpoints(endpoints =>
       pattern: "{area:exists}/{controller}/{action}/{id?}"
     );
 
-    //endpoints.MapControllerRoute(
-    //    name: "DetailStartup",
-    //    pattern: "Details/{name:alpha}",
-    //    defaults: new { controller = "Startup", action = "Details" }
-    //);
+    endpoints.MapControllerRoute(
+        name: "HopDongRoute",
+        pattern: "HopDong/{idStartup:int}",
+        defaults: new { area = "User", controller = "HopDong", action = "Create" }
+    );
+
 
     // Mạc định
     endpoints.MapControllerRoute(

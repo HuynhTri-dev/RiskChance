@@ -18,20 +18,19 @@
     <!-- Dang bai -->
     
         <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
-            <div class="post-box d-flex justify-content-between align-items-center">
+            <div class="post-box d-flex justify-content-center align-items-center">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a href="./detailNews.html" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none" style="margin-right: 20px">
                         <div class="user-info d-flex justify-content-center align-items-center">
-                            <img src="@(ViewBag.UserAvatar ?? Url.Content("~/assets/user/image.png"))"
+                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
                                  alt="anh dai dien"
                                  class="user-image rounded-circle" />
-                            <p class="d-none d-lg-block">@ViewBag.UserName</p>
                         </div>
                     </a>
                 }
-                <a asp-action="Add" class="btn btn-primary fw-bold">
-                    <p>Post news</p>
+                <a asp-area="User" asp-controller="News" asp-action="Add" class="btn btn-primary fw-bold">
+                    <p>Post News</p>
                 </a>
             </div>
         </div>

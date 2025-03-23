@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RiskChance</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/home/logo.png" type="image/x-icon">
+
+    <!-- Icon -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <!-- Boostrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    @* SignalR *@
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/RiskChance.styles.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header class="sticky-top">
+        <div class="header container-fluid bg-light d-flex align-items-center justify-content-between shadow-sm">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
+                        <img class="logo-img rounded-circle"
+                             src="~/assets/home/logo.png"
+                             alt="logo"
+                             width="50"
+                             height="50" />
+                        <h1 class="fw-bold d-none d-sm-block"
+                            style="color: var(--primary-color)">
+                            Risk Chance
+                        </h1>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container">
+                        <div class="d-lg-none">
+                            <div class="menu-container dropdown w-100">
+                                <button class="menu-dropdown d-flex"
+                                        type="button"
+                                        id="mobileMenuButton"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-house"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="mobileMenuButton">
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "startup" ? "active" : "")" asp-area="" asp-controller="Startup" asp-action="Index">Startup</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-area="" asp-controller="News" asp-action="Index">News</a>
+                                    </li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
+                                        </li>
+                                    }
+                                    <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Menu ngang cho desktop (màn hình lg trở lên) -->
+                        <div class="d-none d-lg-block w-100">
+                            <ul class="navbar-nav d-flex gap-3 justify-content-center w-100 flex-row">
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold @(ViewBag.ActivePage == "home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold @(ViewBag.ActivePage == "startup" ? "active" : "")" asp-area="" asp-controller="Startup" asp-action="Index">Startup</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold @(ViewBag.ActivePage == "news" ? "active" : "")" asp-area="" asp-controller="News" asp-action="Index">News</a>
+                                </li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
+                                    </li>
+                                }
+                                <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Tài khoản và các chức năng cần thiết -->
+                <div class="d-flex align-items-center justify-content-between p-2">
+                    <!-- Dropdown menu khi thu nhỏ -->
+                    <div class="dropdown d-lg-none">
+                        <button class="btn btn-primary text-light d-flex align-center"
+                                type="button"
+                                id="menuDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="fa-solid fa-bars fs-4"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="menuDropdown">
+                            <li>
+                                <button type="button"
+                                        class="dropdown-item text-dark position-relative"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#messengerModal">
+                                    <i class="fa-brands fa-signal-messenger"></i> Messenger
+                                    <span id="msgBadge"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                        class="dropdown-item text-dark position-relative"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-bell"></i> Notifications
+                                    <span id="notifBadge"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" id="notifDropdown">
+                                    <li><h5 class="h5 fw-bold">Thông báo</h5></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item text-dark">
+                                    <i class="fa-solid fa-pen"></i> Create Post
+                                </a>
+                            </li>
+                            <li>
+                                @if (!User.IsInRole("Admin"))
+                                {
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fa-solid fa-chart-line"></i> Dashboard
+                                    </a>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Các icon chỉ hiện trên màn hình lớn -->
+                    <div class="d-none d-lg-flex align-items-center gap-3">
+                        <button type="button"
+                                class="text-dark position-relative btn btn-light"
+                                data-bs-toggle="modal"
+                                data-bs-target="#messengerModal">
+                            <i class="fa-brands fa-signal-messenger fs-4"></i>
+                            <span id="msgBadge"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                        </button>
+
+                        <div class="notification dropdown">
+                            <button type="button"
+                                    class="text-dark position-relative btn btn-light"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="fa-solid fa-bell fs-4"></i>
+                                <span id="notifBadge"
+                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
+                                <h5 class="h5 fw-bold">Thông báo</h5>
+                                <hr />
+                                <div class="container-fluid notify-box d-flex align-items-center">
+                                    <div class="avatar-box d-none d-sm-block">
+                                        <img class="rounded-circle user-img"
+                                             src="../assets/user/tri lor.jpg"
+                                             alt="" />
+                                    </div>
+
+                                    <div class="notify-content">
+                                        <p class="line-clamp-2">
+                                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde
+                                            culpa a ratione blanditiis dolor porro molestias aliquam?
+                                            Temporibus a esse, fugiat similique eligendi ipsum soluta
+                                            accusamus. Officiis, magnam? Voluptatibus, odit!
+                                        </p>
+                                        <p>Date:</p>
+                                    </div>
+
+                                    <div class="notify-status d-none d-sm-block">
+                                        <div class="status rounded-circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="../page/postnew.html"
+                           class="text-dark btn btn-light"
+                           id="postIcon">
+                            <i class="fa-solid fa-pen fs-4"></i>
+                        </a>
+
+                        <button class="btn btn-primary fw-bold">Dashboard</button>
+                    </div>
+
+                    <!-- Thong tin ca nhan -->
+                    <div class="account-container d-flex align-items-center justify-content-center">
+                        @await Html.PartialAsync("~/Views/Shared/_LoginPartial.cshtml")
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container row mx-auto mt-4">
+        <!-- Menu -->
+        <div class="col-md-2">
+            <div class="menu-container card">
+                <nav>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Index"
+                               class="btn nav-link d-flex justify-content-center align-items-center">
+                                <i class="fa-solid fa-house"></i>
+                                <p style="margin-left: 5px" class="d-none d-md-block">Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "profile" ? "active-feature" : "")">
+                                <i class="fa-solid fa-address-card"></i>
+                                <p style="margin-left: 5px" class="d-none d-md-block">
+                                    Profile
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboard" ? "active-feature" : "")">
+                                <i class="fa-solid fa-chart-simple"></i>
+                                <p style="margin-left: 5px" class="d-none d-md-block">
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "myPost" ? "active-feature" : "")">
+                                <i class="fa-solid fa-pen"></i>
+                                <p style="margin-left: 5px" class="d-none d-md-block">
+                                    My Post
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div role="main" class="col-md-10 mx-auto">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer id="about" class="bg-dark text-white pt-4 pb-2">
+        <div class="container">
+            <div class="row">
+                <!-- Cột 1: Logo & Giới thiệu -->
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>
+                        Chúng tôi cung cấp nền tảng giúp các startup kết nối với nhà đầu tư
+                        một cách nhanh chóng và hiệu quả.
+                    </p>
+                    <p>
+                        Slogan: "Tôi chưa thấy ai thất bại vì chơi ngu, thử miếng không bạn?"
+                    </p>
+                </div>
+
+                <!-- Cột 2: Điều hướng nhanh -->
+                <div class="col-md-3">
+                    <h5>Member</h5>
+                    <ul class="list-unstyled">
+                        <li>Huỳnh Minh Trí</li>
+                        <li>Nguyễn Thiện Trí</li>
+                        <li>Trần Thanh Thùy</li>
+                        <li>Trương Thị Tuyết Nhi</li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Liên hệ -->
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <p>Email: RiskChance@gmail.com</p>
+                    <p>Phone: +84 123 456 789</p>
+                    <p>Address: 123 Đường ABC, TP.HCM</p>
+                </div>
+
+                <!-- Cột 4: Mạng xã hội -->
+                <div class="col-md-2">
+                    <h5>Follow Us</h5>
+                    <a href="#" class="text-white me-3">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-white me-3">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-white me-3">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dòng bản quyền -->
+            <div class="mt-3 text-center">
+                <p class="mb-0">© 2025 RiskChance. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
