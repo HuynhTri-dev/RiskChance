@@ -6,16 +6,40 @@
 @using RiskChance.Models.ViewModel.TinTucViewModel
 @model TinTucAddViewModel
 
+
+<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.css" />
+<style>
+    .ck-content strong,
+    .ck-content b {
+        font-weight: bold !important;
+    }
+
+    .ck-content i {
+        font-style: italic !important;
+    }
+
+</style>
+
 <div class="container mt-4" style="max-width: 1000px">
     <h2 class="h2 text-center fw-bold">POST NEWS</h2>
     <form asp-area="User" asp-controller="News" asp-action="Add" id="postForm" method="post" enctype="multipart/form-data">
         <div class="mb-3">
-            <label asp-for="NoiDung" class="form-label">Content:</label>
-            <textarea asp-for="NoiDung"
-                      id="postContent"
+            <input type="hidden" asp-for="IDTinTuc" />
+            <input type="hidden" asp-for="IDNguoiDung"/>
+            <label asp-for="TieuDe" class="form-label">Title:</label>
+            <input asp-for="TieuDe"
                       class="form-control"
-                      rows="4"
-                      required></textarea>
+                      required />
+            <span asp-validation-for="TieuDe" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NoiDung" class="form-label">Content:</label>
+            <textarea name="NoiDung"
+                      id="NoiDung"
+                      class="form-control ckeditor">
+                  </textarea>
+            
             <span asp-validation-for="NoiDung" class="text-danger"></span>
         </div>
 
@@ -28,9 +52,8 @@
                    placeholder="Nhập hashtag và nhấn Enter" />
             <div id="hashtagList" class="mt-2"></div>
         </div>
-
         <!-- Input ẩn để lưu danh sách hashtag -->
-        <input type="hidden" id="hiddenHashtags" asp-for="Hashtags" />
+        <input type="hidden" id="hiddenHashtags" name="hiddenHashtags" />
 
         <!-- Thêm hình ảnh -->
         <div class="mb-3 mx-auto">
@@ -47,7 +70,7 @@
                      style="max-height: 200px" />
             </div>
         </div>
-
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary fw-bold"
                     style="width: 100px">
@@ -57,6 +80,47 @@
     </form>
 </div>
 
-@section Scripts {
-    <script src="~/js/addHashtags.js" asp-append-version="true"></script>
-}
+<script src="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.umd.js"></script>
+<script>
+    const {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph
+    } = CKEDITOR;
+
+    ClassicEditor
+        .create(document.querySelector('#NoiDung'), {
+            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzQzMTAzOTksImp0aSI6ImZlNDlmNjBmLTU0MTItNDFkZC1iYzI2LWY5ZDI2M2I5NjNkMCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYmQwMGM5N2QifQ.UM46A3LPCtQLSZMPvbQPR3n0YnxpCQ9yBbwXGtqlCQDYSBqeZHOoGm-4LQFFMUNcIVkQ57xQA1p4hUX6ht6Ivw', // Nếu có license key
+            plugins: [Essentials, Bold, Italic, Font, Paragraph],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|'
+            ]
+        })
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    document.getElementById("postForm").addEventListener("submit", function (event) {
+        let content = window.editor.getData();
+
+        if (!content.trim()) {
+            alert("Vui lòng nhập nội dung!");
+            event.preventDefault();
+        }
+
+        document.getElementById("NoiDung").value = content;
+    });
+
+    
+</script>
+
+ @section Scripts {
+     <script src="~/js/addHashtags.js" asp-append-version="true"></script>
+ }

@@ -4,14 +4,16 @@ namespace RiskChance.Models.ViewModel.TinTucViewModel
 {
     public class TinTucBoxViewModel
     {
-        public int? IdTinTuc {  get; set; }
+        [Required]
+        public int IDTinTuc { get; set; }
+        [Required]
+        public string Title { get; set; } = string.Empty;
         public string? ImgTinTuc { get; set; }
-        [Required]
-        public string NoiDung { get; set; } = string.Empty;
-        public DateTime NgayDang { get; set; }
-        [Required]
-        public string IDNguoiDang { get; set; } = string.Empty;
-        [Required]
-        public string NameNguoiDang { get; set; } = "Ẩn danh";
+        public string? NoiDung { get; set; }
+        public DateTime? NgayDang { get; set; }
+        public string? IDNguoiDang { get; set; }
+        public string? NameNguoiDang { get; set; }
+        public string? ImgNguoiDang { get; set; }
+        public IEnumerable<Hashtag>? Hashtags = new List<Hashtag>();
     }
 }

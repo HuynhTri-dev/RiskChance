@@ -1,0 +1,54 @@
+﻿@model List<RiskChance.Models.ViewModel.TinTucViewModel.TinTucBoxViewModel>
+
+@if (Model != null)
+{
+    @foreach (var news in Model)
+    {
+        <div class="news-item row align-items-center mb-3">
+            <!-- Hình ảnh tin tức -->
+            <div class="col-lg-4">
+                <a href="./detailNews.html">
+                    <img src="@news.ImgTinTuc"
+                         alt="News @news.Title"
+                         class="news-img img-fluid rounded-3 shadow d-none d-lg-block" />
+                </a>
+            </div>
+
+            <!-- Nội dung tin tức -->
+            <div class="news-content-box col-lg-8">
+                <div class="news-content mb-2">
+                    <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc" class="text-decoration-none">
+                        <h4 class="h4 fw-bold news-title text-black">@news.Title</h4>
+                    </a>
+                    <p class="news-desc text-muted line-clamp-2">
+                        @news.NoiDung
+                    </p>
+                    <p class="news-date text-secondary small">
+                        <i class="fa-solid fa-calendar"></i>: @news.NgayDang?.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+
+                <!-- Tác giả -->
+                <a class="news-author d-flex align-items-center text-decoration-none"
+                   asp-area="" asp-controller="News" asp-action="Details">
+                    <img class="author-img rounded-circle me-2 border"
+                         src="@news.ImgNguoiDang"
+                         alt="Author - @news.NameNguoiDang"
+                         width="40"
+                         height="40" />
+                    <p class="author-name fw-bold text-dark">@news.NameNguoiDang</p>
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div>
+        <h3 class="h3 text-center fw-bold text-danger">
+            Không có thông tin bạn cần kiếm
+        </h3>
+    </div>
+}
+
+

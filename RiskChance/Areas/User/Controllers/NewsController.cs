@@ -8,6 +8,8 @@ using RiskChance.Utils;
 using RiskChance.Data;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 using RiskChance.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
 namespace RiskChance.Areas.User.Controllers
 {
@@ -19,79 +21,138 @@ namespace RiskChance.Areas.User.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IRepository<TinTuc> _newsRepo;
         private readonly IRepository<Hashtag> _hashtagRepo;
-        private readonly IRepository<TinTucHashtag> _hashtagHashtagRepo;
+        private readonly IRepository<TinTucHashtag> _tinTucHashtagRepo;
 
         public NewsController(ApplicationDBContext context, 
                               UserManager<NguoiDung> userManager,
                               IRepository<TinTuc> news,
                               IRepository<Hashtag> hashtag,
-                              IRepository<TinTucHashtag> hashtagHashtagRepo)
+                              IRepository<TinTucHashtag> tinTucHashtagRepo)
         {
             _context = context;
             _userManager = userManager;
             _newsRepo = news;
             _hashtagRepo = hashtag;
-            _hashtagHashtagRepo = hashtagHashtagRepo;
+            _tinTucHashtagRepo = tinTucHashtagRepo;
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                ModelState.AddModelError("", "Không thể xác định người dùng.");
+                return View();
+            }
+
+            var model = new TinTucAddViewModel();
+            model.IDNguoiDung = currentUser.Id;
+
+            return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile imageUrl)
+        public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile ImgTinTuc, string hiddenHashtags)
         {
-            if (ModelState.IsValid)
+            if (!string.IsNullOrEmpty(hiddenHashtags))
             {
-                if (imageUrl != null)
+                try
+                {
+                    model.Hashtags = JsonSerializer.Deserialize<List<string>>(hiddenHashtags);
+                }
+                catch
+                {
+                    ModelState.AddModelError("Hashtags", "Dữ liệu hashtag không hợp lệ.");
+                }
+            }
+
+            // Hien tai ko hop ly xi sua 
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                ModelState.AddModelError("", System.Text.Json.JsonSerializer.Serialize(model));
+
+                return View(model);
+            }
+
+            if (ImgTinTuc != null)
+            {
+                try
+                {
+                    model.ImgTinTuc = await ImageUtil.SaveAsync(ImgTinTuc);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("ImgTinTuc", "Lỗi khi lưu ảnh: " + ex.Message);
+                    return View(model);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("ImgTinTuc", "Vui lòng chọn ảnh.");
+            }
+
+            var tinTuc = new TinTuc()
+            {
+                TieuDe = model.TieuDe,
+                ImgTinTuc = model.ImgTinTuc,
+                NoiDung = model.NoiDung,
+                NgayDang = DateTime.Now,
+                TrangThaiXetDuyet = TrangThaiXetDuyetEnum.ChoDuyet,
+                IDNguoiDung = model.IDNguoiDung
+            };
+
+            try
+            {
+                await _newsRepo.AddAsync(tinTuc);
+               
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Lỗi khi lưu tin tức vào database: " + ex.Message);
+            }
+
+            int tinTucId = tinTuc.IDTinTuc;
+
+            if (model.Hashtags != null && model.Hashtags.Any())
+            {
+                foreach (var tag in model.Hashtags)
                 {
                     try
                     {
-                        model.ImgTinTuc = await ImageUtil.SaveAsync(imageUrl);
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError("", "Lỗi khi lưu ảnh: " + ex.Message);
-                        return View(model);
-                    }
-                }
-
-                var tinTuc = new TinTuc()
-                {
-                    ImgTinTuc = model.ImgTinTuc,
-                    NoiDung = model.NoiDung,
-                    NgayDang = DateTime.Now,
-                    IDNguoiDung = (await _userManager.GetUserAsync(User))?.Id,
-                };
-
-                // cap nhat hashtag va hashtag tin tuc
-                if (model.Hashtags != null && model.Hashtags.Any())
-                {
-                    foreach (var tag in model.Hashtags)
-                    {
                         var existingTag = await _hashtagRepo.GetFirstOrDefaultAsync(h => h.TenHashtag == tag);
-                        // neu ko co thi them moi
+
                         if (existingTag == null)
                         {
                             existingTag = new Hashtag { TenHashtag = tag };
-
                             await _hashtagRepo.AddAsync(existingTag);
                         }
 
-                        await _hashtagHashtagRepo.AddAsync(new TinTucHashtag
+                        await _tinTucHashtagRepo.AddAsync(new TinTucHashtag
                         {
+                            IDTinTuc = tinTucId,
                             IDHashtag = existingTag.IDHashtag
                         });
                     }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Lỗi khi xử lý hashtag '{tag}': {ex.Message}");
+                        return View(model);
+                    }
                 }
-
-                await _newsRepo.AddAsync(tinTuc);
-                return RedirectToAction("Index", "News", new { areas = ""});
             }
-            return View(model);
+            else
+            {
+                ModelState.AddModelError("Hashtags", "Cần nhập ít nhất một hashtag.");
+            }
+
+            return RedirectToAction("Index", "News", new { area = "" });
         }
+
 
         // Sua
         [HttpGet]
@@ -109,6 +170,7 @@ namespace RiskChance.Areas.User.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(TinTucAddViewModel model, IFormFile? imageUrl)
         {
             var tinTuc = await _context.TinTucs.Include(t => t.TinTucHashtags).FirstOrDefaultAsync(t => t.IDTinTuc == model.IDTinTuc);

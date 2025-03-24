@@ -10,10 +10,10 @@
 
 /* Post */
 .post-box {
-  width: 50%;
-  padding: 10px 30px;
-  background-color: var(--primary-color);
-  border-radius: 10px;
+    width: fit-content;
+    padding: 10px 30px;
+    background-color: var(--primary-color);
+    border-radius: 10px;
 }
 
 .user-image {

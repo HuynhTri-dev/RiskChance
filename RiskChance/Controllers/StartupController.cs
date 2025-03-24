@@ -13,6 +13,7 @@ using RiskChance.Repositories;
 
 namespace QuanLyStartup.Controllers
 {
+    [AllowAnonymous]
     public class StartupController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -38,7 +39,6 @@ namespace QuanLyStartup.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var model = new StartupPageViewModel();
@@ -116,7 +116,6 @@ namespace QuanLyStartup.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> SearchStartups(string query)
         {
             var startups = await _context.Startups

@@ -20,26 +20,24 @@
     <div class="startup-container col-md-8">
         <!-- Create poster startup -->
         <!-- Chỉ có startup mới hiện khung này -->
-        
-            <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
-                <div class="post-box d-flex justify-content-center align-items-center">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <a href="#" class="text-decoration-none" style="margin-right: 20px">
-                            <div class="user-info d-flex justify-content-center align-items-center">
+        <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
+            <div class="post-box d-flex justify-content-center align-items-center">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a href="#" class="text-decoration-none" style="margin-right: 20px">
+                        <div class="user-info d-flex justify-content-center align-items-center">
                             <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
-                                     alt="anh dai dien"
-                                     class="user-image rounded-circle" />
-                            </div>
-                        </a>
-                    }
-                        <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
-                            <p>Create Startup</p>
-                        </a>
-                </div>
+                                 alt="anh dai dien"
+                                 class="user-image rounded-circle" />
+                        </div>
+                    </a>
+                }
+                <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
+                    <p>Create Startup</p>
+                </a>
             </div>
-            
-        
+        </div>
+
         <!-- Outstanding startup -->
         <div class="outstanding-startups-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Outstanding Startups</h3>
@@ -55,18 +53,18 @@
                       rgba(0, 0, 0, 0.5)
                     ),
                     url('@topStartup.LogoUrl');
-                    ">
+                        ">
                             <h5 class="fw-bold">@topStartup.TenStartup</h5>
                             <p class="line-clamp-2">
-                                    @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
-                                    {
-                                        <i class="fa-solid fa-star star-color"></i>
-                                    }
+                                @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
+                                {
+                                    <i class="fa-solid fa-star star-color"></i>
+                                }
                             </p>
                         </div>
                     </a>
                 }
-                
+
             </section>
         </div>
 
@@ -76,7 +74,7 @@
                 <input type="text"
                        id="searchInput"
                        class="form-control search-input"
-                       placeholder="Name startup or business..." 
+                       placeholder="Name startup or business..."
                        onkeyup="searchStartup(event)" />
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
             </div>
@@ -91,7 +89,7 @@
 
             <!-- Loading more -->
             @* <div id="load-more-trigger" class="mt-3 text-center">
-                <div class="spinner-border"></div>
+            <div class="spinner-border"></div>
             </div> *@
         </div>
     </div>
@@ -100,7 +98,7 @@
         <!-- Các lĩnh vực top đầu -->
         <div class="top-fields-container mx-auto">
             <h4 class="h4 mb-3 fw-bold">Top Business</h4>
-            <section class="top-fields-list">            
+            <section class="top-fields-list">
                 @foreach (var business in Model.TopBusiness)
                 {
                     <a href="#" class="field-link text-decoration-none">
@@ -171,22 +169,18 @@
         }
     }
 
-        // Kết nối SignalR
-        const connection = new signalR.HubConnectionBuilder()
+    // Kết nối SignalR
+    const connection = new signalR.HubConnectionBuilder()
         .withUrl("/statusStartupHub")
         .build();
 
-        // Nhận sự kiện cập nhật từ Admin
-        connection.on("ReceiveStatusUpdate", function () {
-            console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
-            location.reload();
-        });
+    // Nhận sự kiện cập nhật từ Admin
+    connection.on("ReceiveStatusUpdate", function () {
+        console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+        location.reload();
+    });
 
-        connection.start()
-            .then(() => console.log("SignalR connected"))
-            .catch(err => console.error("SignalR error:", err));
+    connection.start()
+        .then(() => console.log("SignalR connected"))
+        .catch(err => console.error("SignalR error:", err));
 </script>
-
-@* @section Scripts {
-    <script src="~/js/loadStartup.js" asp-append-version="true"></script>
-} *@
