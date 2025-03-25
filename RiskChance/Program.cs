@@ -7,7 +7,6 @@ using RiskChance.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -22,7 +21,6 @@ builder.Services.AddIdentity<NguoiDung, IdentityRole>()
 
 builder.Services.AddRazorPages();
 
-// Gây ra hiện tượng bị đè dữ liệu khi chung 1 tab
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>

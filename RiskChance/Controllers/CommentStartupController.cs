@@ -13,42 +13,28 @@ namespace RiskChance.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly IRepository<DanhGiaStartup> _danhGiaRepo;
+        private readonly IViewComponentHelper _viewComponentHelper;
 
-        public CommentStartupController(ApplicationDBContext context, IRepository<DanhGiaStartup> danhGiaRepo)
+        public CommentStartupController(ApplicationDBContext context, IRepository<DanhGiaStartup> danhGiaRepo, IViewComponentHelper viewComponentHelper)
         {
             _context = context;
             _danhGiaRepo = danhGiaRepo;
+            _viewComponentHelper = viewComponentHelper;
         }
 
-        public async Task<IActionResult> CommentEachStartup(int? id)
-        {
-            if (id == null)
-                return NotFound();
+        //public async Task<IActionResult> CommentEachStartup(int? id)
+        //{
+        //    if (id == null)
+        //        return NotFound();
 
-            var danhGiaList = await _context.DanhGiaStartups
-                .Include(x => x.NguoiDung)
-                .Where(x => x.IDStartup == id)
-                .OrderByDescending(x => x.NgayDanhGia)
-                .ToListAsync();
+        //    var danhGiaList = await _context.DanhGiaStartups
+        //        .Include(x => x.NguoiDung)
+        //        .Where(x => x.IDStartup == id)
+        //        .OrderByDescending(x => x.NgayDanhGia)
+        //        .ToListAsync();
 
-            return View(danhGiaList);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetComments(int idStartup)
-        {
-            var vc = HttpContext.RequestServices.GetService(typeof(IViewComponentHelper)) as IViewComponentHelper;
-            if (vc == null) return BadRequest("Không tìm thấy ViewComponentHelper.");
-
-            var viewContext = new ViewContext();
-            (vc as IViewContextAware)?.Contextualize(viewContext);
-
-            var result = await vc.InvokeAsync("CommentEachStartup", new { idStartup });
-
-            return Content(result.ToString(), "text/html");
-        }
-
-
+        //    return View(danhGiaList);
+        //}
 
     }
 }

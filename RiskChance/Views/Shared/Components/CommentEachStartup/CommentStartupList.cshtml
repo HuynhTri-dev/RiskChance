@@ -1,11 +1,17 @@
 ﻿@model List<RiskChance.Models.DanhGiaStartup>;
 
-<section id="commentsList" class="mb-3">
+<style>
+    .point {
+        color: var(--star);
+    }
+</style>
+
+
     @if (Model != null && Model.Any())
     {
         @foreach (var com in Model)
         {
-            <div class="d-flex align-items-start mb-3 p-3 border rounded shadow-sm">
+            <div class="d-flex align-items-start mb-3 p-3 rounded border shadow-sm">
                 <!-- Avatar -->
                 <img src="@(com.NguoiDung != null && !string.IsNullOrEmpty(com.NguoiDung.AvatarUrl)
                                                  ? com.NguoiDung.AvatarUrl
@@ -15,8 +21,13 @@
                      width="50" height="50" />
 
                 <div>
-                    <!-- Tên người dùng -->
-                    <h6 class="fw-bold mb-1">@com.NguoiDung?.HoTen</h6>
+                    <div class="d-flex algin-center">
+                        <h6 class="fw-bold mb-1">@com.NguoiDung?.HoTen</h6>
+                        @for (int i = 0; i < @com.DiemDanhGia; i++)
+                        {
+                            <i class="fa-solid fa-star point"></i>
+                        }
+                    </div>
 
                     <!-- Nội dung bình luận -->
                     <p class="mb-1">@com.NhanXet</p>
@@ -32,19 +43,3 @@
     {
         <p class="text-muted">Chưa có bình luận nào.</p>
     }
-</section>
-
- @* <script>
-     const connection = new signalR.HubConnectionBuilder()
-         .withUrl("/postCommentStartupHub")
-         .build();
-
-     connection.on("ReceiveComment", function () {
-         console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
-         location.reload();
-     });
-
-     connection.start()
-         .then(() => console.log("SignalR connected"))
-         .catch(err => console.error("SignalR error:", err));
- </script> *@

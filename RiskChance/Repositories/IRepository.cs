@@ -12,6 +12,5 @@ namespace RiskChance.Repositories
         Task UpdateAsync(T entity);
         Task DeleteAsync(object id);
         Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
-
     }
 }

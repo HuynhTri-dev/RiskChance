@@ -24,7 +24,6 @@ namespace RiskChance.Areas.Founder.Controllers
         }
 
         // GET: GiayToes/Create
-        [Authorize(Roles = "Founder, Admin")]
         public async Task<IActionResult> Create()
         {
             int? startupId = HttpContext.Session.GetInt32("StartupID");
@@ -48,10 +47,7 @@ namespace RiskChance.Areas.Founder.Controllers
         }
 
         // POST: GiayToes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Founder, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GiayToPageViewModel model)
         {
@@ -131,8 +127,6 @@ namespace RiskChance.Areas.Founder.Controllers
         }
 
         // POST: GiayToes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GiayToPageViewModel model)

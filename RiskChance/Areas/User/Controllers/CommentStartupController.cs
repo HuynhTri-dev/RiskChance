@@ -37,12 +37,17 @@ namespace RiskChance.Areas.User.Controllers
 
             var user = await _userManager.GetUserAsync(User);
 
-            model.IDNguoiDung = user?.Id;
+            if (user == null)
+            {
+                return RedirectToAction("Details", "Startup", new { area = "", id = model.IDStartup, error = "User not found" });
+            }
+
+            model.IDNguoiDung = user.Id;
             model.NgayDanhGia = DateTime.Now;
 
             await _commentRepo.AddAsync(model);
 
-            await _hubContext.Clients.All.SendAsync("ReceiveComment", model.IDDanhGia, model.NhanXet, model.DiemDanhGia);
+            await _hubContext.Clients.All.SendAsync("ReceiveComment", model.IDNguoiDung, model.NhanXet, model.DiemDanhGia, model.NguoiDung?.AvatarUrl, model.NgayDanhGia.ToString("dd/MM/yyyy HH:mm:ss"));
 
             return RedirectToAction("Details", "Startup", new { area = "", id = model.IDStartup });
         }
@@ -50,7 +55,7 @@ namespace RiskChance.Areas.User.Controllers
         // GET: CommentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View();  
         }
 
         // POST: CommentController/Edit/5

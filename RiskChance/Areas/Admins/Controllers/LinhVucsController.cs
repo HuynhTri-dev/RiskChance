@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Data;
 using RiskChance.Models;
+using RiskChance.Models.ViewModel.Admins;
+using RiskChance.Repositories;
 
 namespace RiskChance.Areas.Admins.Controllers
 {
@@ -16,17 +18,20 @@ namespace RiskChance.Areas.Admins.Controllers
     public class LinhVucsController : Controller
     {
         private readonly ApplicationDBContext _context;
+        private readonly IRepository<LinhVuc> _businessRepo;
 
-        public LinhVucsController(ApplicationDBContext context)
+        public LinhVucsController(ApplicationDBContext context,
+            IRepository<LinhVuc> businessRepo)
         {
             _context = context;
+            _businessRepo = businessRepo;
         }
 
         // Danh sách Lĩnh Vực
         public async Task<IActionResult> Index()
         {
             ViewBag.ActiveFeature = "manageBusiness";
-            var linhVucs = await _context.LinhVucs.ToListAsync();
+            var linhVucs = await _businessRepo.GetAllAsync();
             return View(linhVucs);
         }
 
@@ -39,12 +44,11 @@ namespace RiskChance.Areas.Admins.Controllers
         // Xử lý tạo mới
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IDLinhVuc,TenLinhVuc")] LinhVuc linhVuc)
+        public async Task<IActionResult> Create(LinhVuc linhVuc)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(linhVuc);
-                await _context.SaveChangesAsync();
+                await _businessRepo.AddAsync(linhVuc);
                 return RedirectToAction(nameof(Index));
             }
             return View(linhVuc);
@@ -54,7 +58,7 @@ namespace RiskChance.Areas.Admins.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-            var linhVuc = await _context.LinhVucs.FindAsync(id);
+            var linhVuc = await _businessRepo.GetByIdAsync(id);
             if (linhVuc == null) return NotFound();
             return View(linhVuc);
         }
@@ -65,15 +69,16 @@ namespace RiskChance.Areas.Admins.Controllers
             {
                 return NotFound();
             }
-
             var linhVuc = await _context.LinhVucs
-                .Include(lv => lv.Startups) // Load danh sách Startup theo lĩnh vực
+                .Include(lv => lv.Startups)
                 .FirstOrDefaultAsync(m => m.IDLinhVuc == id);
 
             if (linhVuc == null)
             {
                 return NotFound();
             }
+
+            //DetailBusinessViewModel model = new DetailBusinessViewModel();
 
             return View(linhVuc);
         }
@@ -82,35 +87,14 @@ namespace RiskChance.Areas.Admins.Controllers
         // Xử lý cập nhật
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IDLinhVuc,TenLinhVuc")] LinhVuc linhVuc)
+        public async Task<IActionResult> Edit(int id, LinhVuc linhVuc)
         {
             if (id != linhVuc.IDLinhVuc) return NotFound();
             if (ModelState.IsValid)
             {
-                _context.Update(linhVuc);
-                await _context.SaveChangesAsync();
+                await _businessRepo.UpdateAsync(linhVuc);
                 return RedirectToAction(nameof(Index));
             }
-            return View(linhVuc);
-        }
-
-        // Hiển thị trang xác nhận xóa
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (!id.HasValue)
-            {
-                return NotFound("ID lĩnh vực không hợp lệ.");
-            }
-
-            var linhVuc = await _context.LinhVucs
-                                        .AsNoTracking() // 🚀 Cải thiện hiệu suất khi chỉ đọc dữ liệu
-                                        .FirstOrDefaultAsync(lv => lv.IDLinhVuc == id);
-
-            if (linhVuc == null)
-            {
-                return NotFound("Không tìm thấy lĩnh vực cần xóa.");
-            }
-
             return View(linhVuc);
         }
 
@@ -119,7 +103,7 @@ namespace RiskChance.Areas.Admins.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var linhVuc = await _context.LinhVucs.FindAsync(id);
+            var linhVuc = await _businessRepo.GetByIdAsync(id);
 
             if (linhVuc == null)
             {
@@ -127,10 +111,8 @@ namespace RiskChance.Areas.Admins.Controllers
             }
             try
             {
-                _context.LinhVucs.Remove(linhVuc);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "🗑Xóa lĩnh vực thành công!";
+                await _businessRepo.DeleteAsync(id);
+                TempData["SuccessMessage"] = "Xóa lĩnh vực thành công!";
             }
             catch (DbUpdateException ex)
             {
@@ -139,6 +121,16 @@ namespace RiskChance.Areas.Admins.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchBusiness(string keyword)
+        {
+            var business = await _context.LinhVucs
+                                .Where(x => string.IsNullOrEmpty(keyword) || x.TenLinhVuc.ToLower().Contains(keyword.ToLower()))
+                                .ToListAsync();
+
+            return View("Index", business);
         }
     }
 }

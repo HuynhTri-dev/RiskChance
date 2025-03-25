@@ -1,19 +1,19 @@
 ﻿<style>
-    .fa-star {
+    .rating-start {
         font-size: 32px;
         color: #ccc;
         cursor: pointer;
         transition: color 0.3s;
     }
 
-        .fa-star.selected {
+        .rating-start.selected {
             color: var(--star);
         }
 </style>
 
 @model RiskChance.Models.DanhGiaStartup;
 
-<div class="card p-2 shadow-sm mt-3">
+<div class="card p-2 mt-3 shadow-sm">
     <h6 class="h6 mb-2">Add comments</h6>
 
     <form method="post" asp-area="User" asp-controller="CommentStartup" asp-action="Create">
@@ -21,11 +21,11 @@
         <input type="hidden" asp-for="IDDanhGia" />
 
         <div class="rating mb-2">
-            <i class="fa-solid fa-star" data-value="1"></i>
-            <i class="fa-solid fa-star" data-value="2"></i>
-            <i class="fa-solid fa-star" data-value="3"></i>
-            <i class="fa-solid fa-star" data-value="4"></i>
-            <i class="fa-solid fa-star" data-value="5"></i>
+            <i class="fa-solid fa-star rating-start" data-value="1"></i>
+            <i class="fa-solid fa-star rating-start" data-value="2"></i>
+            <i class="fa-solid fa-star rating-start" data-value="3"></i>
+            <i class="fa-solid fa-star rating-start" data-value="4"></i>
+            <i class="fa-solid fa-star rating-start" data-value="5"></i>
         </div>
 
         <input type="hidden" id="ratingValue" asp-for="DiemDanhGia" value="0">
@@ -55,7 +55,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const stars = document.querySelectorAll('.fa-star');
+        const stars = document.querySelectorAll('.rating-start');
 
         stars.forEach(star => {
             star.addEventListener('mouseover', function () {

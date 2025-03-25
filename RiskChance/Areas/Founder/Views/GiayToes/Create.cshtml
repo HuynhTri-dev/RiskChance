@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="~/css/createStartup.css" asp-append-version="true" />
 }
 
-<div class="create-container container py-5 mx-auto">
+<div class="create-container py-5 container mx-auto">
     <div class="row justify-content-center">
         <div class="col-lg-6 mb-4">
             <div id="step-2">
                 <form asp-controller="GiayToes" asp-action="Create" method="post" enctype="multipart/form-data">
-                    <h2 class="h2 text-center fw-bold mb-4">Upload Documents</h2>
+                    <h2 class="h2 fw-bold mb-4 text-center">Upload Documents</h2>
                     
 
                     <input type="hidden" asp-for="AddGiayToViewModel.IdDoc" id="IdDoc" />
@@ -76,7 +76,7 @@
                     </div>
                 </form>
 
-                <div class="text-center mt-4">
+                <div class="mt-4 text-center">
                     <a asp-area="" asp-controller="Startup" asp-action="Index" class="submit-btn btn btn-primary fw-bold text-decoration-none text-white">
                         Done
                     </a>
@@ -87,8 +87,8 @@
         <!-- Document List -->
         <div class="col-lg-6">
             <div class="document-list-container">
-                <h3 class="h3 text-center fw-bold">Document List</h3>
-                <table class="table table-striped">
+                <h3 class="h3 fw-bold text-center">Document List</h3>
+                <table class="table-striped table">
                     <thead class="fw-bold">
                         <tr>
                             <th>Name</th>
@@ -130,14 +130,9 @@
     </div>
 </div>
 
-@await Html.PartialAsync("~/Views/Shared/_DeleteConfirmPopUp.cshtml")
+
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    <script src="~/js/CallConfirmBox.js" asp-append-version="true"></script>
 
     <script>
         const editDocument = (id, name, type, content, fileUrl) => {

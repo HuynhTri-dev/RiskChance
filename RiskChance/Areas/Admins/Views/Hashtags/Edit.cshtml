@@ -1,0 +1,113 @@
+﻿@model RiskChance.Models.Hashtag
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@section Styles {
+    <style>
+
+        .form-container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .form-container h2 {
+                text-align: center;
+                margin-bottom: 15px;
+                color: #333;
+            }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-primary {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: white;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+            .btn-primary i {
+                margin-right: 5px;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .btn-secondary {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            background-color: #6c757d;
+            color: white;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+            .btn-secondary i {
+                margin-right: 5px;
+            }
+
+            .btn-secondary:hover {
+                background-color: #545b62;
+            }
+    </style>
+}
+
+<div class="form-container">
+    <h2>Update Business Information</h2>
+
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="IDHashtag" />
+
+        <div class="form-group">
+            <label asp-for="TenHashtag">Name Hashtags</label>
+            <input asp-for="TenHashtag" />
+        </div>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-floppy-disk"></i> Lưu
+            </button>
+            <a asp-action="Index" class="btn btn-danger text-decoration-none">
+                <i class="fa-solid fa-xmark"></i> Hủy
+            </a>
+        </div>
+    </form>
+</div>

@@ -9,6 +9,8 @@ using RiskChance.Utils;
 using RiskChance.Data;
 using RiskChance.Repositories;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.SignalR;
+using RiskChance.Hubs;
 
 namespace RiskChance.Areas.Founder.Controllers
 {
@@ -22,13 +24,15 @@ namespace RiskChance.Areas.Founder.Controllers
         private readonly IRepository<GiayTo> _docRepo;
         private readonly IRepository<DanhGiaStartup> _comStartupRepo;
         private readonly IRepository<HopDongDauTu> _contractRepo;
+        private readonly IHubContext<StatusStartupHub> _hubContext;
 
         public StartupController(ApplicationDBContext context,
                                  UserManager<NguoiDung> userManager,
                                  IRepository<Startup> startupRepo,
                                  IRepository<GiayTo> docRepo,
                                  IRepository<DanhGiaStartup> comStartupRepo,
-                                 IRepository<HopDongDauTu> contractRepo)
+                                 IRepository<HopDongDauTu> contractRepo,
+                                  IHubContext<StatusStartupHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
@@ -36,6 +40,7 @@ namespace RiskChance.Areas.Founder.Controllers
             _docRepo = docRepo;
             _comStartupRepo = comStartupRepo;
             _contractRepo = contractRepo;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -116,6 +121,8 @@ namespace RiskChance.Areas.Founder.Controllers
             await _context.SaveChangesAsync();
 
             HttpContext.Session.SetInt32("StartupID", newStartup.IDStartup);
+
+            await _hubContext.Clients.All.SendAsync("ReceiveStartupAdd", "Thanh cong them" + newStartup.IDStartup.ToString());
 
             return RedirectToAction("Create", "GiayToes");
         }

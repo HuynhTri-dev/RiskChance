@@ -1,0 +1,152 @@
+﻿@model IEnumerable<RiskChance.Models.Hashtag>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles {
+    <style>
+        /* Căn chỉnh phần header */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .add-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-left: 15px;
+        }
+
+            .add-button:hover {
+                background-color: #0056b3;
+            }
+
+        /* Thanh tìm kiếm */
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 10px;
+            width: 300px;
+            margin-top: 15px;
+            margin-right: 15px;
+            background: white;
+        }
+
+            .search-box input {
+                border: none;
+                outline: none;
+                width: 100%;
+                padding: 5px;
+            }
+
+            .search-box i {
+                color: #007bff;
+            }
+
+        /* Bảng dữ liệu */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-custom th, .table-custom td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .table-custom thead {
+                background-color: #f8f9fa;
+            }
+
+            .table-custom tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+        /* Nút nhỏ */
+        .btn-sm {
+            padding: 8px;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+            .btn-primary:hover, .btn-danger:hover {
+                opacity: 0.8;
+            }
+    </style>
+}
+
+
+<div class="header-container">
+    <a asp-action="Create" class="add-button">
+        <i class="fa-solid fa-plus"></i> Add New Hashtag
+    </a>
+
+    <form asp-area="Admins" asp-controller="Hashtags" asp-action="SearchHashtags" method="get" class="search-box">
+        <i class="fa fa-search"></i>
+        <input name="keyword" type="text" placeholder="find hashtag..." />
+    </form>
+</div>
+
+<!-- Bảng danh sách lĩnh vực -->
+<div class="table-container">
+    <table class="table-custom" id="linhVucTable">
+        <thead>
+            <tr>
+                <th class="text-center"><input type="checkbox" /></th>
+                <th>ID</th>
+                <th>Name Hashtags</th>
+                <th class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center"><input type="checkbox" /></td>
+                    <td>@item.IDHashtag</td>
+                    <td>@item.TenHashtag</td>
+                    <td class="text-center">
+                        <a asp-action="Details" asp-route-id="@item.IDHashtag" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@item.IDHashtag" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <button onclick="confirmDelete('@item.IDHashtag', '@Url.Action("Delete", "Hashtags")');" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

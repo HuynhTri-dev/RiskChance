@@ -6,11 +6,16 @@
 @model IEnumerable<RiskChance.Models.Startup>
 
 <div class="container">
+    @* Cac tac vu *@
+    <div class="mt-3 mb-3">
+        <button class="btn btn-success" onclick="bulkUpdateStatus()">Duyệt các startup</button>
+    </div>
+
     <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped w-100">
+        <table class="table-bordered table-hover table-striped w-100 table">
             <thead>
                 <tr>
-                    <th class="checkbox-column"><input type="checkbox"></th>
+                    <th class="checkbox-column"><input type="checkbox" id="selectAllCheckbox"></th>
                     <th class="id-column">ID</th>
                     <th>Name Startup</th>
                     <th>Business</th>
@@ -46,7 +51,7 @@
                                 asp-action="Details"
                                 asp-route-id="@startup.IDStartup"
                                 class="btn btn-primary text-decoration none">
-                                Detail
+                                <i class="fa-solid fa-circle-info"></i>
                             </a>
                             <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@startup.IDStartup" onclick="deleteStartup(this)">
                                 <i class="fa-solid fa-trash"></i>
@@ -65,12 +70,18 @@
         .withUrl("/statusStartupHub")
         .build();
 
-    // Nhận sự kiện từ Server và cập nhật trạng thái button
+    // Sự kiện thay đổi trạng thái
     connection.on("ReceiveStatusUpdate", function (id, newStatus) {
         let button = document.querySelector(`button[data-id='${id}']`);
         if (button) {
             updateButtonUI(button, newStatus);
         }
+    });
+
+    // sự kiện nhận startup mới
+    connection.on("ReceiveStartupAdd", function () {
+        console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+        location.reload();
     });
 
     connection.start()
@@ -123,4 +134,54 @@
             });
         }
     }
+
+    document.getElementById("selectAllCheckbox").addEventListener("change", function () {
+        let checkboxes = document.querySelectorAll("#startupTable input[type='checkbox']");
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    function bulkUpdateStatus() {
+        let selectedIds = [];
+        document.querySelectorAll("#startupTable input[type='checkbox']:checked").forEach(cb => {
+            let row = cb.closest("tr");
+            if (row) {
+                let statusButton = row.querySelector(".status-btn");
+                if (statusButton) {
+                    let id = statusButton.dataset.id;
+                    selectedIds.push(id);
+                }
+            }
+        });
+
+        if (selectedIds.length === 0) {
+            alert("Vui lòng chọn ít nhất một startup để duyệt.");
+            return;
+        }
+
+        fetch("/Admins/ManagerStartup/BulkUpdateStatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ ids: selectedIds })
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    selectedIds.forEach(id => {
+                        let button = document.querySelector(`button[data-id='${id}']`);
+                        if (button) {
+                            updateButtonUI(button, 1); // Cập nhật trạng thái thành "Đã duyệt"
+                        }
+                    });
+                    alert("Đã duyệt thành công các startup được chọn.");
+                } else {
+                    alert("Có lỗi xảy ra khi duyệt startup.");
+                }
+            })
+            .catch(() => {
+                alert("Lỗi kết nối đến server.");
+            });
+    }
+
 </script>

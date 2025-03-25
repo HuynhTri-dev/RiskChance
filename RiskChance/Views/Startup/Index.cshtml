@@ -142,7 +142,6 @@
         <div id="detailStartup"></div>
     </aside>
 </div>
-
 <script>
     function searchStartup(event) {
         let keyword = document.getElementById("searchInput").value.trim();
@@ -176,6 +175,11 @@
 
     // Nhận sự kiện cập nhật từ Admin
     connection.on("ReceiveStatusUpdate", function () {
+        console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+        location.reload();
+    });
+
+    connection.on("ReceiveStartupAdd", function () {
         console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
         location.reload();
     });

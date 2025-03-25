@@ -9,5 +9,10 @@ namespace RiskChance.Hubs
         {
             await Clients.All.SendAsync("ReceiveStatusUpdate", id, newStatus);
         }
+
+        public async Task AddNewStartup(string message)
+        {
+            await Clients.All.SendAsync("ReceiveStartupAdd", message);
+        }
     }
 }

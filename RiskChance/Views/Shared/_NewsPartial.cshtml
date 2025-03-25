@@ -7,10 +7,10 @@
         <div class="news-item row align-items-center mb-3">
             <!-- Hình ảnh tin tức -->
             <div class="col-lg-4">
-                <a href="./detailNews.html">
+                <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc">
                     <img src="@news.ImgTinTuc"
                          alt="News @news.Title"
-                         class="news-img img-fluid rounded-3 shadow d-none d-lg-block" />
+                         class="news-img img-fluid rounded-3 d-none d-lg-block shadow" />
                 </a>
             </div>
 
@@ -45,7 +45,7 @@
 else
 {
     <div>
-        <h3 class="h3 text-center fw-bold text-danger">
+        <h3 class="h3 fw-bold text-danger text-center">
             Không có thông tin bạn cần kiếm
         </h3>
     </div>

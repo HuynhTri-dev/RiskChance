@@ -111,8 +111,8 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link menu-link" href="/Admin/HashtagManagement">
+            <li class="nav-item @(ViewBag.ActiveFeature == "hashtagManage" ? "active" : "")">
+                <a class="nav-link menu-link" asp-area="Admins" asp-controller="Hashtags" asp-action="Index">
                     <i class="fas fa-fw fa-hashtag"></i>
                     <span>Manage Hashtags</span>
                 </a>
@@ -131,6 +131,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
+    @await Html.PartialAsync("~/Views/Shared/_DeleteConfirmPopUp.cshtml")
+    <script src="~/js/CallConfirmBox.js" asp-append-version="true"></script>
+
     <script src="~/Assets/admin/vendor/jquery/jquery.min.js"></script>
     <script src="~/Assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -139,9 +142,5 @@
 
     <!-- Custom scripts for all pages-->
     <script src="~/Assets/admin/js/sb-admin-2.min.js"></script>
-
-    
-
-
 </body>
 </html>
