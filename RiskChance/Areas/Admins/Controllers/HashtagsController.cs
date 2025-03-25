@@ -111,21 +111,7 @@ namespace RiskChance.Areas.Admins.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _hashTagRepo.UpdateAsync(hashtag);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HashtagExists(hashtag.IDHashtag))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _hashTagRepo.UpdateAsync(hashtag);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -147,9 +133,13 @@ namespace RiskChance.Areas.Admins.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HashtagExists(int id)
+        public async Task<IActionResult> SearchHashtags(string keyword)
         {
-            return _context.Hashtags.Any(e => e.IDHashtag == id);
+            var hashtags = await _context.Hashtags
+                                .Where(x => string.IsNullOrEmpty(keyword) || x.TenHashtag.ToLower().Contains(keyword.ToLower()))
+                                .ToListAsync();
+
+            return View("Index", hashtags);
         }
     }
 }
