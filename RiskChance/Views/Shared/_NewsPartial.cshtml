@@ -32,7 +32,7 @@
                 <a class="news-author d-flex align-items-center text-decoration-none"
                    asp-area="" asp-controller="News" asp-action="Details">
                     <img class="author-img rounded-circle me-2 border"
-                         src="@news.ImgNguoiDang"
+                         src="@(news.ImgNguoiDang ?? Url.Content("~/assets/user/image.png"))"
                          alt="Author - @news.NameNguoiDang"
                          width="40"
                          height="40" />

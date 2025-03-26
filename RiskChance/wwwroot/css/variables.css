@@ -40,9 +40,13 @@
   --star: #ffd700;
 }
 
+.star-color {
+    color: var(--star);
+}
+
 :root {
-  --font-primary: "Inter", sans-serif;
-  --font-secondary: "Poppins", sans-serif;
+    --font-primary: "Inter", sans-serif;
+    --font-secondary: "Poppins", sans-serif;
 }
 
 body {

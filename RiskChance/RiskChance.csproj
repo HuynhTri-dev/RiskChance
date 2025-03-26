@@ -25,12 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admins\Data\" />
-    <Folder Include="Areas\Admins\Models\" />
-    <Folder Include="Areas\Founder\Data\" />
-    <Folder Include="Areas\Founder\Models\" />
-    <Folder Include="Areas\User\Data\" />
-    <Folder Include="Areas\User\Models\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\upload\logos\" />
     <Folder Include="wwwroot\upload\documents\" />

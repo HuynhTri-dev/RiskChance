@@ -12,8 +12,8 @@ namespace RiskChance.Models.ViewModel.TinTucViewModel
         public string? NoiDung { get; set; }
         public DateTime? NgayDang { get; set; }
         public string? IDNguoiDang { get; set; }
-        public string? NameNguoiDang { get; set; }
-        public string? ImgNguoiDang { get; set; }
+        public string NameNguoiDang { get; set; } = "Ẩn danh";
+        public string ImgNguoiDang { get; set; } = "~/wwwroot/assests/user/image.png";
         public IEnumerable<Hashtag>? Hashtags = new List<Hashtag>();
     }
 }
