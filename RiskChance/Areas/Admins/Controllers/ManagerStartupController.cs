@@ -172,6 +172,5 @@ namespace RiskChance.Areas.Admins.Controllers
 
             return Json(new { success = true, newStatus = (int)startup.TrangThaiXetDuyet });
         }
-
     }
 }

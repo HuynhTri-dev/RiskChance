@@ -228,7 +228,7 @@
         </div>
     </header>
 
-    <main class="row mt-4 container mx-auto">
+    <main class="row mt-4 container mx-auto" style="min-width: 90%">
         <!-- Menu -->
         <div class="col-md-2">
             <div class="menu-container card">
@@ -238,23 +238,23 @@
                             <a asp-area="" asp-controller="Home" asp-action="Index"
                                class="btn nav-link d-flex justify-content-center align-items-center">
                                 <i class="fa-solid fa-house"></i>
-                                <p style="margin-left: 5px" class="d-none d-md-block">Home</p>
+                                <p style="margin-left: 5px" class="d-none d-lg-block">Home</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "profile" ? "active-feature" : "")">
                                 <i class="fa-solid fa-address-card"></i>
-                                <p style="margin-left: 5px" class="d-none d-md-block">
+                                <p style="margin-left: 5px" class="d-none d-lg-block">
                                     Profile
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            @if(User.IsInRole("Founder"))
+                            @if (User.IsInRole("Founder"))
                             {
                                 <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboardFounder" ? "active-feature" : "")">
                                     <i class="fa-solid fa-chart-simple"></i>
-                                    <p style="margin-left: 5px" class="d-none d-md-block">
+                                    <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
                                     </p>
                                 </a>
@@ -263,7 +263,7 @@
                             {
                                 <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboard" ? "active-feature" : "")">
                                     <i class="fa-solid fa-chart-simple"></i>
-                                    <p style="margin-left: 5px" class="d-none d-md-block">
+                                    <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
                                     </p>
                                 </a>
@@ -272,7 +272,7 @@
                             {
                                 <a asp-area="Admins" asp-controller="Dashboard" asp-action="Index" class="btn nav-link d-flex justify-content-center align-items-center">
                                     <i class="fa-solid fa-chart-simple"></i>
-                                    <p style="margin-left: 5px" class="d-none d-md-block">
+                                    <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
                                     </p>
                                 </a>
@@ -281,7 +281,7 @@
                         <li class="nav-item">
                             <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "myPost" ? "active-feature" : "")">
                                 <i class="fa-solid fa-pen"></i>
-                                <p style="margin-left: 5px" class="d-none d-md-block">
+                                <p style="margin-left: 5px" class="d-none d-lg-block">
                                     My Post
                                 </p>
                             </a>
@@ -350,6 +350,9 @@
             </div>
         </div>
     </footer>
+
+    @await Html.PartialAsync("~/Views/Shared/_DeleteConfirmPopUp.cshtml")
+    <script src="~/js/CallConfirmBox.js" asp-append-version="true"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)

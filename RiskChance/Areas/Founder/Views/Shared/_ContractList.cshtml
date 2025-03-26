@@ -1,0 +1,50 @@
+﻿@model IEnumerable<RiskChance.Models.HopDongDauTu>
+@using RiskChance.Models
+
+@{
+    string GetContractStatusClass(TrangThaiKyKetEnum status)
+    {
+        if (status == TrangThaiKyKetEnum.DaDuyet) return "success-status";
+        if (status == TrangThaiKyKetEnum.DaGui) return "update-status";
+        return "non-success-status";             
+    }
+}
+
+<section class="doc-list">
+    <div class="row">
+        <p class="col-4 fw-bold">Name</p>
+        <p class="col-3 fw-bold">ID Contact</p>
+        <p class="col-4 fw-bold">Contract Value</p>
+        <p class="col-1"></p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var contract in Model)
+        {
+            <!-- Thêm bằng vòng lặplặp -->
+            <!-- Nen xanh la da ky: success-status -->
+            <!-- Nen  la chua ky: update-status -->
+            <!-- nen ko ky dang ky: non-success-status -->
+
+            <a class="doc-item row text-decoration-none align-items-center"
+               asp-area="User" asp-controller="HopDong" asp-action="Details" asp-route-id="@contract.IDHopDong">
+                <p class="col-4 text-truncate">@contract.NguoiDung?.Id</p>
+                <p class="col-3 text-truncate">@contract.IDHopDong</p>
+                <p class="col-4 text-truncate">@contract.TongTien</p>
+                <div class="col-1">
+                    <div class="@GetContractStatusClass(contract.TrangThaiKyKet)"></div>
+                </div>
+            </a>
+        }
+    }
+    else
+    {
+        <p class="text-muted mt-3 text-center">None Contract</p>
+    }
+
+</section>
+
+
+
+

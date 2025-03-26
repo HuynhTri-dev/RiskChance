@@ -177,23 +177,23 @@ namespace RiskChance.Areas.Founder.Controllers
         }
 
         // GET: GiayToes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var giayTo = await _context.GiayTos
-                .Include(g => g.Startup)
-                .FirstOrDefaultAsync(m => m.IDGiayTo == id);
-            if (giayTo == null)
-            {
-                return NotFound();
-            }
+        //    var giayTo = await _context.GiayTos
+        //        .Include(g => g.Startup)
+        //        .FirstOrDefaultAsync(m => m.IDGiayTo == id);
+        //    if (giayTo == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(giayTo);
-        }
+        //    return View(giayTo);
+        //}
 
         // POST: GiayToes/Delete/5
         [HttpPost, ActionName("Delete")]

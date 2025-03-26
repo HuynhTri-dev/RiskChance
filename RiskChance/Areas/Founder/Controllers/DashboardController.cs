@@ -16,18 +16,30 @@ namespace RiskChance.Areas.Founder.Controllers
         private readonly ApplicationDBContext _context;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public DashboardController(ApplicationDBContext context, 
+        public DashboardController(ApplicationDBContext context,
                                    UserManager<NguoiDung> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index(int? id)
+        {
+            return await LoadDashboard(id);
+        }
+
+        [HttpPost]
+        public IActionResult Index(DashboardViewModel model)
+        {
+            return RedirectToAction("Index", new { id = model.SelectedStartupId });
+        }
+        private async Task<IActionResult> LoadDashboard(int? id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            var startups = await _context.Startups
+            var startupList = await _context.Startups
                                 .Where(s => s.IDNguoiDung == user.Id)
                                 .Select(x => new SelectListItem
                                 {
@@ -35,16 +47,43 @@ namespace RiskChance.Areas.Founder.Controllers
                                     Text = x.TenStartup
                                 })
                                 .ToListAsync();
-            int defaultStartupId = startups.Any() ? int.Parse(startups.First().Value) : 0;
+
+            if (!startupList.Any())
+            {
+                ModelState.AddModelError("", "Không tìm thấy startup nào cho người dùng này.");
+                return View();
+            }
+
+            int selectedId = id ?? (startupList.Any() ? int.Parse(startupList.First().Value) : 0);
+            var startupInfo = await LoadStartupInfo(selectedId);
+
+            var coInvestor = startupInfo.HopDongDauTus.DistinctBy(hd => hd.IDNguoiDung).Count();
+            var totalInvestment = startupInfo.HopDongDauTus
+                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet)
+                                .Sum(x => x.TongTien);
 
             DashboardViewModel viewModel = new DashboardViewModel()
             {
-                startupSelectList = startups,
-                SelectedStartupId = defaultStartupId
+                startupSelectList = startupList,
+                SelectedStartupId = selectedId,
+                SelectStartup = startupInfo,
+                CoInvestors = coInvestor,
+                TotalInvestment = totalInvestment
             };
 
             ViewBag.FeatureActive = "dashboardFounder";
             return View(viewModel);
+        }
+        public async Task<Startup> LoadStartupInfo(int? id)
+        {
+            var model = await _context.Startups
+                                    .Include(x => x.HopDongDauTus)
+                                        .ThenInclude(hd => hd.NguoiDung)
+                                    .Include(x => x.GiayTos)
+                                    .Include(x => x.DanhGiaStartups)
+                                    .Include(x => x.LinhVuc)
+                                    .FirstOrDefaultAsync(x => x.IDStartup == id);
+            return model;
         }
     }
 }

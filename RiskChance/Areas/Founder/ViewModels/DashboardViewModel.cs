@@ -5,7 +5,11 @@ namespace RiskChance.Areas.Founder.ViewModels
 {
     public class DashboardViewModel
     {
-        public int? SelectedStartupId { get; set; }
         public List<SelectListItem>? startupSelectList { get; set; }
+        public int? SelectedStartupId { get; set; }
+        public Startup? SelectStartup { get; set; }
+        public int InteractView { get; set; } = 0;
+        public int CoInvestors { get; set;} = 0;
+        public decimal? TotalInvestment { get; set; }
     }
 }
