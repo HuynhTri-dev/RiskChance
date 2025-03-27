@@ -12,10 +12,10 @@
 <div class="create-container py-5 mx-auto">
     <div class="row justify-content-center">
         <div class="col-lg-6 mb-4">
-            <div class="card shadow-lg p-4">
+            <div class="card p-4 shadow-lg">
                 <!-- Step 1: Information startup -->
                 <div id="step-1">
-                    <h2 class="h2 text-center fw-bold mb-4">Create Your Startup</h2>
+                    <h2 class="h2 fw-bold mb-4 text-center">Create Your Startup</h2>
                     
                     <form id="startupForm" asp-controller="Startup" asp-action="Add" method="post" enctype="multipart/form-data">
                         <!-- Startup Name -->
@@ -96,14 +96,14 @@
                                    accept="image/*" />
                             <span asp-validation-for="@Model.LogoUrl" class="text-danger"></span>
                             <div class="mt-3 text-center">
-                                <img id="logoPreview" class="rounded shadow-sm d-none" />
+                                <img id="logoPreview" class="d-none rounded shadow-sm" />
                             </div>
                         </div>
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <!-- Save Button -->
-                        <div class="text-center mt-4">
+                        <div class="mt-4 text-center">
                             <button id="createStartup"
                                     type="submit"
                                     class="submit-btn btn btn-primary fw-bold">
@@ -113,8 +113,8 @@
                     </form>
 
                     <!-- Close -->
-                    <div class="text-center mt-4">
-                        <a asp-controller="Startup" asp-action="Index"
+                    <div class="mt-4 text-center">
+                        <a asp-area="" asp-controller="Startup" asp-action="Index"
                            class="btn btn-danger fw-bold text-white text-decoration-none">
                             <i class="fa-solid fa-xmark"></i> Close
                         </a>

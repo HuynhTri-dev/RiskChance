@@ -26,6 +26,7 @@
     <form asp-action="UpdateProfile" method="post" class="mt-3">
         <input type="hidden" asp-for="UserID" />
         <input type="hidden" asp-for="AvatarUrl"/>
+
         <div class="form-group mt-2">
             <label asp-for="FullName">Full Name:</label>
             <input asp-for="FullName" class="form-control" required />

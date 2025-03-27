@@ -14,7 +14,7 @@ namespace RiskChance.Models
         public string? NoiDung { get; set; }
         public DateTime NgayTao { get; set; } = DateTime.Now;
         public string? TenGiayTo { get; set; }
-        public int IDStartup { get; set; }
+        public int? IDStartup { get; set; }
         [ForeignKey("IDStartup")]
         public Startup? Startup { get; set; }
     }

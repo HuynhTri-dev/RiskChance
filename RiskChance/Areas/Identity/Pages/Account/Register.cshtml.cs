@@ -116,7 +116,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             Roles = _roleManager.Roles
-                                .Where(r => r.Name != "Admin")
+                                //.Where(r => r.Name != "Admin")
                                 .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
                                 .ToList();
             ReturnUrl = returnUrl;  
@@ -139,7 +139,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
                     }
                 }
                 Roles = _roleManager.Roles
-                                .Where(r => r.Name != "Admin")
+                                //.Where(r => r.Name != "Admin")
                                 .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
                                 .ToList();
                 return Page();
@@ -160,7 +160,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
                 }
 
                 Roles = _roleManager.Roles
-                                .Where(r => r.Name != "Admin")
+                                //.Where(r => r.Name != "Admin")
                                 .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
                                 .ToList();
                 return Page();

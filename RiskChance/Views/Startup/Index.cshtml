@@ -18,6 +18,13 @@
 <div class="main-container row mt-4 mb-4 mx-auto">
     <!-- Startup -->
     <div class="startup-container col-md-8">
+        @if (TempData["Message"] != null)
+        {
+            <div id="message-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <!-- Create poster startup -->
         <!-- Chỉ có startup mới hiện khung này -->
         <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">

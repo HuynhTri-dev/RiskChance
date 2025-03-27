@@ -18,6 +18,7 @@
                     
 
                     <input type="hidden" asp-for="AddGiayToViewModel.IdDoc" id="IdDoc" />
+                    <input type="hidden" asp-for="AddGiayToViewModel.IdStartup" id="GetStartup" />
 
                     <!-- Name doc -->
                     <div class="mb-3">
@@ -77,7 +78,7 @@
                 </form>
 
                 <div class="mt-4 text-center">
-                    <a asp-area="" asp-controller="Startup" asp-action="Index" class="submit-btn btn btn-primary fw-bold text-decoration-none text-white">
+                    <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" asp-route-id="@Model.AddGiayToViewModel.IdStartup" class="submit-btn btn btn-primary fw-bold text-decoration-none text-white">
                         Done
                     </a>
                 </div>
@@ -101,7 +102,7 @@
                         {
                             @foreach (var doc in Model.ListDocs)
                             {
-                                <tr onclick="editDocument('@doc.IDGiayTo', '@doc.TenGiayTo', '@doc.LoaiFile', '@doc.NoiDung', '@doc.FileGiayTo')">
+                                <tr onclick="editDocument('@doc.IDGiayTo', '@doc.TenGiayTo', '@doc.LoaiFile', '@doc.NoiDung', '@doc.FileGiayTo', '@doc.IDStartup')">
                                     <td>@doc.TenGiayTo</td>
                                     <td>@doc.LoaiFile</td>
                                     <td>
@@ -135,11 +136,13 @@
 @section Scripts {
 
     <script>
-        const editDocument = (id, name, type, content, fileUrl) => {
+        const editDocument = (id, name, type, content, fileUrl, idStartup) => {
             $("#IdDoc").val(id);
             $("#NameDoc").val(name);
             $("#TypeDoc").val(type);
             $("#ContentDoc").val(content);
+            $("#GetStartup").val(idStartup);
+
 
             let fileLink = $("#FileLink");
             if (fileUrl && fileUrl !== "null") {

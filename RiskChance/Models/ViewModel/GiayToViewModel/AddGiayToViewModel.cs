@@ -10,7 +10,7 @@ namespace RiskChance.Models.ViewModel.GiayToViewModel
         public string? TypeDoc { get; set; }
         public string? ContentDoc { get; set; }
         public string? FileUrl { get; set; }
-
+        public int? IdStartup { get; set; }
         public IFormFile? GetFile { get; set;
         }
     }

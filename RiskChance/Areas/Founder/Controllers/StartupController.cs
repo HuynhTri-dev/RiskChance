@@ -117,11 +117,11 @@ namespace RiskChance.Areas.Founder.Controllers
             _context.Startups.Add(newStartup);
             await _context.SaveChangesAsync();
 
-            HttpContext.Session.SetInt32("StartupID", newStartup.IDStartup);
+            //HttpContext.Session.SetInt32("StartupID", newStartup.IDStartup);
 
             await _hubContext.Clients.All.SendAsync("ReceiveStartupAdd", "Thanh cong them" + newStartup.IDStartup.ToString());
 
-            return RedirectToAction("Create", "GiayToes");
+            return RedirectToAction("Create", "GiayToes", new { startupId = newStartup.IDStartup });
         }
 
         [HttpPost]

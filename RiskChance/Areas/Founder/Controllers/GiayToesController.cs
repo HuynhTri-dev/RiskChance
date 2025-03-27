@@ -24,22 +24,29 @@ namespace RiskChance.Areas.Founder.Controllers
         }
 
         // GET: GiayToes/Create
-        public async Task<IActionResult> Create()
+        [HttpGet]
+        public async Task<IActionResult> Create(int? startupId)
         {
-            int? startupId = HttpContext.Session.GetInt32("StartupID");
+            // int? startupId = HttpContext.Session.GetInt32("StartupID");
 
             if (startupId == null)
             {
-                return RedirectToAction("Add", "Startup");
+                TempData["Message"] = "Error create startup";
+                return RedirectToAction("Index", "Startup", new { area = "" });
             }
 
             var listDoc = await _context.GiayTos
                                         .Where(x => x.IDStartup == startupId)
                                         .ToListAsync();
 
+            AddGiayToViewModel addGiayToViewModel = new AddGiayToViewModel
+            {
+                IdStartup = startupId
+            };
+
             var model = new GiayToPageViewModel()
             {
-                AddGiayToViewModel = new AddGiayToViewModel(),
+                AddGiayToViewModel = addGiayToViewModel,
                 ListDocs = listDoc
             };
 
@@ -51,23 +58,23 @@ namespace RiskChance.Areas.Founder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GiayToPageViewModel model)
         {
-            int? startupId = HttpContext.Session.GetInt32("StartupID");
+            //int? startupId = HttpContext.Session.GetInt32("StartupID");
 
-            if (startupId == null)
+            if (model.AddGiayToViewModel.IdStartup == null)
             {
-                ModelState.AddModelError("", "Không tìm thấy StartupID trong session.");
-                return RedirectToAction("Add", "Startup");
+                TempData["Message"] = "Error create startup";
+                return RedirectToAction("Index", "Startup", new { area = ""});
+
             }
 
             if (!ModelState.IsValid)
             {
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    Console.WriteLine(error.ErrorMessage);
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                model.ListDocs = await _context.GiayTos.Where(g => g.IDStartup == startupId).ToListAsync();
-                return View(model);
+                model.ListDocs = await _context.GiayTos.Where(g => g.IDStartup == model.AddGiayToViewModel.IdStartup).ToListAsync();
+                return RedirectToAction("Create", new { startupId = model.AddGiayToViewModel.IdStartup });
             }
 
 
@@ -80,8 +87,8 @@ namespace RiskChance.Areas.Founder.Controllers
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "Lỗi khi lưu tệp: " + ex.Message);
-                    model.ListDocs = await _context.GiayTos.Where(g => g.IDStartup == startupId).ToListAsync();
-                    return View(model);
+                    model.ListDocs = await _context.GiayTos.Where(g => g.IDStartup == model.AddGiayToViewModel.IdStartup).ToListAsync();
+                    return RedirectToAction("Create", new { startupId = model.AddGiayToViewModel.IdStartup });
                 }
             }
 
@@ -90,7 +97,7 @@ namespace RiskChance.Areas.Founder.Controllers
                 TenGiayTo = model.AddGiayToViewModel.NameDoc,
                 NoiDung = model.AddGiayToViewModel.ContentDoc,
                 LoaiFile = model.AddGiayToViewModel.TypeDoc,
-                IDStartup = startupId.Value,
+                IDStartup = model.AddGiayToViewModel.IdStartup,
                 FileGiayTo = model.AddGiayToViewModel.FileUrl,
                 NgayTao = DateTime.UtcNow
             };
@@ -99,46 +106,63 @@ namespace RiskChance.Areas.Founder.Controllers
             {
                 _context.GiayTos.Add(giayTo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create");
+                return RedirectToAction("Create", new { startupId = model.AddGiayToViewModel.IdStartup });
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: " + ex.Message);
-                return View(model);
+                return RedirectToAction("Create", new { startupId = model.AddGiayToViewModel.IdStartup });
             }
         }
 
         // GET: GiayToes/Edit/5
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? startupId)
         {
-            if (id == null)
+            if (startupId == null)
             {
                 return NotFound();
             }
 
-            var giayTo = await _context.GiayTos.FindAsync(id);
-            if (giayTo == null)
+            var docs = await _context.GiayTos
+                .Where(x => x.IDStartup == startupId)
+                .ToListAsync();
+
+            var doc = docs
+                .Select(x => new AddGiayToViewModel
+                {
+                    IdDoc = x.IDGiayTo,
+                    NameDoc = x.TenGiayTo,
+                    ContentDoc = x.NoiDung,
+                    TypeDoc = x.LoaiFile,
+                    FileUrl = x.FileGiayTo,
+                    IdStartup = x.IDStartup
+
+                })
+                .FirstOrDefault();  
+
+            // Gán dữ liệu vào model
+            GiayToPageViewModel model = new GiayToPageViewModel
             {
-                return NotFound();
-            }
-            ViewData["IDStartup"] = new SelectList(_context.Startups, "IDStartup", "IDNguoiDung", giayTo.IDStartup);
-            return View(giayTo);
+                AddGiayToViewModel = doc,
+                ListDocs = docs
+            };
+
+            return RedirectToAction("Create", "GiayToes", new { startupId = doc?.IdStartup });
         }
+
 
         // POST: GiayToes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GiayToPageViewModel model)
         {
-            int? startupId = HttpContext.Session.GetInt32("StartupID");
-
             var formEdit = model.AddGiayToViewModel;
 
-            if (startupId == null)
+            if (model.AddGiayToViewModel.IdStartup == null)
             {
                 ModelState.AddModelError("", "Không tìm thấy StartupID trong session.");
-                return RedirectToAction("Index", "Startup");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             if (!ModelState.IsValid)
@@ -153,7 +177,7 @@ namespace RiskChance.Areas.Founder.Controllers
                 return NotFound();
             }
 
-            if (startupId != document.IDStartup)
+            if (model.AddGiayToViewModel.IdStartup != document.IDStartup)
             {
                 ModelState.AddModelError("", "Không có quyền xử lý");
             }
@@ -173,7 +197,7 @@ namespace RiskChance.Areas.Founder.Controllers
             _context.Update(document);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Create", "GiayToes");
+            return RedirectToAction("Create", "GiayToes", new { startupId = document.IDStartup });
         }
 
         // GET: GiayToes/Delete/5
@@ -207,12 +231,7 @@ namespace RiskChance.Areas.Founder.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Create", "GiayToes");
-        }
-
-        private bool GiayToExists(int id)
-        {
-            return _context.GiayTos.Any(e => e.IDGiayTo == id);
+            return RedirectToAction("Create", "GiayToes", new { startupId = giayTo.IDStartup });
         }
     }
 }

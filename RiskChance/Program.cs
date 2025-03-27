@@ -73,28 +73,25 @@ app.UseAuthorization();
 
 
 // sử dụng pattern : là tên đường dẫn. còn defaults: new {} : là tên điwonfg dẫn
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller}/{action}/{id?}"
-    );
+// Định tuyến cho các khu vực (Areas)
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller}/{action}/{id?}"
+);
 
-    endpoints.MapControllerRoute(
-        name: "HopDongRoute",
-        pattern: "HopDong/{idStartup:int}",
-        defaults: new { area = "User", controller = "HopDong", action = "Create" }
-    );
+// Định tuyến riêng cho HopDong
+app.MapControllerRoute(
+    name: "HopDongRoute",
+    pattern: "HopDong/{idStartup:int}",
+    defaults: new { area = "User", controller = "HopDong", action = "Create" }
+);
 
-
-    // Mạc định
-    endpoints.MapControllerRoute(
+app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
-    endpoints.MapHub<StatusStartupHub>("/statusStartupHub").RequireAuthorization();
-    endpoints.MapHub<PostCommentStartupHub>("/postCommentStartupHub").RequireAuthorization();
-});
+app.MapHub<StatusStartupHub>("/statusStartupHub").RequireAuthorization();
+app.MapHub<PostCommentStartupHub>("/postCommentStartupHub").RequireAuthorization();
 
 app.MapRazorPages();
 
