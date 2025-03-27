@@ -22,14 +22,10 @@
     {
         foreach (var contract in Model)
         {
-            <!-- Thêm bằng vòng lặplặp -->
-            <!-- Nen xanh la da ky: success-status -->
-            <!-- Nen  la chua ky: update-status -->
-            <!-- nen ko ky dang ky: non-success-status -->
 
             <a class="doc-item row text-decoration-none align-items-center"
-               asp-area="User" asp-controller="HopDong" asp-action="Details" asp-route-id="@contract.IDHopDong">
-                <p class="col-4 text-truncate">@contract.NguoiDung?.Id</p>
+               asp-area="User" asp-controller="HopDong" asp-action="Details" asp-route-idContract="@contract.IDHopDong">
+                <p class="col-4 text-truncate">@contract.NguoiDung?.HoTen</p>
                 <p class="col-3 text-truncate">@contract.IDHopDong</p>
                 <p class="col-4 text-truncate">@contract.TongTien</p>
                 <div class="col-1">

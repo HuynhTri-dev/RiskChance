@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\upload\logos\" />
     <Folder Include="wwwroot\upload\documents\" />
   </ItemGroup>

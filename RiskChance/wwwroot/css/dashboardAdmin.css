@@ -1,0 +1,113 @@
+﻿.basic-data-item {
+    flex: 1;
+    min-width: 200px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 10px;
+}
+
+/* Đảm bảo các item xuống dòng khi màn hình nhỏ */
+@media (max-width: 768px) {
+    .basic-data-item {
+        width: 100%;
+    }
+}
+
+.basic-data-item h4 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.basic-data-item p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.chart-startup-data {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    margin-left: 30px
+}
+
+.chart-startup-data-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f9fafe;
+}
+
+    .chart-startup-data-header h4 {
+        font-size: 16px;
+        font-weight: bold;
+        color: #375cb3;
+        margin: 0;
+    }
+
+.chart-startup-data-footer {
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px 12px;
+    border-top: 1px solid #dee2e6;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 0 0 8px 8px;
+}
+
+.canvas-wrapper {
+    padding: 16px 20px;
+    text-align: left;
+    height: 250px;
+}
+
+.chart-startup-business-data {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    margin-left: 30px
+}
+
+.chart-startup-business-data-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f9fafe;
+}
+
+    .chart-startup-business-data-header h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #375cb3;
+        margin: 0;
+    }
+
+.canvas-pie-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    height: 450px;
+}
+
+.chart-startup-business-data-footer {
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px 12px;
+    border-top: 1px solid #dee2e6;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 0 0 8px 8px;
+}

@@ -1,91 +1,195 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<!-- Thống kê quan trọng -->
-<div class="row">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6>Startup đang chờ xét duyệt</h6>
-                <p class="count">15</p>
+@section Styles{
+    <link href="~/css/dashboardAdmin.css" rel="stylesheet" />
+}
+
+<div class="mt-5 mb-3 container">
+    <div class="d-flex align-items-center g-4 p-2 flex-wrap">
+
+        <!-- Card 1 - Startup Đã Đăng -->
+        <div class="basic-data-item">
+            <i class="fas fa-building fa-2x" style="color: #375cb3;"></i>
+            <div>
+                <h4 style="color: #375cb3;">Startup Đã Đăng</h4>
+                <p>@ViewBag.TotalStartups</p>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6>Tin tức đang chờ xét duyệt</h6>
-                <p class="count">8</p>
+
+        <!-- Card 2 - Tin Tức -->
+        <div class="basic-data-item">
+            <i class="fas fa-newspaper fa-2x" style="color: #28a745;"></i>
+            <div>
+                <h4 style="color: #28a745;">Tin Tức</h4>
+                <p>@ViewBag.TotalNews</p>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6>Lượt truy cập hôm nay</h6>
-                <p class="count">1024</p>
+
+        <!-- Card 3 - Yêu Cầu Xét Duyệt -->
+        <div class="basic-data-item">
+            <i class="fas fa-hourglass-half fa-2x" style="color: #ffc107;"></i>
+            <div>
+                <h4 style="color: #ffc107;">Yêu Cầu Xét Duyệt</h4>
+                <p>@ViewBag.PendingStartups</p>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6>Yêu cầu chỉnh sửa</h6>
-                <p class="count">5</p>
+
+        <!-- Card 4 - Lượt Truy Cập -->
+        <div class="basic-data-item">
+            <i class="fas fa-chart-line fa-2x" style="color: #17a2b8;"></i>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 style="color: #17a2b8;">Founders</h4>
+                    <p>@ViewBag.founderCount</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h4 style="color: #17a2b8;">Investors</h4>
+                    <p>@ViewBag.investorCount</p>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
-<!-- Biểu đồ thống kê -->
-<div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-body">
-                <h6>Thống kê truy cập</h6>
-                <canvas id="trafficChart"></canvas>
-            </div>
-        </div>
+
+<!-- Chart Card for Bar Chart (Số lượng Startup theo tháng) -->
+<div class="chart-startup-data">
+
+    <!-- Header -->
+    <div class="chart-startup-data-header">
+        <h4>
+            <i class="fa-solid fa-chart-simple"></i>
+            Bar Chart - Số lượng Startup theo tháng trong năm 2025
+        </h4>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h6>Tỉ lệ loại hình startup</h6>
-                <canvas id="startupPieChart"></canvas>
-            </div>
-        </div>
+
+    <!-- Chart Canvas -->
+    <div class="canvas-wrapper">
+        <canvas id="startupChart" style="width: 100%; height: 100%;"></canvas>
+    </div>
+
+    <!-- Footer-->
+    <div class="chart-startup-data-footer">
+        Thống kê số lượng Startup đăng ký theo tháng trong năm 2025.
     </div>
 </div>
 
-<script>
-    // Placeholder cho dữ liệu thống kê
-    var ctx1 = document.getElementById('trafficChart').getContext('2d');
-    var trafficChart = new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'],
-            datasets: [{
-                label: 'Lượt truy cập',
-                data: [100, 200, 150, 300, 250, 400, 350],
-                borderColor: 'blue',
-                fill: false
-            }]
-        }
-    });
+<!-- Chart Card for Pie Chart (Số lượng Startup theo lĩnh vực) -->
+<div class="chart-startup-business-data">
 
-    var ctx2 = document.getElementById('startupPieChart').getContext('2d');
-    var startupPieChart = new Chart(ctx2, {
-        type: 'pie',
-        data: {
-            labels: ['Công nghệ', 'Giáo dục', 'Y tế', 'Dịch vụ'],
-            datasets: [{
-                data: [40, 30, 20, 10],
-                backgroundColor: ['red', 'blue', 'green', 'orange']
-            }]
+    <!-- Header -->
+    <div class="chart-startup-business-data-header">
+        <h4>
+            <i class="fa-solid fa-chart-pie"></i>
+            Pie Chart - Số lượng Startup theo lĩnh vực
+        </h4>
+    </div>
+
+    <!-- Chart Canvas - Centered and enlarged -->
+    <div class="canvas-pie-wrapper">
+        <canvas id="startupLinhVucChart" style="max-width: 400px; max-height: 400px;"></canvas>
+    </div>
+
+    <!-- Footer-->
+    <div class="chart-startup-business-data-footer">
+        Thống kê số lượng Startup theo lĩnh vực.
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Load Bar Chart - Số lượng Startup theo tháng
+        async function loadStartupChart() {
+            try {
+                const response = await fetch('/Admins/Dashboard/GetStartupData');
+                if (!response.ok) throw new Error('Lỗi khi tải dữ liệu Startup theo tháng.');
+
+                const data = await response.json();
+                const labels = data.map(d => 'Tháng ' + d.month);
+                const counts = data.map(d => d.count);
+
+                const ctx = document.getElementById('startupChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số lượng Startup',
+                            data: counts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: { font: { size: 10 } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1, font: { size: 10 } }
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { font: { size: 12 } } }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
-    });
-</script>
+
+        // Load Pie Chart - Số lượng Startup theo lĩnh vực
+        async function loadLinhVucChart() {
+            try {
+                const response = await fetch('/Admins/Dashboard/GetStartupCountByLinhVuc');
+                if (!response.ok) throw new Error('Lỗi khi tải dữ liệu lĩnh vực.');
+
+                const data = await response.json();
+                const labels = data.map(item => item.linhVuc);
+                const counts = data.map(item => item.startupCount);
+
+                const backgroundColors = ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'];
+
+                const ctx = document.getElementById('startupLinhVucChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số lượng Startup theo lĩnh vực',
+                            data: counts,
+                            backgroundColor: backgroundColors.slice(0, labels.length)
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadStartupChart();
+            loadLinhVucChart();
+        });
+    </script>
+}
+

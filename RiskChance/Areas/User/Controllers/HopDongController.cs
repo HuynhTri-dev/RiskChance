@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RiskChance.Data;
 using RiskChance.Models;
 using RiskChance.Repositories;
 using RiskChance.Utils;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 
 namespace RiskChance.Areas.User.Controllers
 {
@@ -16,14 +18,17 @@ namespace RiskChance.Areas.User.Controllers
         private readonly IRepository<HopDongDauTu> _contractRepo;
         private readonly IRepository<Startup> _startupRepo;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly ApplicationDBContext _context;
 
         public HopDongController(IRepository<HopDongDauTu> contract,
                                 UserManager<NguoiDung> userManager,
-                                IRepository<Startup> startupRepo)
+                                IRepository<Startup> startupRepo,
+                                ApplicationDBContext context)
         {
             _contractRepo = contract;
             _userManager = userManager;
             _startupRepo = startupRepo;
+            _context = context;
         }
 
         [HttpGet]
@@ -94,6 +99,22 @@ namespace RiskChance.Areas.User.Controllers
             await _contractRepo.AddAsync(hopDong);
 
             return RedirectToAction("Index", "Startup", new { area = "" });
+        }
+
+        public async Task<IActionResult> Details(int? idContract)
+        {
+            if (idContract == null)
+                return NotFound();
+
+            var contract = await _context.HopDongDauTus
+                                    .Include(x => x.NguoiDung)
+                                    .Include(x => x.Startup)
+                                    .FirstOrDefaultAsync(x => x.IDHopDong == idContract);
+                                   
+            if (contract == null)
+                return NotFound();
+
+            return View(contract);
         }
     }
 }

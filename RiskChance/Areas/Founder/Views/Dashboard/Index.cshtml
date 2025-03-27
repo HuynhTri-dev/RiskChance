@@ -140,7 +140,7 @@
         <div class="startup-doc-box box container-fluid p-3">
             <div class="d-flex algin-items-center justify-content-between">
                 <h4 class="h4 fw-bold">Contracts List</h4>
-                <a asp-controller="GiayToes" asp-action="Create" asp-route-startupId="@Model.SelectedStartupId" class="btn btn-primary text-decoration-none">Manage</a>
+                <a asp-controller="GiayToes" asp-action="Create" asp-route-startupId="@Model.SelectedStartupId" class="btn btn-primary text-decoration-none fw-bold text-white">Manage</a>
             </div>
             <hr />
             @await Html.PartialAsync("_DocList", Model.SelectStartup?.GiayTos)
