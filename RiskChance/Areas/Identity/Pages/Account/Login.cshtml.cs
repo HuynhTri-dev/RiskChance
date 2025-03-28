@@ -118,12 +118,14 @@ namespace RiskChance.Areas.Identity.Pages.Account
                     var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                         if (result.Succeeded)
                         {
-                            // Kiểm tra nếu user có vai trò Admin thì chuyển hướng
+                            HttpContext.Session.SetString("UserId", user.Id);
+
                             if (await _userManager.IsInRoleAsync(user, "Admin"))
                             {
                                 returnUrl = Url.Content("~/Admins/Dashboard/Index");
                                 return LocalRedirect(returnUrl);
-                        }
+                            }
+
                             if (roles.Contains(Input.Role))
                             {
                                  return LocalRedirect(returnUrl);

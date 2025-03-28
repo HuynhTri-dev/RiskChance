@@ -36,11 +36,13 @@ namespace RiskChance.Areas.Founder.Controllers
         }
         private async Task<IActionResult> LoadDashboard(int? id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Unauthorized();
+            var userId = HttpContext.Session.GetString("UserId");
+
+            //var user = await _userManager.GetUserAsync(User);
+            //if (user == null) return Unauthorized();
 
             var startupList = await _context.Startups
-                                .Where(s => s.IDNguoiDung == user.Id)
+                                .Where(s => s.IDNguoiDung == userId)
                                 .Select(x => new SelectListItem
                                 {
                                     Value = x.IDStartup.ToString(),
@@ -50,7 +52,6 @@ namespace RiskChance.Areas.Founder.Controllers
 
             if (!startupList.Any())
             {
-                ModelState.AddModelError("", "Không tìm thấy startup nào cho người dùng này.");
                 return View();
             }
 

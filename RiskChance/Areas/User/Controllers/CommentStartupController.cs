@@ -35,14 +35,9 @@ namespace RiskChance.Areas.User.Controllers
                 return RedirectToAction("Details", "Startup", new { area = "", id = model.IDStartup });
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var userId = HttpContext.Session.GetString("UserId");
 
-            if (user == null)
-            {
-                return RedirectToAction("Details", "Startup", new { area = "", id = model.IDStartup, error = "User not found" });
-            }
-
-            model.IDNguoiDung = user.Id;
+            model.IDNguoiDung = userId;
             model.NgayDanhGia = DateTime.Now;
 
             await _commentRepo.AddAsync(model);

@@ -27,7 +27,7 @@
                asp-area="User" asp-controller="HopDong" asp-action="Details" asp-route-idContract="@contract.IDHopDong">
                 <p class="col-4 text-truncate">@contract.NguoiDung?.HoTen</p>
                 <p class="col-3 text-truncate">@contract.IDHopDong</p>
-                <p class="col-4 text-truncate">@contract.TongTien</p>
+                <p class="col-4 text-truncate">@(contract.TongTien.HasValue ? contract.TongTien?.ToString("N0") : "0") VNĐ</p>
                 <div class="col-1">
                     <div class="@GetContractStatusClass(contract.TrangThaiKyKet)"></div>
                 </div>

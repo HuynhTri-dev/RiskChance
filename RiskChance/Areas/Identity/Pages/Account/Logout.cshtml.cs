@@ -33,7 +33,7 @@ namespace RiskChance.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
 
             // Xóa toàn bộ session
-            //HttpContext.Session.Clear();
+            HttpContext.Session.Clear();
 
             // Đăng xuất khỏi hệ thống Identity
             await _signInManager.SignOutAsync();

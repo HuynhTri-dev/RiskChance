@@ -39,15 +39,15 @@ namespace RiskChance.Areas.User.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (currentUser == null)
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
             {
                 ModelState.AddModelError("", "Không thể xác định người dùng.");
                 return View();
             }
 
             var model = new TinTucAddViewModel();
-            model.IDNguoiDung = currentUser.Id;
+            model.IDNguoiDung = userId;
 
             return View(model);
         }

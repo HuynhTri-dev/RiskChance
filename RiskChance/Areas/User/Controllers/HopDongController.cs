@@ -62,7 +62,7 @@ namespace RiskChance.Areas.User.Controllers
                 return View(hopDong);
             }
 
-            var investorId = _userManager.GetUserId(User);
+            var investorId = HttpContext.Session.GetString("UserId");
 
             if (investorId == null)
             {
@@ -101,6 +101,7 @@ namespace RiskChance.Areas.User.Controllers
             return RedirectToAction("Index", "Startup", new { area = "" });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(int? idContract)
         {
             if (idContract == null)
@@ -115,6 +116,126 @@ namespace RiskChance.Areas.User.Controllers
                 return NotFound();
 
             return View(contract);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignConfirm(HopDongDauTu hopDong, IFormFile FileUrl)
+        {
+            if (!ModelState.IsValid)
+                return View(hopDong);
+
+            var contractExist = await _contractRepo.GetByIdAsync(hopDong.IDHopDong);
+
+            if (contractExist == null)
+            {
+               ModelState.AddModelError("", "None contract available");
+            }
+
+            string fileUrl = null;
+            if (FileUrl != null && FileUrl.Length > 0)
+            {
+                try
+                {
+                    fileUrl = await DocumentUtil.SaveAsync(FileUrl);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Fail when update: " + ex.Message);
+                    return View(hopDong);
+                }
+            }
+
+            contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.DaDuyet;
+            contractExist.NgayKyKet = DateTime.Now;
+            contractExist.FileUrl = fileUrl;
+
+            await _contractRepo.UpdateAsync(contractExist);
+
+            TempData["Message"] = "Successful Sign";
+
+            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = hopDong.IDHopDong });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DenyContract(int? id)
+        {
+            if (id == null)
+            {
+                TempData["Message"] = "Error deny contract";
+                return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+            }
+
+            var contractExist = await _contractRepo.GetByIdAsync(id);
+
+            if (contractExist == null)
+            {
+                TempData["Message"] = "Error deny contract";
+                return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+            }
+
+            contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.BiTuChoi;
+            contractExist.NgayKyKet = DateTime.Now;
+
+            await _contractRepo.UpdateAsync(contractExist);
+
+            TempData["Message"] = "Successful Deny";
+            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var contract = await _contractRepo.GetByIdAsync(id);
+
+            if (contract == null)
+                return NotFound();
+
+            return View(contract);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(HopDongDauTu hopDong, IFormFile? FileUrl)
+        {
+            if (!ModelState.IsValid)
+                return View(hopDong);
+
+            var contractExist = await _contractRepo.GetByIdAsync(hopDong.IDHopDong);
+
+            if (contractExist == null)
+            {
+                ModelState.AddModelError("", "None contract available");
+                return View(hopDong);
+            }
+
+            string? fileUrl = null;
+            if (FileUrl != null && FileUrl.Length > 0)
+            {
+                try
+                {
+                    fileUrl = await DocumentUtil.SaveAsync(FileUrl);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Fail when update: " + ex.Message);
+                    return View(hopDong);
+                }
+            }
+
+            contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.DaGui;
+            contractExist.NgayKyKet = DateTime.Now;
+            if (fileUrl != null)
+            {
+                contractExist.FileUrl = fileUrl;
+            }
+
+            await _contractRepo.UpdateAsync(contractExist);
+
+            TempData["Message"] = "Successful Update";
+
+            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = hopDong.IDHopDong });
         }
     }
 }

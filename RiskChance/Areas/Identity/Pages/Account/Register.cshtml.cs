@@ -190,6 +190,8 @@ namespace RiskChance.Areas.Identity.Pages.Account
             //    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
             //}
 
+            HttpContext.Session.SetString("UserId", user.Id);
+
             await _signInManager.SignInAsync(user, isPersistent: false);
             return LocalRedirect(returnUrl);
         }

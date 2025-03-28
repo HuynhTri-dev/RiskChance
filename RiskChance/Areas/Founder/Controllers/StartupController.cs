@@ -99,6 +99,8 @@ namespace RiskChance.Areas.Founder.Controllers
                 }
             }
 
+            var userId = HttpContext.Session.GetString("UserId");
+
             // Tạo đối tượng Startup
             var newStartup = new Startup
             {
@@ -108,7 +110,7 @@ namespace RiskChance.Areas.Founder.Controllers
                 IDLinhVuc = linhVuc.IDLinhVuc, // Gán ID lĩnh vực
                 MucTieu = startup.MucTieu ?? 0,
                 PhanTramCoPhan = startup.PhanTramCoPhan ?? 0,
-                IDNguoiDung = (await _userManager.GetUserAsync(User))?.Id,
+                IDNguoiDung = userId,
                 NgayTao = DateTime.Now,
                 TrangThaiXetDuyet = TrangThaiXetDuyetEnum.ChoDuyet
             };

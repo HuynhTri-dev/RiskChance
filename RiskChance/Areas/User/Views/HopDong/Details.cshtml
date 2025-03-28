@@ -21,6 +21,14 @@
 
 @model RiskChance.Models.HopDongDauTu
 
+@if(TempData["Message"] != null)
+{
+    <div id="message-alert" class="mt-3 alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="mt-4 mb-4 row container mx-auto">
     <!-- Hop dong -->
     <div class="contact-container col-lg-8 p-4 mx-auto">
@@ -31,7 +39,7 @@
             <div class="contract-paper" id="contractDisplay">
                     <h5 class="h5 fw-bold">ID Contract: #@Model.IDHopDong</h5>
                     <p><strong>Date:</strong> @Model.NgayKyKet.ToString("dd/MM/yyyy")</p>
-                    <p><strong>Total Investment:</strong> @(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") : "Updating")</p>
+                    <p><strong>Total Investment:</strong> @(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " VNĐ" : "Updating")</p>
                     <p><strong>Percent of Profit:</strong> @(Model.PhanTramLoiNhuan.HasValue ? Model.PhanTramLoiNhuan.Value + "%" : "Updating")</p>
                     <p><strong>Content:</strong> @Model.NoiDung</p>
                     <p><strong>Contract Content:</strong> @GetStatusText(Model.TrangThaiKyKet)</p>
@@ -47,27 +55,87 @@
                     <h5 class="fw-bold h5">Information Investment</h5>
                 <p><strong>Signatory:</strong> @(Model.NguoiDung != null ? Model.NguoiDung.HoTen : "None Information")</p>
             </div>
-
-            
         </div>
         <!-- Nut chuc nang -->
         <div class="d-flex justify-content-around mt-4">
-            <a asp-controller="HopDong" asp-action="SignConfirm" asp-route-idContract="@Model.IDHopDong"
-                class="btn btn-success fw-bold p-2 text-decoration-none">
+            @* Ky *@
+            <button type="button" data-bs-toggle="modal" data-bs-target="#signModal"
+                    class="btn btn-success fw-bold p-2 text-white">
                 Sign Confirmation
-            </a>
-            <a asp-controller="HopDong" asp-action="UpdateContract" asp-route-idContract="@Model.IDHopDong"
-                class="btn btn-warning fw-bold p-2 text-decoration-none">
+            </button>
+            @* Cap nhat *@
+            <a asp-controller="HopDong" asp-action="Edit" asp-route-id="@Model.IDHopDong"
+               class="btn btn-warning fw-bold p-2 text-decoration-none text-white">
                 Contact Update
             </a>
-            <a asp-controller="HopDong" asp-action="DenyContract" asp-route-idContract="@Model.IDHopDong"
-                class="btn btn-danger fw-bold p-2 text-decoration-none">
+            @* Tu choi *@
+            <button type="button" data-bs-toggle="modal" data-bs-target="#denyModal"
+               class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
                 Deny the Contract
-            </a>
+            </button>
+
+            @if (User.IsInRole("Founder"))
+            {
+                <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" asp-route-id="@Model.IDStartup"
+                   class="btn btn-secondary text-white d-flex align-items-center justify-content-center"
+                   style="width: 50px; height: 50px; border-radius: 8px;">
+                    <i class="fa-solid fa-backward"></i>
+                </a>
+
+            }
         </div>
     </div>
     <!-- Thong tin nha dau tu -->
     <div class="col-lg-4 mx-auto">
         <div id="userInfo"></div>
+    </div>
+</div>
+
+@* Modal sign confirm *@
+<div class="modal fade" id="signModal" tabindex="-1" aria-labelledby="signModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signModalLabel">Sign Confirm Contract</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-area="User" asp-controller="HopDong" asp-action="SignConfirm" method="post" enctype="multipart/form-data">
+                    <input asp-for="IDHopDong" type="hidden">
+                    <div class="mb-3">
+                        <label asp-for="FileUrl" class="form-label">File Contact</label>
+                        <input asp-for="FileUrl" type="file" class="form-control" id="fileUrlInput" />
+                        <span asp-validation-for="FileUrl" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-success">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Deny Contract *@
+<div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="denyModalLabel">Deny Confirm Contract</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to deny this contract?</p>
+
+                <div class="d-flex mt-2 justify-content-around align-items-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+
+                    <form asp-controller="HopDong" asp-action="DenyContract" method="post">
+                        <input name="id" type="hidden" value="@Model.IDHopDong">
+                        <button class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
+                            <i class="fa-solid fa-ban"></i> Deny
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
