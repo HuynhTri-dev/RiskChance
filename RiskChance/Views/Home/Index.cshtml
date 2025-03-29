@@ -25,7 +25,7 @@
         <button class="btn btn-primary fw-bold mb-3">Try Now</button>
 
         <p class="rocket-desc text-white mb-3">Cooperators</p>
-        <ul class="rocket-desc list-group d-flex flex-row justify-content-left gap-3">
+        <ul class="rocket-desc list-group d-flex justify-content-left gap-3 flex-row">
             <li class="d-flex align-items-center bg-transparent border-0">
                 <img class="logo-cooperator me-2"
                      src="~/assets/cooperators/ubs.png"
@@ -67,7 +67,7 @@
 
     <!-- Search Input -->
     <!-- Search box -->
-    <div class="search-container container d-flex justify-content-center">
+    <div class="search-container d-flex justify-content-center container">
         <div class="search-box">
             <input type="text"
                    class="form-control ps-4"
@@ -77,15 +77,15 @@
     </div>
 
     <!-- Danh sach cac tu khoa -->
-    <div class="keyword-container container mt-4 d-none d-lg-block">
-        <h3 class="text-center mb-3 fw-bold">Popular HashTag</h3>
-        <ul class="keyword-box d-flex flex-wrap justify-content-center gap-3">
+    <div class="keyword-container mt-4 d-none d-lg-block container">
+        <h3 class="mb-3 fw-bold text-center">Popular HashTag</h3>
+        <ul class="keyword-box d-flex justify-content-center gap-3 flex-wrap">
             <!-- Cái này sẽ dò trên lịch sử tìm kiếm để có thể in ra -->
             @if (ViewBag.TopHashtags != null)
             {
                 @foreach (var hashtag in ViewBag.TopHashtags)
                 {
-                    <li class="keyword-item">#@hashtag.Name (@hashtag.Count)</li>
+                    <li class="keyword-item">@hashtag.Name (@hashtag.Count)</li>
                 }
             }
         </ul>
@@ -128,7 +128,7 @@
                             <div class="progress-bar" style="width: 70%"></div>
                         </div>
                         <p>Mô tả:</p>
-                        <div class="description-container text-justify mb-3">
+                        <div class="description-container mb-3 text-justify">
                             <p class="description">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                 Quia reprehenderit fuga sint ea cum. Consequatur. Lorem
@@ -164,7 +164,7 @@
                                      alt="Startup 1"
                                      class="startup-img card-img-top" />
                                 <div class="card-body">
-                                    <h4 class="text-center fw-bold card-title">Startup 1</h4>
+                                    <h4 class="fw-bold card-title text-center">Startup 1</h4>
                                     <p class="card-text line-clamp-2">
                                         Lorem ipsum dolor sit amet.
                                     </p>
@@ -185,7 +185,7 @@
                                      alt="Startup 2"
                                      class="startup-img card-img-top" />
                                 <div class="card-body">
-                                    <h4 class="text-center fw-bold card-title">Startup 2</h4>
+                                    <h4 class="fw-bold card-title text-center">Startup 2</h4>
                                     <p class="card-text line-clamp-2">
                                         Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
                                         ea cum. Consequatur.
@@ -207,7 +207,7 @@
                                      alt="Startup 3"
                                      class="startup-img card-img-top" />
                                 <div class="card-body">
-                                    <h4 class="text-center fw-bold card-title">Startup 3</h4>
+                                    <h4 class="fw-bold card-title text-center">Startup 3</h4>
                                     <p class="card-text line-clamp-2">
                                         Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
                                         ea cum. Consequatur.
@@ -234,7 +234,7 @@
                 </div>
 
                 <!-- Nút Xem Thêm (Mobile) -->
-                <div class="text-center mt-3">
+                <div class="mt-3 text-center">
                     <button id="seeMoreBtn" class="btn btn-success d-md-none">
                         Xem thêm
                     </button>
@@ -244,7 +244,7 @@
     </div>
 
     <!-- News -->
-    <div class="news-container container mb-4">
+    <div class="news-container mb-4 container">
         <h3 class="h3 fw-bold mb-4">Market News</h3>
 
         <div class="news-box row">
@@ -263,7 +263,7 @@
             </div>
 
             <!-- News list -->
-            <section class="news-list container row gap-4 col-12 col-lg-9">
+            <section class="news-list row gap-4 col-12 col-lg-9 container">
                 <!-- News 1 -->
                 <div class="news-item row align-items-center mb-2">
                     <!-- Hình ảnh tin tức -->

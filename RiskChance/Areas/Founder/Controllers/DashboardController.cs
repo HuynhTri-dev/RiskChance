@@ -26,6 +26,14 @@ namespace RiskChance.Areas.Founder.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? id)
         {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (User != null && userId == null)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                HttpContext.Session.SetString("UserId", user.Id);
+                ViewBag.User = user;
+            }
+
             return await LoadDashboard(id);
         }
 

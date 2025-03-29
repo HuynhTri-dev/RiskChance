@@ -91,6 +91,7 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<StatusStartupHub>("/statusStartupHub").RequireAuthorization();
+app.MapHub<StatusStartupHub>("/statusNewsHub").RequireAuthorization();
 app.MapHub<PostCommentStartupHub>("/postCommentStartupHub").RequireAuthorization();
 
 app.MapRazorPages();

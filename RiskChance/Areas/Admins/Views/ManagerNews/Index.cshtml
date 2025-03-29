@@ -1,8 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Manage Startup";
-}
-
-@section Styles {
+﻿@section Styles {
     <style>
         .search-box {
             display: flex;
@@ -49,20 +45,23 @@
     </style>
 }
 
+@model IEnumerable<RiskChance.Models.TinTuc>
 
-@using RiskChance.Models;
-
-@model IEnumerable<RiskChance.Models.Startup>
+@{
+    ViewData["Title"] = "Manager News";
+}
 
 <div class="container">
     @* Cac tac vu *@
     <div class="mt-3 mb-3 d-flex align-items-center justify-content-around">
-        <button class="btn btn-success fw-bold" onclick="bulkUpdateStatus()">Change Status Startup</button>
+        <button class="btn btn-success fw-bold" onclick="bulkUpdateStatus()">Change Status News</button>
 
-        <form asp-area="Admins" asp-controller="ManagerStartup" asp-action="SearchStartup" method="get" class="search-box">
-            <i class="fa fa-search"></i>
-            <input name="keyword" type="text" placeholder="Tìm lĩnh vực..." />
-        </form>
+        <div>
+            <form method="get" asp-action="Index" class="search-box">
+                <i class="fa fa-search"></i>
+                <input type="text" name="search" placeholder="Tìm kiếm tin tức..." value="@Context.Request.Query["search"]" class="search-input"/>
+            </form>
+        </div>
     </div>
 
     <div class="table-responsive">
@@ -71,43 +70,39 @@
                 <tr>
                     <th class="checkbox-column"><input type="checkbox" id="selectAllCheckbox"></th>
                     <th class="id-column">ID</th>
-                    <th>Name Startup</th>
-                    <th>Business</th>
-                    <th class="image-column">Logo</th>
-                    <th class="date-column">Target</th>
+                    <th>Title</th>
+                    <th>Img</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="startupTable">
-                @foreach (var startup in Model)
+            <tbody id="newsTable">
+                @foreach (var news in Model)
                 {
-                    <tr id="row-@startup.IDStartup">
+                    <tr id="row-@news.IDTinTuc">
                         <td class="checkbox-column"><input type="checkbox"></td>
-                        <td class="id-column">@startup.IDStartup</td>
-                        <td>@startup.TenStartup</td>
-                        <td>@startup.LinhVuc?.TenLinhVuc</td>
-                        <td class="image-column"><img src="@startup.LogoUrl" alt="Startup A" width="50" height="50" class="rounded-circle"></td>
-                        <td>@startup.MucTieu.ToString("N0")</td>
+                        <td class="id-column">@news.IDTinTuc</td>
+                        <td>@news.TieuDe</td>
+                        <td class="image-column"><img src="@news.ImgTinTuc" alt="Startup A" width="50" height="50" class="rounded-circle"></td>
                         <td>
-                            <button class="btn @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "btn-warning":
-                                                startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "btn-success" : "btn-danger") btn-sm status-btn text-white fw-bold"
-                                    data-id="@startup.IDStartup"
-                                    data-status="@((int)startup.TrangThaiXetDuyet)"
+                            <button class="btn @(news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "btn-warning":
+                                                news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "btn-success" : "btn-danger") btn-sm status-btn text-white fw-bold"
+                                    data-id="@news.IDTinTuc"
+                                    data-status="@((int)news.TrangThaiXetDuyet)"
                                     onclick="updateStatus(this)">
-                                @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Chờ duyệt" :
-                                    startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
+                                @(news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Chờ duyệt" :
+                                    news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
                             </button>
                         </td>
                         <td class="d-flex align-items-center justify-content-around">
-                            <a asp-area="" 
-                                asp-controller="Startup" 
-                                asp-action="Details"
-                                asp-route-id="@startup.IDStartup"
-                                class="btn btn-primary text-decoration none">
+                            <a asp-area=""
+                               asp-controller="News"
+                               asp-action="Details"
+                               asp-route-id="@news.IDTinTuc"
+                               class="btn btn-primary text-decoration none">
                                 <i class="fa-solid fa-circle-info"></i>
                             </a>
-                            <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@startup.IDStartup" onclick="deleteStartup(this)">
+                            <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@news.IDTinTuc" onclick="deleteNews(this)">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -122,11 +117,11 @@
     <script>
         // Kết nối SignalR
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/statusStartupHub")
+            .withUrl("/statusNewsHub")
             .build();
 
         // Sự kiện thay đổi trạng thái
-        connection.on("ReceiveStatusUpdate", function (id, newStatus) {
+        connection.on("ReceiveStatusNews", function (id, newStatus) {
             let button = document.querySelector(`button[data-id='${id}']`);
             if (button) {
                 updateButtonUI(button, newStatus);
@@ -134,10 +129,10 @@
         });
 
         // sự kiện nhận startup mới
-        connection.on("ReceiveStartupAdd", function () {
-            console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
-            location.reload();
-        });
+        // connection.on("ReceiveStartupAdd", function () {
+        //     console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+        //     location.reload();
+        // });
 
         connection.start()
             .then(() => console.log("SignalR connected"))
@@ -147,14 +142,14 @@
         function updateStatus(button) {
             let id = button.dataset.id;
 
-            $.post("/Admins/ManagerStartup/UpdateStatus", { id: id }, function (result) {
+            $.post("/Admins/ManagerNews/UpdateStatus", { id: id }, function (result) {
                 if (result.success) {
                     updateButtonUI(button, result.newStatus);
                 } else {
-                    alert("Lỗi khi cập nhật trạng thái!");
+                    alert(result.message);
                 }
             }).fail(function () {
-                alert("Lỗi kết nối đến server!");
+                alert(result.message);
             });
         }
 
@@ -173,31 +168,30 @@
             }
         }
 
-        // Gọi API để xóa startup
-        function deleteStartup(button) {
+        function deleteNews(button) {
             let id = button.dataset.id;
 
-            if (confirm("Bạn có chắc chắn muốn xóa startup này?")) {
-                $.post("/Admins/ManagerStartup/DeleteStartup", { id: id }, function (result) {
+            if (confirm("Are you sure want to delete this NEWS?")) {
+                $.post("/Admins/ManagerNews/DeleteNews", { id: id }, function (result) {
                     if (result.success) {
                         document.getElementById("row-" + id).remove();
                     } else {
-                        alert("Lỗi khi xóa startup!");
+                        alert(result.message);
                     }
                 }).fail(function () {
-                    alert("Lỗi kết nối đến server!");
+                    alert(result.message);
                 });
             }
         }
 
         document.getElementById("selectAllCheckbox").addEventListener("change", function () {
-            let checkboxes = document.querySelectorAll("#startupTable input[type='checkbox']");
+            let checkboxes = document.querySelectorAll("#newsTable input[type='checkbox']");
             checkboxes.forEach(cb => cb.checked = this.checked);
         });
 
         function bulkUpdateStatus() {
             let selectedIds = [];
-            document.querySelectorAll("#startupTable input[type='checkbox']:checked").forEach(cb => {
+            document.querySelectorAll("#newsTable input[type='checkbox']:checked").forEach(cb => {
                 let row = cb.closest("tr");
                 if (row) {
                     let statusButton = row.querySelector(".status-btn");
@@ -209,11 +203,11 @@
             });
 
             if (selectedIds.length === 0) {
-                alert("Choose at least one startup to approve");
+                alert("Choose at least one news to update.");
                 return;
             }
 
-            fetch("/Admins/ManagerStartup/BulkUpdateStatus", {
+            fetch("/Admins/ManagerNews/BulkUpdateStatus", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -226,17 +220,17 @@
                         // selectedIds.forEach(id => {
                         //     let button = document.querySelector(`button[data-id='${id}']`);
                         //     if (button) {
-                        //         updateButtonUI(button, 1); // Cập nhật trạng thái thành "Đã duyệt"
+                        //         updateButtonUI(button, 1);
                         //     }
                         // });
                         location.reload();
-                        alert("Success approve startup have been choose");
+                        alert("Success approve all the news have been choosen");
                     } else {
-                        alert("Have a problem when approve");
+                        alert("Get fail oke ko :))) hum hum");
                     }
                 })
                 .catch(() => {
-                    alert("Fail connect DB");
+                    alert("Fail connect db");
                 });
         }
     </script>

@@ -97,10 +97,10 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link menu-link" href="/Admin/DocumentsValidation">
+            <li class="nav-item @(ViewBag.ActiveFeature == "manageNews" ? "active" : "")">
+                <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManagerNews" asp-action="Index">
                     <i class="fas fa-fw fa-file-alt"></i>
-                    <span>Checking Documents</span>
+                    <span>Manager News</span>
                 </a>
             </li>
 

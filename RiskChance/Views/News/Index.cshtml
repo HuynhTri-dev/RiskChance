@@ -18,15 +18,17 @@
     <!-- Dang bai -->
     <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="post-box d-flex justify-content-center align-items-center">
-                @if (SignInManager.IsSignedIn(User))
+                @if (ViewBag.User != null && !string.IsNullOrEmpty(ViewBag.User.AvatarUrl))
                 {
-                    <a href="#" class="text-decoration-none" style="margin-right: 20px">
-                        <div class="user-info d-flex justify-content-center align-items-center">
-                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
-                                 alt="anh dai dien"
-                                 class="user-image rounded-circle" />
-                        </div>
-                    </a>
+                    <img src="@ViewBag.User.AvatarUrl"
+                         alt="anh dai dien"
+                         class="user-image rounded-circle" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/assets/user/image.png")"
+                         alt="anh dai dien"
+                         class="user-image rounded-circle" />
                 }
                 <a asp-area="User" asp-controller="News" asp-action="Add" class="btn btn-primary fw-bold">
                     <p>Post News</p>
@@ -50,7 +52,7 @@
             <h3 class="mb-3 fw-bold text-center">Top HashTag</h3>
         <ul class="keyword-box d-flex justify-content-center gap-3 flex-wrap">
             <!-- Cái này sẽ dò trên lịch sử tìm kiếm để có thể in ra -->
-            @if (Model.TopHashTag != null)
+                @if (Model?.TopHashTag != null && Model.TopHashTag.Any())
             {
                 @foreach (var hashtag in Model.TopHashTag)
                 {
@@ -83,24 +85,27 @@
             <i class="fa-solid fa-thumbtack"></i> Top News
         </h5>
         <ul class="list-group list-group-flush">
-            @foreach(var news in Model.TopNews)
+                @if (Model?.TopNews != null && Model.TopNews.Any())
             {
-                    <li class="list-group-item d-flex align-items-center">
-                        <img src="@news.ImgTinTuc"
-                             alt="Thumbnail @news.Title"
-                             class="rounded me-2"
-                             width="50"
-                             height="50"
-                             style="object-fit: fill"/>
-                        <div>
-                            <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc"
-                               class="fw-bold text-dark text-decoration-none">
-                               @news.Title
-                            </a>
-                            <small class="text-muted d-block">@news.NameNguoiDang</small>
-                        </div>
-                    </li>
-            }
+                    @foreach (var news in Model.TopNews)
+                    {
+                        <li class="list-group-item d-flex align-items-center">
+                            <img src="@news.ImgTinTuc"
+                                 alt="Thumbnail @news.Title"
+                                 class="me-2 rounded"
+                                 width="50"
+                                 height="50"
+                                 style="object-fit: fill" />
+                            <div>
+                                <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc"
+                                   class="fw-bold text-dark text-decoration-none">
+                                    @news.Title
+                                </a>
+                                <small class="text-muted d-block">@news.NameNguoiDang</small>
+                            </div>
+                        </li>
+                    }
+                }
         </ul>
     </div>
 </aside>

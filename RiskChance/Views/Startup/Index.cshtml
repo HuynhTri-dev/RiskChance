@@ -29,15 +29,17 @@
         <!-- Chỉ có startup mới hiện khung này -->
         <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="post-box d-flex justify-content-center align-items-center">
-                @if (SignInManager.IsSignedIn(User))
+                @if (ViewBag.User != null && !string.IsNullOrEmpty(ViewBag.User.AvatarUrl))
                 {
-                    <a href="#" class="text-decoration-none" style="margin-right: 20px">
-                        <div class="user-info d-flex justify-content-center align-items-center">
-                            <img src="@(ViewBag.User.AvatarUrl ?? Url.Content("~/assets/user/image.png"))"
-                                 alt="anh dai dien"
-                                 class="user-image rounded-circle" />
-                        </div>
-                    </a>
+                    <img src="@ViewBag.User.AvatarUrl"
+                         alt="anh dai dien"
+                         class="user-image rounded-circle" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/assets/user/image.png")"
+                         alt="anh dai dien"
+                         class="user-image rounded-circle" />
                 }
                 <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold">
                     <p>Create Startup</p>
@@ -49,29 +51,31 @@
         <div class="outstanding-startups-container mt-4 mb-4">
             <h3 class="h3 mb-3 fw-bold">Outstanding Startups</h3>
             <section class="outstanding-list row mx-auto">
-                @foreach (var topStartup in Model.TopStartups)
+                @if (Model.TopStartups != null)
                 {
-                    <a asp-area="" asp-controller="Startup" asp-action="Details" asp-route-id="@topStartup.IDStartup"
-                       class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
-                        <div class="startup-card text-white"
-                             style="
-                  background-image: linear-gradient(
-                      rgba(0, 0, 0, 0.5),
-                      rgba(0, 0, 0, 0.5)
-                    ),
-                    url('@topStartup.LogoUrl');
-                        ">
-                            <h5 class="fw-bold">@topStartup.TenStartup</h5>
-                            <p class="line-clamp-2">
-                                @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
-                                {
-                                    <i class="fa-solid fa-star star-color"></i>
-                                }
-                            </p>
-                        </div>
-                    </a>
+                    @foreach (var topStartup in Model.TopStartups)
+                    {
+                        <a asp-area="" asp-controller="Startup" asp-action="Details" asp-route-id="@topStartup.IDStartup"
+                           class="info-link col-md-6 mb-3 text-decoration-none mx-auto">
+                            <div class="startup-card text-white"
+                                 style="
+                                  background-image: linear-gradient(
+                                      rgba(0, 0, 0, 0.5),
+                                      rgba(0, 0, 0, 0.5)
+                                    ),
+                                    url('@topStartup.LogoUrl');
+                                ">
+                                <h5 class="fw-bold">@topStartup.TenStartup</h5>
+                                <p class="line-clamp-2">
+                                    @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
+                                    {
+                                        <i class="fa-solid fa-star star-color"></i>
+                                    }
+                                </p>
+                            </div>
+                        </a>
+                    }
                 }
-
             </section>
         </div>
 
@@ -106,16 +110,19 @@
         <div class="top-fields-container mx-auto">
             <h4 class="h4 mb-3 fw-bold">Top Business</h4>
             <section class="top-fields-list">
-                @foreach (var business in Model.TopBusiness)
+                @if (Model.TopBusiness != null)
                 {
-                    <a href="#" class="field-link text-decoration-none">
-                        <div class="field-card d-flex justify-content-between">
-                            <h5 class="fw-bold">@business.NameBusiness</h5>
-                            <p class="text-muted d-block d-md-none d-lg-none d-xl-block">
-                                @business.NumberOfStartup
-                            </p>
-                        </div>
-                    </a>
+                    @foreach (var business in Model.TopBusiness)
+                    {
+                        <a href="#" class="field-link text-decoration-none">
+                            <div class="field-card d-flex justify-content-between">
+                                <h5 class="fw-bold">@business.NameBusiness</h5>
+                                <p class="text-muted d-block d-md-none d-lg-none d-xl-block">
+                                    @business.NumberOfStartup
+                                </p>
+                            </div>
+                        </a>
+                    }
                 }
             </section>
         </div>
@@ -124,23 +131,26 @@
         <div class="top-investors-container mb-4 mt-4 mx-auto">
             <h4 class="h4 fw-bold">Top Investors</h4>
             <section class="top-investor-list">
-                @foreach (var investor in Model.TopInvestors)
+                @if (Model.TopInvestors != null)
                 {
-                    <a href="#"
-                       class="user-link text-decoration-none d-flex align-items-center justify-content-between">
-                        <div class="user-container d-flex justify-content-center align-items-center">
-                            <img class="user-image rounded-circle"
-                                 src="@(investor.AvatartUrl ?? Url.Content("~/assets/user/image.png"))"
-                                 alt="user img" />
+                    @foreach (var investor in Model.TopInvestors)
+                    {
+                        <a href="#"
+                           class="user-link text-decoration-none d-flex align-items-center justify-content-between">
+                            <div class="user-container d-flex justify-content-center align-items-center">
+                                <img class="user-image rounded-circle"
+                                     src="@(investor.AvatartUrl ?? Url.Content("~/assets/user/image.png"))"
+                                     alt="user img" />
 
-                            <p>@investor.FullName</p>
-                        </div>
+                                <p>@investor.FullName</p>
+                            </div>
 
-                        <div class="d-md-none d-lg-none d-xl-block">
-                            <p>Number of contract: @investor.NumberOfContract</p>
-                            <p>Profit: @investor.Profit?.ToString("N0") VND</p>
-                        </div>
-                    </a>
+                            <div class="d-md-none d-lg-none d-xl-block">
+                                <p>Number of contract: @investor.NumberOfContract</p>
+                                <p>Profit: @investor.Profit?.ToString("N0") VND</p>
+                            </div>
+                        </a>
+                    }
                 }
             </section>
         </div>

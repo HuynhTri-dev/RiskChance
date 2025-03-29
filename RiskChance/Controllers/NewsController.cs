@@ -38,6 +38,17 @@ namespace QuanLyStartup.Controllers
         // Page
         public async Task<IActionResult> Index()
         {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(userId))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    ViewBag.User = user;
+                }
+            }
+
             var model = new TinTucPageViewModel();
 
             // Top hahstag
@@ -90,10 +101,7 @@ namespace QuanLyStartup.Controllers
                 })
                 .ToListAsync();
 
-
-            // View bag
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.User = user;
+            
 
             ViewBag.ActivePage = "news";
 

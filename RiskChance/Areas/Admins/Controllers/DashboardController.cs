@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Data;
@@ -11,14 +12,25 @@ namespace RiskChance.Areas.Admins.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDBContext _context;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public DashboardController(ApplicationDBContext context)
+        public DashboardController(ApplicationDBContext context,
+                                    UserManager<NguoiDung> userManager)
         {
             _context = context;
+            _userManager = userManager; 
         }
 
         public async Task<IActionResult> Index()
         {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (User != null && userId == null)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                HttpContext.Session.SetString("UserId", user.Id);
+                ViewBag.User = user;
+            }
+
             ViewBag.TotalStartups = await _context.Startups.CountAsync();
             ViewBag.TotalNews = await _context.TinTucs.CountAsync();
             ViewBag.PendingStartups = await _context.Startups.Where(s => s.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet).CountAsync();

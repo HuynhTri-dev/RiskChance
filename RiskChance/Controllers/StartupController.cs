@@ -41,8 +41,21 @@ namespace QuanLyStartup.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(userId))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    ViewBag.User = user;
+                }
+            }
+
             var model = new StartupPageViewModel();
             model.TopStartups = await _context.DanhGiaStartups
+                                .Where(s => s.DiemDanhGia != null)
                                 .GroupBy(s => s.IDStartup)
                                 .Select(g => new
                                 {
@@ -86,6 +99,7 @@ namespace QuanLyStartup.Controllers
                                              .ToListAsync();
 
             model.TopInvestors = await _context.HopDongDauTus
+                                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.TongTien > 0) 
                                                  .GroupBy(x => x.IDNguoiDung)
                                                  .Select(g => new
                                                  {
@@ -107,9 +121,6 @@ namespace QuanLyStartup.Controllers
                                                        })
                                                  .ToListAsync();
 
-
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.User = user;
             ViewBag.ActivePage = "startup";
 
             return View(model);

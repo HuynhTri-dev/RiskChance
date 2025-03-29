@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RiskChance.Data;
@@ -10,23 +11,36 @@ namespace QuanLyStartup.Controllers;
 public class HomeController : Controller
 {
     private readonly ApplicationDBContext _context;
+    private readonly UserManager<NguoiDung> _userManager;
 
-    public HomeController(ApplicationDBContext context)
+    public HomeController(ApplicationDBContext context, UserManager<NguoiDung> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index()
     {
-        var topHashtags = await _context.Hashtags
-            .Select(h => new
+        var userId = HttpContext.Session.GetString("UserId");
+
+        if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(userId))
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
             {
-                Name = h.TenHashtag,
-                Count = h.TinTucHashtags.Count()
-            })
-            .OrderByDescending(h => h.Count)
-            .Take(5)
-            .ToListAsync();
+                HttpContext.Session.SetString("UserId", user.Id);
+                ViewBag.User = user;
+            }
+        }
+        var topHashtags = await _context.Hashtags
+                        .Select(h => new
+                        {
+                            Name = h.TenHashtag,
+                            Count = h.TinTucHashtags.Count()
+                        })
+                        .OrderByDescending(h => h.Count)
+                        .Take(5)
+                        .ToListAsync();
 
         ViewBag.TopHashtags = topHashtags;
         ViewBag.ActivePage = "home";
