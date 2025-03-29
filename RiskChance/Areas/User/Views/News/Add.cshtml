@@ -20,8 +20,8 @@
 
 </style>
 
-<div class="container mt-4" style="max-width: 1000px">
-    <h2 class="h2 text-center fw-bold">POST NEWS</h2>
+<div class="mt-4 container" style="max-width: 1000px">
+    <h2 class="h2 fw-bold text-center">POST NEWS</h2>
     <form asp-area="User" asp-controller="News" asp-action="Add" id="postForm" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <input type="hidden" asp-for="IDTinTuc" />
@@ -63,7 +63,7 @@
                    id="postImage"
                    class="form-control"
                    accept="image/*" />
-            <div class="mt-2 mx-auto d-flex justify-content-center">
+            <div class="mt-2 d-flex justify-content-center mx-auto">
                 <img id="imagePreview"
                      src=""
                      class="img-fluid d-none"
@@ -80,47 +80,46 @@
     </form>
 </div>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.umd.js"></script>
-<script>
-    const {
-        ClassicEditor,
-        Essentials,
-        Bold,
-        Italic,
-        Font,
-        Paragraph
-    } = CKEDITOR;
 
-    ClassicEditor
-        .create(document.querySelector('#NoiDung'), {
-            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzQzMTAzOTksImp0aSI6ImZlNDlmNjBmLTU0MTItNDFkZC1iYzI2LWY5ZDI2M2I5NjNkMCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYmQwMGM5N2QifQ.UM46A3LPCtQLSZMPvbQPR3n0YnxpCQ9yBbwXGtqlCQDYSBqeZHOoGm-4LQFFMUNcIVkQ57xQA1p4hUX6ht6Ivw', // Nếu có license key
-            plugins: [Essentials, Bold, Italic, Font, Paragraph],
-            toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|'
-            ]
-        })
-        .then(editor => {
-            window.editor = editor;
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-    document.getElementById("postForm").addEventListener("submit", function (event) {
-        let content = window.editor.getData();
-
-        if (!content.trim()) {
-            alert("Vui lòng nhập nội dung!");
-            event.preventDefault();
-        }
-
-        document.getElementById("NoiDung").value = content;
-    });
-
-    
-</script>
 
  @section Scripts {
      <script src="~/js/addHashtags.js" asp-append-version="true"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.umd.js"></script>
+    <script>
+        const {
+            ClassicEditor,
+            Essentials,
+            Bold,
+            Italic,
+            Font,
+            Paragraph
+        } = CKEDITOR;
+
+        ClassicEditor
+            .create(document.querySelector('#NoiDung'), {
+                licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzQzMTAzOTksImp0aSI6ImZlNDlmNjBmLTU0MTItNDFkZC1iYzI2LWY5ZDI2M2I5NjNkMCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYmQwMGM5N2QifQ.UM46A3LPCtQLSZMPvbQPR3n0YnxpCQ9yBbwXGtqlCQDYSBqeZHOoGm-4LQFFMUNcIVkQ57xQA1p4hUX6ht6Ivw', // Nếu có license key
+                plugins: [Essentials, Bold, Italic, Font, Paragraph],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        document.getElementById("postForm").addEventListener("submit", function (event) {
+            let content = window.editor.getData();
+
+            // if (!content.trim()) {
+            //     alert("Vui lòng nhập nội dung!");
+            //     event.preventDefault();
+            // }
+
+            document.getElementById("NoiDung").value = content;
+        });
+    </script>
  }

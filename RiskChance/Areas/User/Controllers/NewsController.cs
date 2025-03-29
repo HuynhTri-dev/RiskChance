@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 using RiskChance.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RiskChance.Areas.User.Controllers
 {
@@ -52,7 +53,7 @@ namespace RiskChance.Areas.User.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile ImgTinTuc, string hiddenHashtags)
+        public async Task<IActionResult> Add(TinTucAddViewModel model, IFormFile? ImgTinTuc, string? hiddenHashtags)
         {
             if (!string.IsNullOrEmpty(hiddenHashtags))
             {
@@ -62,19 +63,19 @@ namespace RiskChance.Areas.User.Controllers
                 }
                 catch
                 {
-                    ModelState.AddModelError("Hashtags", "Dữ liệu hashtag không hợp lệ.");
+                    ModelState.AddModelError("Hashtags", "None hashtag are available");
                 }
             }
-
-            // Hien tai ko hop ly xi sua 
+ 
             if (!ModelState.IsValid)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
+                //foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                //{
+                //   
+                //}
 
-                ModelState.AddModelError("", System.Text.Json.JsonSerializer.Serialize(model));
+                //ModelState.AddModelError("", System.Text.Json.JsonSerializer.Serialize(model));
+                ModelState.AddModelError("", "Error post news");
 
                 return View(model);
             }
@@ -87,13 +88,9 @@ namespace RiskChance.Areas.User.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("ImgTinTuc", "Lỗi khi lưu ảnh: " + ex.Message);
+                    ModelState.AddModelError("ImgTinTuc", "Error when upload picture: " + ex.Message);
                     return View(model);
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("ImgTinTuc", "Vui lòng chọn ảnh.");
             }
 
             var tinTuc = new TinTuc()
@@ -113,7 +110,7 @@ namespace RiskChance.Areas.User.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Lỗi khi lưu tin tức vào database: " + ex.Message);
+                ModelState.AddModelError("", "Error create news: " + ex.Message);
             }
 
             int tinTucId = tinTuc.IDTinTuc;
@@ -140,14 +137,10 @@ namespace RiskChance.Areas.User.Controllers
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError("", $"Lỗi khi xử lý hashtag '{tag}': {ex.Message}");
+                        ModelState.AddModelError("", $"Error solve hashtag '{tag}': {ex.Message}");
                         return View(model);
                     }
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("Hashtags", "Cần nhập ít nhất một hashtag.");
             }
 
             return RedirectToAction("Index", "News", new { area = "" });
