@@ -1,4 +1,4 @@
-﻿@model List<RiskChance.Models.Startup>
+﻿@model IEnumerable<RiskChance.Models.Startup>
 @if (Model != null)
 {
     @foreach (var startup in Model)
@@ -28,7 +28,7 @@
 else
 {
     <div>
-        <h3 class="h3 text-center fw-bold text-danger">
+        <h3 class="h3 fw-bold text-danger text-center">
             Không có thông tin bạn cần kiếm
         </h3>
     </div>

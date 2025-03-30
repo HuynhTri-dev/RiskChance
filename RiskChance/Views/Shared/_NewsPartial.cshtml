@@ -1,6 +1,6 @@
-﻿@model List<RiskChance.Models.ViewModel.TinTucViewModel.TinTucBoxViewModel>
+﻿@model IEnumerable<RiskChance.Models.ViewModel.TinTucViewModel.TinTucBoxViewModel>
 
-@if (Model != null)
+@if (Model != null || Model.Any())
 {
     @foreach (var news in Model)
     {
@@ -10,7 +10,8 @@
                 <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc">
                     <img src="@news.ImgTinTuc"
                          alt="News @news.Title"
-                         class="news-img img-fluid rounded-3 d-none d-lg-block shadow" />
+                         class="news-img rounded-3 d-none d-lg-block"
+                         />
                 </a>
             </div>
 
@@ -46,7 +47,7 @@ else
 {
     <div>
         <h3 class="h3 fw-bold text-danger text-center">
-            Không có thông tin bạn cần kiếm
+            None News
         </h3>
     </div>
 }

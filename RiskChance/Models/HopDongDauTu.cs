@@ -24,6 +24,7 @@ namespace RiskChance.Models
 
         [Required]
         public TrangThaiKyKetEnum TrangThaiKyKet { get; set; } = TrangThaiKyKetEnum.DaGui;
+        public bool? ThanhToan { get; set; }
 
         // Khóa ngoại
         public int? IDStartup { get; set; }
@@ -33,6 +34,7 @@ namespace RiskChance.Models
         public string? IDNguoiDung { get; set; }
         [ForeignKey("IDNguoiDung")]
         public NguoiDung? NguoiDung { get; set; }
+        public ICollection<ThanhToanLoiNhuan>? ThanhToanLoiNhuans { get; set; } = new List<ThanhToanLoiNhuan>();
     }
 
     public enum TrangThaiKyKetEnum

@@ -230,7 +230,7 @@ namespace RiskChance.Migrations
                     b.Property<string>("FileGiayTo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IDStartup")
+                    b.Property<int?>("IDStartup")
                         .HasColumnType("int");
 
                     b.Property<string>("LoaiFile")
@@ -294,6 +294,9 @@ namespace RiskChance.Migrations
 
                     b.Property<double?>("PhanTramLoiNhuan")
                         .HasColumnType("float");
+
+                    b.Property<bool?>("ThanhToan")
+                        .HasColumnType("bit");
 
                     b.Property<decimal?>("TongTien")
                         .HasColumnType("decimal(18,2)");
@@ -447,6 +450,35 @@ namespace RiskChance.Migrations
                     b.HasIndex("IDNguoiDung");
 
                     b.ToTable("Startup");
+                });
+
+            modelBuilder.Entity("RiskChance.Models.ThanhToanLoiNhuan", b =>
+                {
+                    b.Property<int>("IdThanhToan")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdThanhToan"));
+
+                    b.Property<int?>("HopDongDauTuIDHopDong")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IDHopDong")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayThanhToan")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("SoTien")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("IdThanhToan");
+
+                    b.HasIndex("HopDongDauTuIDHopDong");
+
+                    b.HasIndex("IDHopDong");
+
+                    b.ToTable("ThanhToanLoiNhuans");
                 });
 
             modelBuilder.Entity("RiskChance.Models.ThongBao", b =>
@@ -653,8 +685,7 @@ namespace RiskChance.Migrations
                     b.HasOne("RiskChance.Models.Startup", "Startup")
                         .WithMany("GiayTos")
                         .HasForeignKey("IDStartup")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Startup");
                 });
@@ -693,6 +724,20 @@ namespace RiskChance.Migrations
                     b.Navigation("LinhVuc");
 
                     b.Navigation("NguoiDung");
+                });
+
+            modelBuilder.Entity("RiskChance.Models.ThanhToanLoiNhuan", b =>
+                {
+                    b.HasOne("RiskChance.Models.HopDongDauTu", "HopDongDauTu")
+                        .WithMany("ThanhToanLoiNhuans")
+                        .HasForeignKey("HopDongDauTuIDHopDong");
+
+                    b.HasOne("RiskChance.Models.HopDongDauTu", null)
+                        .WithMany()
+                        .HasForeignKey("IDHopDong")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("HopDongDauTu");
                 });
 
             modelBuilder.Entity("RiskChance.Models.ThongBao", b =>
@@ -751,6 +796,11 @@ namespace RiskChance.Migrations
             modelBuilder.Entity("RiskChance.Models.Hashtag", b =>
                 {
                     b.Navigation("TinTucHashtags");
+                });
+
+            modelBuilder.Entity("RiskChance.Models.HopDongDauTu", b =>
+                {
+                    b.Navigation("ThanhToanLoiNhuans");
                 });
 
             modelBuilder.Entity("RiskChance.Models.LinhVuc", b =>

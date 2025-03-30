@@ -23,6 +23,7 @@ namespace RiskChance.Data
         public DbSet<TinTucHashtag> TinTucHashtags { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<BinhLuanTinTuc> BinhLuanTinTucs { get; set; }
+        public DbSet<ThanhToanLoiNhuan> ThanhToanLoiNhuans { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,8 +50,6 @@ namespace RiskChance.Data
                 .WithMany(nd => nd.BinhLuanTinTucs)
                 .HasForeignKey(bl => bl.IDNguoiDung)
                 .OnDelete(DeleteBehavior.SetNull);
-
-
 
             // Khi xóa người dùng, xóa luôn startup và giấy tờ liên quan (Cascade)
             modelBuilder.Entity<Startup>()
@@ -93,19 +92,25 @@ namespace RiskChance.Data
                 .HasOne(tt => tt.TinTuc)
                 .WithMany(t => t.TinTucHashtags)
                 .HasForeignKey(tt => tt.IDTinTuc)
-                .OnDelete(DeleteBehavior.Cascade); // Khi xóa TinTuc thì xóa luôn TinTucHashtag
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TinTucHashtag>()
                 .HasOne(tt => tt.Hashtag)
                 .WithMany(h => h.TinTucHashtags)
                 .HasForeignKey(tt => tt.IDHashtag)
-                .OnDelete(DeleteBehavior.Cascade); // Khi xóa Hashtag thì xóa luôn TinTucHashtag
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<DanhGiaStartup>()
                 .HasOne(dg => dg.Startup)
                 .WithMany(s => s.DanhGiaStartups)
                 .HasForeignKey(dg => dg.IDStartup)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ThanhToanLoiNhuan>()
+                .HasOne<HopDongDauTu>()
+                .WithMany()
+                .HasForeignKey(p => p.IDHopDong)
+                .OnDelete(DeleteBehavior.SetNull);
 
         }
     }

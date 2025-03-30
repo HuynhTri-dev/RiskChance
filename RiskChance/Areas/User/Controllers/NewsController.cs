@@ -11,6 +11,7 @@ using RiskChance.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.RegularExpressions;
 
 namespace RiskChance.Areas.User.Controllers
 {
@@ -147,6 +148,55 @@ namespace RiskChance.Areas.User.Controllers
         }
 
 
+        // Danh sach cac news cua nguoi dung da dang
+        public async Task<IActionResult> UserIndex()
+        {
+            ViewBag.FeatureActive = "myPost";
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                ModelState.AddModelError("", "Cannot Find The User");
+                return View();
+            }
+
+            var news = await _context.TinTucs
+                            .Where(t => t.IDNguoiDung == userId)
+                            .OrderByDescending(t => t.NgayDang)
+                            .Select(x => new TinTucBoxViewModel
+                            {
+                                IDTinTuc = x.IDTinTuc,
+                                Title = x.TieuDe,
+                                ImgTinTuc = x.ImgTinTuc,
+                                NoiDung = TrimHtmlContent(x.NoiDung, 40),
+                                NgayDang = x.NgayDang,
+                                IDNguoiDang = x.IDNguoiDung,
+                                NameNguoiDang = x.NguoiDung.HoTen,
+                                ImgNguoiDang = x.NguoiDung.AvatarUrl
+                            })
+                            .ToListAsync();
+
+            return View(news);
+        }
+
+        // hàm này để loại bỏ các thẻ html trong db
+        public static string TrimHtmlContent(string? html, int wordLimit)
+        {
+            if (string.IsNullOrEmpty(html)) return "";
+
+            // Loại bỏ tất cả HTML nhưng giữ xuống dòng (`<br>` -> `\n`)
+            string text = Regex.Replace(html, "<br\\s*/?>", "\n");  // Giữ xuống dòng
+            text = Regex.Replace(text, "<.*?>", "");  // Xoá thẻ HTML
+
+            // Cắt nội dung theo số từ
+            var words = text.Split(new[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length > wordLimit)
+            {
+                return string.Join(" ", words.Take(wordLimit)) + "..."; // 🔥 Cắt nội dung
+            }
+
+            return text;
+        }
+
         // Sua
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -156,6 +206,9 @@ namespace RiskChance.Areas.User.Controllers
 
             return View(new TinTucAddViewModel
             {
+                IDTinTuc = id,
+                TieuDe = tinTuc.TieuDe,
+                IDNguoiDung = tinTuc.IDNguoiDung,
                 NoiDung = tinTuc.NoiDung,
                 ImgTinTuc = tinTuc.ImgTinTuc,
                 Hashtags = tinTuc.TinTucHashtags.Select(h => h.Hashtag.TenHashtag).ToList()
@@ -164,43 +217,107 @@ namespace RiskChance.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(TinTucAddViewModel model, IFormFile? imageUrl)
+        public async Task<IActionResult> Edit(TinTucAddViewModel model, IFormFile? ImgTinTuc, string? hiddenHashtags)
         {
-            var tinTuc = await _context.TinTucs.Include(t => t.TinTucHashtags).FirstOrDefaultAsync(t => t.IDTinTuc == model.IDTinTuc);
-            if (tinTuc == null) return NotFound();
+            var tinTuc = await _context.TinTucs
+                .Include(t => t.TinTucHashtags)
+                .FirstOrDefaultAsync(t => t.IDTinTuc == model.IDTinTuc);
 
+            if (tinTuc == null) return RedirectToAction(nameof(UserIndex));
+
+            if (!string.IsNullOrEmpty(hiddenHashtags))
+            {
+                try
+                {
+                    model.Hashtags = JsonSerializer.Deserialize<List<string>>(hiddenHashtags);
+                }
+                catch
+                {
+                    ModelState.AddModelError("Hashtags", "None hashtag are available");
+                }
+            }
+
+            tinTuc.TieuDe = model.TieuDe;
             tinTuc.NoiDung = model.NoiDung;
-            if (imageUrl != null) tinTuc.ImgTinTuc = await ImageUtil.SaveAsync(imageUrl);
+            tinTuc.NgayDang = DateTime.Now;
 
-            tinTuc.TinTucHashtags.Clear();
-            if (model.Hashtags?.Any() == true)
+            if (ImgTinTuc != null)
+            {
+                try
+                {
+                    model.ImgTinTuc = await ImageUtil.SaveAsync(ImgTinTuc);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("ImgTinTuc", "Error when upload picture: " + ex.Message);
+                    return View(model);
+                }
+            }
+
+            int idTinTuc = tinTuc.IDTinTuc;
+
+            if (model.Hashtags != null && model.Hashtags.Any())
             {
                 foreach (var tag in model.Hashtags)
                 {
-                    var existingTag = await _context.Hashtags.FirstOrDefaultAsync(h => h.TenHashtag == tag)
-                                     ?? new Hashtag { TenHashtag = tag };
+                    try
+                    {
+                        var existingTag = await _hashtagRepo.GetFirstOrDefaultAsync(h => h.TenHashtag == tag);
 
-                    _context.Hashtags.Add(existingTag);
-                    await _context.SaveChangesAsync();
+                        if (existingTag == null)
+                        {
+                            existingTag = new Hashtag { TenHashtag = tag };
+                            await _hashtagRepo.AddAsync(existingTag);
+                        }
 
-                    tinTuc.TinTucHashtags.Add(new TinTucHashtag { IDHashtag = existingTag.IDHashtag });
+                        var existingTinTucHashtag = await _tinTucHashtagRepo
+                            .GetFirstOrDefaultAsync(th => th.IDTinTuc == idTinTuc && th.IDHashtag == existingTag.IDHashtag);
+
+                        if (existingTinTucHashtag != null) continue;
+
+                        await _tinTucHashtagRepo.AddAsync(new TinTucHashtag
+                        {
+                            IDTinTuc = idTinTuc,
+                            IDHashtag = existingTag.IDHashtag
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Error solve hashtag '{tag}': {ex.Message}");
+                        return View(model);
+                    }
                 }
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UserIndex));
         }
 
         // Xoa
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            var tinTuc = await _context.TinTucs.FindAsync(id);
-            if (tinTuc == null) return NotFound();
+            if (id == null) return NotFound();
+            try
+            {
+                
+                var tinTuc = await _context.TinTucs
+                    .Include(t => t.BinhLuanTinTucs)
+                    .FirstOrDefaultAsync(t => t.IDTinTuc == id);
 
-            _context.TinTucs.Remove(tinTuc);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (tinTuc == null) return NotFound();
+
+                _context.BinhLuanTinTucs.RemoveRange(tinTuc.BinhLuanTinTucs);
+
+                await _newsRepo.DeleteAsync(id);
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Delete Unsuccess!";
+                return RedirectToAction(nameof(UserIndex));
+            }
+            return RedirectToAction(nameof(UserIndex));
         }
     }
 }

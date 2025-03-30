@@ -1,0 +1,115 @@
+﻿@model IEnumerable<RiskChance.Models.ViewModel.TinTucViewModel.TinTucBoxViewModel>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/news.css" asp-append-version="true" />
+    <style>
+        .dropdown-item:active {
+            background-color: #e0e0e0 !important; 
+            color: #000 !important; 
+        }
+
+    </style>
+}
+
+@{
+    Layout = "~/Areas/User/Views/Shared/_ProfileLayout.cshtml";
+    ViewData["Title"] = "My Post";
+}
+
+<div class="mb-3 d-flex justify-content-center">
+    <a asp-area="User" asp-controller="News" asp-action="Add"
+       class="btn btn-outline-primary fw-bold text-white d-flex align-items-center justify-content-center"
+       style="padding: 10px 20px; width: auto; min-width: 50px;">
+
+        <i class="fa-solid fa-pen me-2"></i>
+        <span>Post News</span>
+
+    </a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="news-list-container container-fluid">
+    <section class="news-list">
+        <!-- News list -->
+
+            @if (Model != null || Model.Any())
+            {
+                @foreach (var news in Model)
+                {
+                <div class="news-item row align-items-center mb-3">
+                    <!-- Hình ảnh tin tức -->
+                    <div class="col-lg-4">
+                        <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc">
+                            <img src="@news.ImgTinTuc"
+                                 alt="News @news.Title"
+                                 class="news-img rounded-3 d-none d-lg-block" />
+                        </a>
+                    </div>
+
+                    <!-- Nội dung tin tức -->
+                    <div class="news-content-box col-lg-8 position-relative">
+                        <div class="news-content mb-2">
+                            <a asp-area="" asp-controller="News" asp-action="Details" asp-route-id="@news.IDTinTuc" class="text-decoration-none">
+                                <h4 class="h4 fw-bold news-title text-black">@news.Title</h4>
+                            </a>
+                            <p class="news-desc text-muted line-clamp-2">@news.NoiDung</p>
+                            <p class="news-date text-secondary small">
+                                <i class="fa-solid fa-calendar"></i>: @news.NgayDang?.ToString("dd/MM/yyyy")
+                            </p>
+                        </div>
+
+                        <!-- Tác giả -->
+                        <a class="news-author d-flex align-items-center text-decoration-none"
+                           asp-area="" asp-controller="News" asp-action="Details">
+                            <img class="author-img rounded-circle me-2 border"
+                                 src="@(news.ImgNguoiDang ?? Url.Content("~/assets/user/image.png"))"
+                                 alt="Author - @news.NameNguoiDang"
+                                 width="40"
+                                 height="40" />
+                            <p class="author-name fw-bold text-dark">@news.NameNguoiDang</p>
+                        </a>
+
+                        <!-- Nút ba chấm (Dropdown Menu) -->
+                        <div class="position-absolute top-0 end-0 p-2">
+                            <div class="dropdown">
+                                <button class="btn" style="background: none;" type="button" id="dropdownMenuButton-@news.IDTinTuc" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@news.IDTinTuc">
+                                    <li>
+                                        <a class="dropdown-item text-primary" asp-area="User" asp-controller="News" asp-action="Edit" asp-route-id="@news.IDTinTuc">
+                                            <i class="fa-solid fa-pen-to-square me-2"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" onclick="confirmDelete('@news.IDTinTuc', '@Url.Action("Delete", "News", new {area = "User"})');">
+                                            <i class="fa-solid fa-trash me-2"></i> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+                }
+            }
+            else
+            {
+                <div>
+                    <h3 class="h3 fw-bold text-danger text-center">
+                        None News
+                    </h3>
+                </div>
+            }
+    </section>
+</div>
