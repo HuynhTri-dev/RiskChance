@@ -9,10 +9,10 @@ using RiskChance.Utils;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 
-namespace RiskChance.Areas.User.Controllers
+namespace RiskChance.Areas.Investor.Controllers
 {
-    [Area("User")]
-    [Authorize]
+    [Area("Investor")]
+    [Authorize(Roles="Investor, Founder")]
     public class HopDongController : Controller
     {
         private readonly IRepository<HopDongDauTu> _contractRepo;
@@ -45,7 +45,7 @@ namespace RiskChance.Areas.User.Controllers
 
             ViewBag.NameStartup = startup.TenStartup;
             ViewBag.IdStartup = startup.IDStartup;
-            
+
             return View();
         }
 
@@ -55,7 +55,7 @@ namespace RiskChance.Areas.User.Controllers
             if (!ModelState.IsValid)
                 return View(hopDong);
 
-            
+
             if (hopDong.IDStartup == null)
             {
                 ModelState.AddModelError("", "Không có startup hợp lệ.");
@@ -111,7 +111,7 @@ namespace RiskChance.Areas.User.Controllers
                                     .Include(x => x.NguoiDung)
                                     .Include(x => x.Startup)
                                     .FirstOrDefaultAsync(x => x.IDHopDong == idContract);
-                                   
+
             if (contract == null)
                 return NotFound();
 
@@ -128,7 +128,7 @@ namespace RiskChance.Areas.User.Controllers
 
             if (contractExist == null)
             {
-               ModelState.AddModelError("", "None contract available");
+                ModelState.AddModelError("", "None contract available");
             }
 
             string fileUrl = null;
@@ -153,7 +153,7 @@ namespace RiskChance.Areas.User.Controllers
 
             TempData["Message"] = "Successful Sign";
 
-            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = hopDong.IDHopDong });
+            return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
         }
 
         [HttpPost]
@@ -162,7 +162,7 @@ namespace RiskChance.Areas.User.Controllers
             if (id == null)
             {
                 TempData["Message"] = "Error deny contract";
-                return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = id });
             }
 
             var contractExist = await _contractRepo.GetByIdAsync(id);
@@ -170,7 +170,7 @@ namespace RiskChance.Areas.User.Controllers
             if (contractExist == null)
             {
                 TempData["Message"] = "Error deny contract";
-                return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = id });
             }
 
             contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.BiTuChoi;
@@ -179,7 +179,7 @@ namespace RiskChance.Areas.User.Controllers
             await _contractRepo.UpdateAsync(contractExist);
 
             TempData["Message"] = "Successful Deny";
-            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = id });
+            return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = id });
         }
 
         [HttpGet]
@@ -235,7 +235,7 @@ namespace RiskChance.Areas.User.Controllers
 
             TempData["Message"] = "Successful Update";
 
-            return RedirectToAction("Details", "HopDong", new { area = "User", idContract = hopDong.IDHopDong });
+            return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
         }
     }
 }

@@ -83,16 +83,18 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "HopDongRoute",
     pattern: "HopDong/{idStartup:int}",
-    defaults: new { area = "User", controller = "HopDong", action = "Create" }
+    defaults: new { area = "Investor", controller = "HopDong", action = "Create" }
 );
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapHub<StatusStartupHub>("/statusStartupHub").RequireAuthorization();
-app.MapHub<StatusStartupHub>("/statusNewsHub").RequireAuthorization();
-app.MapHub<PostCommentStartupHub>("/postCommentStartupHub").RequireAuthorization();
+app.MapHub<StatusStartupHub>("/statusStartupHub");
+app.MapHub<StatusStartupHub>("/statusNewsHub");
+app.MapHub<PostCommentStartupHub>("/postCommentStartupHub");
+app.MapHub<PostCommentNewsHub>("/commentHub");
+
 
 app.MapRazorPages();
 

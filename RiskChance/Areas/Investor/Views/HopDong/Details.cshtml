@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Titile"] = "Details";
+    ViewData["Title"] = "Details";
 
     string GetStatusText(TrangThaiKyKetEnum status)
     {
@@ -64,7 +64,7 @@
                 Sign Confirmation
             </button>
             @* Cap nhat *@
-            <a asp-controller="HopDong" asp-action="Edit" asp-route-id="@Model.IDHopDong"
+            <a asp-area="Investor" asp-controller="HopDong" asp-action="Edit" asp-route-id="@Model.IDHopDong"
                class="btn btn-warning fw-bold p-2 text-decoration-none text-white">
                 Contact Update
             </a>
@@ -81,7 +81,6 @@
                    style="width: 50px; height: 50px; border-radius: 8px;">
                     <i class="fa-solid fa-backward"></i>
                 </a>
-
             }
         </div>
     </div>
@@ -100,7 +99,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-area="User" asp-controller="HopDong" asp-action="SignConfirm" method="post" enctype="multipart/form-data">
+                <form asp-area="Investor" asp-controller="HopDong" asp-action="SignConfirm" method="post" enctype="multipart/form-data">
                     <input asp-for="IDHopDong" type="hidden">
                     <div class="mb-3">
                         <label asp-for="FileUrl" class="form-label">File Contact</label>
@@ -128,7 +127,7 @@
                 <div class="d-flex mt-2 justify-content-around align-items-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
 
-                    <form asp-controller="HopDong" asp-action="DenyContract" method="post">
+                    <form asp-area="Investor" asp-controller="HopDong" asp-action="DenyContract" method="post">
                         <input name="id" type="hidden" value="@Model.IDHopDong">
                         <button class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
                             <i class="fa-solid fa-ban"></i> Deny

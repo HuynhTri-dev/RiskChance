@@ -1,15 +1,17 @@
-﻿<style>
-    .rating-start {
-        font-size: 32px;
-        color: #ccc;
-        cursor: pointer;
-        transition: color 0.3s;
-    }
-
-        .rating-start.selected {
-            color: var(--star);
+﻿
+    <style>
+        .rating-start {
+            font-size: 32px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s;
         }
-</style>
+
+            .rating-start.selected {
+                color: var(--star);
+            }
+    </style>
+
 
 @model RiskChance.Models.DanhGiaStartup;
 
@@ -42,46 +44,40 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <button class="btn btn-primary fw-bold">Send Comment</button>
-        @* @if (Model.IDDanhGia == null)
-        {
-
-        }
-        else
-        {
-        <button class="btn btn-primary fw-bold">Update Comment</button>
-        } *@
     </form>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const stars = document.querySelectorAll('.rating-start');
 
-        stars.forEach(star => {
-            star.addEventListener('mouseover', function () {
-                let value = this.getAttribute('data-value');
-                stars.forEach(s => {
-                    s.classList.remove('selected');
-                    if (s.getAttribute('data-value') <= value) {
-                        s.classList.add('selected');
-                    }
-                });
-            });
+     <script>
+         document.addEventListener("DOMContentLoaded", function () {
+             const stars = document.querySelectorAll('.rating-start');
 
-            star.addEventListener('click', function () {
-                let value = this.getAttribute('data-value');
-                document.getElementById('ratingValue').value = value;
-            });
+             stars.forEach(star => {
+                 star.addEventListener('mouseover', function () {
+                     let value = this.getAttribute('data-value');
+                     stars.forEach(s => {
+                         s.classList.remove('selected');
+                         if (s.getAttribute('data-value') <= value) {
+                             s.classList.add('selected');
+                         }
+                     });
+                 });
 
-            star.addEventListener('mouseleave', function () {
-                let selectedValue = document.getElementById('ratingValue').value;
-                stars.forEach(s => {
-                    s.classList.remove('selected');
-                    if (s.getAttribute('data-value') <= selectedValue) {
-                        s.classList.add('selected');
-                    }
-                });
-            });
-        });
-    });
-</script>
+                 star.addEventListener('click', function () {
+                     let value = this.getAttribute('data-value');
+                     document.getElementById('ratingValue').value = value;
+                 });
+
+                 star.addEventListener('mouseleave', function () {
+                     let selectedValue = document.getElementById('ratingValue').value;
+                     stars.forEach(s => {
+                         s.classList.remove('selected');
+                         if (s.getAttribute('data-value') <= selectedValue) {
+                             s.classList.add('selected');
+                         }
+                     });
+                 });
+             });
+         });
+     </script>
+

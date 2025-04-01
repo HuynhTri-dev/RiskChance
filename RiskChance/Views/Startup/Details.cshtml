@@ -15,6 +15,22 @@
     ViewData["Title"] = @Model.Name;
 }
 
+@section Styles {
+    <style>
+        .rating-start-edit {
+            font-size: 32px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+            .rating-start-edit.selected {
+                color: var(--star);
+            }
+    </style>
+}
+
+
 <div class="mt-4 container">
     <div class="row">
         <!-- Ảnh sản phẩm -->
@@ -51,8 +67,8 @@
                         style="margin-right: 10px">
                     Contact
                 </button>
-                <a asp-area="User" 
-                    asp-controller="HopDong" 
+                <a asp-area="Investor"
+                   asp-controller="HopDong" 
                     asp-action="Create" 
                     asp-route-idStartup="@Model.IDStartup"
                     class="btn btn-success fw-bold text-white">
@@ -117,40 +133,7 @@
     </div>
 </div>
 
-<script>
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/postCommentStartupHub")
-        .build();
 
-    connection.on("ReceiveComment", function (IDNguoiDang, Comment, DiemDanhGia, AvatarUrl, NgayDanhGia) {
-        // Tạo icon sao dựa trên điểm đánh giá
-        let starsHtml = "";
-        for (let i = 0; i < DiemDanhGia; i++) {
-            starsHtml += '<i class="fa-solid fa-star point"></i> ';
-        }
-
-        // Tạo HTML mới cho bình luận
-        const commentHtml = `
-                    <div class="d-flex align-items-start mb-3 p-3 rounded border shadow-sm">
-                    <img src="${AvatarUrl || '/assets/user/image.png'}"
-                     alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
-                <div>
-                    <div class="d-flex align-items-center">
-                            <h6 class="fw-bold mb-1 me-2">${Comment}</h6>
-                        ${starsHtml}
-                    </div>
-                    <p class="mb-1">${comment.message}</p>
-                        <small class="text-muted">${new Date(NgayDanhGia).toLocaleString()}</small>
-                </div>
-            </div>`;
-
-        // Chèn vào đầu danh sách bình luận
-        document.getElementById("commentsList").insertAdjacentHTML("afterbegin", commentHtml);
-
-        console.log("Nhận cập nhật từ SignalR, cập nhật danh sách bình luận...");
-    });
-
-    connection.start()
-        .then(() => console.log("SignalR Comment connected"))
-        .catch(err => console.error("SignalR error:", err));
-</script>
+@section Scripts {
+    <script src="~/js/DetailStartup.js"></script>
+}

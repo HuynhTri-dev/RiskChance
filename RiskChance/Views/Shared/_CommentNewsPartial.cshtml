@@ -1,0 +1,29 @@
+﻿@model RiskChance.Models.BinhLuanTinTuc
+
+<form asp-area="User" asp-controller="CommentNews" asp-action="Create" method="post">
+    <input type="hidden" asp-for="IDTinTuc" />
+
+    <div class="rating mb-2">
+        <i class="fa-solid fa-star rating-start" data-value="1"></i>
+        <i class="fa-solid fa-star rating-start" data-value="2"></i>
+        <i class="fa-solid fa-star rating-start" data-value="3"></i>
+        <i class="fa-solid fa-star rating-start" data-value="4"></i>
+        <i class="fa-solid fa-star rating-start" data-value="5"></i>
+    </div>
+
+    <input type="hidden" id="ratingValue" asp-for="DiemDanhGia" value="0">
+    <span asp-validation-for="DiemDanhGia" class="text-danger"></span>
+
+    <div class="mb-3">
+        <textarea id="commentText"
+                  class="form-control"
+                  asp-for="NhanXet"
+                  rows="3"
+                  placeholder="Writing your comment"></textarea>
+        <span asp-validation-for="NhanXet" class="text-danger"></span>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <button class="btn btn-primary fw-bold">Send Comment</button>
+</form>

@@ -76,7 +76,10 @@ namespace QuanLyStartup.Controllers
                                       })
                                 .ToListAsync();
 
-            model.StartupList = await _context.Startups.Include(s => s.LinhVuc).Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet).ToListAsync();
+            model.StartupList = await _context.Startups
+                .Include(s => s.LinhVuc)
+                .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
+                .ToListAsync();
 
             model.TopBusiness = await _context.Startups
                                              .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)

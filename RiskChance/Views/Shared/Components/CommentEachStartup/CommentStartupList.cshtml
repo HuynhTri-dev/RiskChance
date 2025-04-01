@@ -4,6 +4,11 @@
     .point {
         color: var(--star);
     }
+
+    .dropdown-item:active {
+        background-color: #e0e0e0 !important;
+        color: #000 !important;
+    }
 </style>
 
 
@@ -11,7 +16,7 @@
     {
         @foreach (var com in Model)
         {
-            <div class="d-flex align-items-start mb-3 p-3 rounded border shadow-sm">
+            <div id="comment-@com.IDDanhGia" class="d-flex align-items-start mb-3 p-3 position-relative rounded border shadow-sm">
                 <!-- Avatar -->
                 <img src="@(com.NguoiDung != null && !string.IsNullOrEmpty(com.NguoiDung.AvatarUrl)
                                                  ? com.NguoiDung.AvatarUrl
@@ -35,11 +40,35 @@
                     <!-- Ngày giờ bình luận -->
                     <small class="text-muted">@com.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")</small>
                 </div>
+
+                @if (User.Identity.IsAuthenticated && User.Identity.Name == com.NguoiDung?.Email)
+                {
+                    <!-- Nút ba chấm (Dropdown Menu) -->
+                    <div class="position-absolute top-0 end-0 p-2">
+                        <div class="dropdown">
+                            <button class="btn" style="background: none;" type="button" id="dropdownMenuButton-@com.IDDanhGia" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@com.IDDanhGia">
+                                <li>
+                                    <button type="button" class="dropdown-item text-primary" onclick="CallEditBox('@com.IDDanhGia')">
+                                        <i class="fa-solid fa-pen-to-square me-2"></i> Edit
+                                    </button>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" onclick="confirmDelete('@com.IDDanhGia', '@Url.Action("Delete", "CommentStartup", new {area = "User"})');">
+                                        <i class="fa-solid fa-trash me-2"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
             </div>
         }
 
     }
     else
     {
-        <p class="text-muted">Chưa có bình luận nào.</p>
+        <p class="text-muted">Don't have any comment</p>
     }

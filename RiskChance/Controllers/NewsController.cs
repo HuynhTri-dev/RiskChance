@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using RiskChance.Data;
 using RiskChance.Models;
 using RiskChance.Models.ViewModel.TinTucViewModel;
@@ -127,27 +128,6 @@ namespace QuanLyStartup.Controllers
             return text;
         }
 
-
-        //[HttpGet]
-        //public async Task<IActionResult> LoadNews(int page = 1, int pageSize = 6)
-        //{
-        //    var news = await _context.TinTucs
-        //        .OrderByDescending(t => t.NgayDang)
-        //        .Skip((page - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .Select(t => new
-        //        {
-        //            t.IDTinTuc,
-        //            t.NoiDung,
-        //            t.ImgTinTuc,
-        //            t.NgayDang,
-        //            NguoiDang = t.NguoiDung != null ? t.NguoiDung.HoTen : "Ẩn danh" // Lấy tên người đăng
-        //        })
-        //        .ToListAsync();
-
-        //    return Json(news);
-        //}
-
         //Search
         [HttpGet]
         public async Task<IActionResult> SearchNews(string query)
@@ -211,35 +191,24 @@ namespace QuanLyStartup.Controllers
                 return NotFound();
             }
 
-            var news = await _newsRepo.GetByIdAsync(id);
-            if (news == null)
-                return NotFound();
+            var news = await _context.TinTucs
+                            .Include(x => x.BinhLuanTinTucs)    
+                                .ThenInclude(x => x.NguoiDung)
+                            .Include(x => x.NguoiDung)
+                            .Include(x => x.TinTucHashtags)
+                                .ThenInclude(x => x.Hashtag)
+                            .FirstOrDefaultAsync(x => x.IDTinTuc == id);
 
-            var hashtag = await _context.TinTucHashtags
-                            .Where(x => x.IDTinTuc == id)
-                            .Select(x => new Hashtag
-                            {
-                                IDHashtag = x.IDHashtag,
-                                TenHashtag = x.Hashtag.TenHashtag
-                            })
-                            .ToListAsync();
+            if (news == null) return NotFound();
 
-
-            var model = await _context.TinTucs
-                                .Where(x => x.IDTinTuc == id)
-                                .Select(x => new TinTucBoxViewModel
-                                {
-                                    IDTinTuc = x.IDTinTuc,
-                                    Title = x.TieuDe,
-                                    ImgTinTuc = x.ImgTinTuc,
-                                    NoiDung = x.NoiDung,
-                                    NgayDang = x.NgayDang,
-                                    IDNguoiDang = x.IDNguoiDung,
-                                    NameNguoiDang = x.NguoiDung.HoTen,
-                                    ImgNguoiDang = x.NguoiDung.AvatarUrl,
-                                    Hashtags = hashtag
-                                })
-                                .FirstOrDefaultAsync();
+            DetailNewsViewModel model = new DetailNewsViewModel()
+            {
+                TinTuc = news,
+                BinhLuanTinTuc = new BinhLuanTinTuc()
+                {
+                    IDTinTuc = news.IDTinTuc
+                }
+            };
 
             return View(model);
         }

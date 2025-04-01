@@ -39,7 +39,7 @@ namespace RiskChance.Areas.User.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
             var userId = HttpContext.Session.GetString("UserId");
             if (userId == null)

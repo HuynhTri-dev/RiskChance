@@ -1,0 +1,31 @@
+﻿@model RiskChance.Models.BinhLuanTinTuc
+
+<form asp-area="User" asp-controller="CommentNews" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="IDTinTuc" />
+    <input type="hidden" asp-for=IDBinhLuan/>
+    <input type="hidden" asp-for="IDNguoiDung"/>
+
+    <div class="rating-edit mb-2">
+        <i class="fa-solid fa-star rating-start-edit" data-value="1"></i>
+        <i class="fa-solid fa-star rating-start-edit" data-value="2"></i>
+        <i class="fa-solid fa-star rating-start-edit" data-value="3"></i>
+        <i class="fa-solid fa-star rating-start-edit" data-value="4"></i>
+        <i class="fa-solid fa-star rating-start-edit" data-value="5"></i>
+    </div>
+
+    <input type="hidden" id="ratingValueEdit" asp-for="DiemDanhGia">
+    <span asp-validation-for="DiemDanhGia" class="text-danger"></span>
+
+    <div class="mb-3">
+        <textarea id="commentText"
+                  class="form-control"
+                  asp-for="NhanXet"
+                  rows="3"
+                  placeholder="Writing your comment"></textarea>
+        <span asp-validation-for="NhanXet" class="text-danger"></span>
+    </div>
+    _EditCommentStartupPartial
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <button class="btn btn-primary fw-bold">Update Comment</button>
+</form>
