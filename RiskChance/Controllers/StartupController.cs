@@ -102,7 +102,7 @@ namespace QuanLyStartup.Controllers
                                              .ToListAsync();
 
             model.TopInvestors = await _context.HopDongDauTus
-                                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.TongTien > 0) 
+                                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true && x.TongTien > 0) 
                                                  .GroupBy(x => x.IDNguoiDung)
                                                  .Select(g => new
                                                  {
@@ -187,7 +187,7 @@ namespace QuanLyStartup.Controllers
             //            .ToListAsync();
 
             var amount = (await _contractRepo.GetAllAsync())
-                        .Where(x => x.IDStartup == startup.IDStartup && x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet)
+                        .Where(x => x.IDStartup == startup.IDStartup && x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true)
                         .Sum(x => x.TongTien);
 
 

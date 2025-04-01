@@ -73,7 +73,7 @@
         <!-- Nut chuc nang -->
         <div class="d-flex justify-content-around mt-4">
             @* Ky *@
-            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.DaDuyet)
+            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.DaDuyet && User.IsInRole("Founder"))
             {
                 <button type="button" data-bs-toggle="modal" data-bs-target="#signModal"
                         class="btn btn-success fw-bold p-2 text-white">
@@ -86,7 +86,7 @@
                 Contact Update
             </a>
             @* Tu choi *@
-            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.BiTuChoi)
+            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.BiTuChoi && User.IsInRole("Founder"))
             {
                 <button type="button" data-bs-toggle="modal" data-bs-target="#denyModal"
                         class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
@@ -102,28 +102,37 @@
                     <i class="fa-solid fa-backward"></i>
                 </a>
             }
+            else if (User.IsInRole("Investor"))
+            {
+                <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index"
+                   class="btn btn-secondary text-white d-flex align-items-center justify-content-center"
+                   style="width: 50px; height: 50px; border-radius: 8px;">
+                    <i class="fa-solid fa-backward"></i>
+                </a>
+            }
         </div>
     </div>
     <!-- Chuc nang phu -->
     <div class="col-lg-4 mx-auto">
-        @if (User.IsInRole("Investor"))
+        @* Cac nay co the phat trien them  *@
+        @if (User.IsInRole("Investor") && Model.ThanhToan == false && Model.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet)
         {
-            <form asp-area="Investor" asp-controller="HopDong" asp-action="ThanhToan" method="post">
-                <input type="hidden" name="id" value="@Model.IDHopDong">
+            <form asp-area="Investor" asp-controller="HopDong" asp-action="ThanhToan" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="@Model.IDHopDong">
+                <div class="mb-3">
+                    <label asp-for="MinhChungThanhToan" class="form-label">Payment receipt</label>
+                    <input asp-for="MinhChungThanhToan" type="file" class="form-control" />
+                    <span asp-validation-for="MinhChungThanhToan" class="text-danger"></span>
+                </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3">
                     <i class="fa-solid fa-credit-card"></i> Pay Contract
                 </button>
             </form>
         }
 
-        @if (User.IsInRole("Founder"))
+        @if (User.IsInRole("Founder") && Model.ThanhToan == true)
         {
-            <form asp-area="Founder" asp-controller="HopDong" asp-action="TraLai" method="post">
-                <input type="hidden" name="id" value="@Model.IDHopDong">
-                <button type="submit" class="btn btn-success w-100 mt-3">
-                    <i class="fa-solid fa-money-bill-wave"></i> Pay Profit
-                </button>
-            </form>
+            
         }
     </div>
 </div>

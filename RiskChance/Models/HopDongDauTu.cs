@@ -25,6 +25,8 @@ namespace RiskChance.Models
         [Required]
         public TrangThaiKyKetEnum TrangThaiKyKet { get; set; } = TrangThaiKyKetEnum.DaGui;
         public bool? ThanhToan { get; set; }
+        [Url(ErrorMessage = "Vui lòng nhập URL hợp lệ.")]
+        public string? MinhChungThanhToan { get; set; }
 
         // Khóa ngoại
         public int? IDStartup { get; set; }

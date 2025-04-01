@@ -108,8 +108,34 @@
 
                 <!-- Tài khoản và các chức năng cần thiết -->
                 <div class="d-flex align-items-center justify-content-between p-2">
+                    <button type="button"
+                            class="text-dark position-relative btn btn-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#messengerModal">
+                        <i class="fa-brands fa-signal-messenger fs-4"></i>
+                        <span id="msgBadge"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                    </button>
+
+                    <div class="notification dropdown">
+                        <button type="button"
+                                class="text-dark position-relative btn btn-light"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="fa-solid fa-bell fs-4"></i>
+                            <span id="notifBadge"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
+                            <h5 class="h5 fw-bold">Thông báo</h5>
+                            <hr />
+                            <section id="notificationListContainer">
+                                @* Hien thong bao o day *@
+                            </section>
+                        </div>
+                    </div>
                     <!-- Dropdown menu khi thu nhỏ -->
-                    @* <div class="dropdown d-lg-none">
+                    <div class="dropdown d-lg-none">
                         <button class="btn btn-primary text-light d-flex align-center"
                                 type="button"
                                 id="menuDropdown"
@@ -120,72 +146,30 @@
                         <ul class="dropdown-menu dropdown-menu-end"
                             aria-labelledby="menuDropdown">
                             <li>
-                                <button type="button"
-                                        class="dropdown-item text-dark position-relative"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#messengerModal">
-                                    <i class="fa-brands fa-signal-messenger"></i> Messenger
-                                    <span id="msgBadge"
-                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button"
-                                        class="dropdown-item text-dark position-relative"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-bell"></i> Notifications
-                                    <span id="notifBadge"
-                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" id="notifDropdown">
-                                    <li><h5 class="h5 fw-bold">Thông báo</h5></li>
-                                </ul>
-                            </li>
-                            <li>
                                 <a asp-area="User" asp-controller="News" asp-action="Add" class="dropdown-item text-dark">
                                     <i class="fa-solid fa-pen"></i> Create Post
                                 </a>
                             </li>
                             <li>
-                                @if (!User.IsInRole("Admin"))
+                                @if (User.IsInRole("Founder"))
                                 {
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fa-solid fa-chart-line"></i> Dashboard
+                                    <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" class="dropdown-item text-dark">
+                                        Dashboard
+                                    </a>
+                                }
+                                else if (User.IsInRole("Investor"))
+                                {
+                                    <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index" class="dropdown-item text-dark">
+                                        Dashboard
                                     </a>
                                 }
                             </li>
                         </ul>
-                    </div> *@
+                    </div>
 
                     <!-- Các icon chỉ hiện trên màn hình lớn -->
                     <div class="d-none d-lg-flex align-items-center gap-3">
-                        <button type="button"
-                                class="text-dark position-relative btn btn-light"
-                                data-bs-toggle="modal"
-                                data-bs-target="#messengerModal">
-                            <i class="fa-brands fa-signal-messenger fs-4"></i>
-                            <span id="msgBadge"
-                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                        </button>
-
-                        <div class="notification dropdown">
-                            <button type="button"
-                                    class="text-dark position-relative btn btn-light"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <i class="fa-solid fa-bell fs-4"></i>
-                                <span id="notifBadge"
-                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
-                                <h5 class="h5 fw-bold">Thông báo</h5>
-                                <hr />
-                                <section id="notificationListContainer">
-                                    @* Hien thong bao o day *@
-                                </section>
-                            </div>
-                        </div>
+                        
 
                         <a asp-area="User" asp-controller="News" asp-action="Add"
                            class="text-dark btn btn-light"
@@ -195,13 +179,13 @@
 
                         @if (User.IsInRole("Founder"))
                         {
-                            <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary fw-bold">
+                            <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary fw-bold text-white">
                                 Dashboard
                             </a>
                         }
                         else if (User.IsInRole("Investor"))
                         {
-                            <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary fw-bold">
+                            <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary fw-bold text-white">
                                 Dashboard
                             </a>
                         }

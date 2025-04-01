@@ -27,11 +27,12 @@ namespace RiskChance.Areas.Founder.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var userId = HttpContext.Session.GetString("UserId");
+
             if (User != null && userId == null)
             {
                 var user = await _userManager.GetUserAsync(User);
                 HttpContext.Session.SetString("UserId", user.Id);
-                ViewBag.User = user;
+                userId = HttpContext.Session.GetString("UserId");
             }
 
             return await LoadDashboard(id);
@@ -68,7 +69,7 @@ namespace RiskChance.Areas.Founder.Controllers
 
             var coInvestor = startupInfo.HopDongDauTus.DistinctBy(hd => hd.IDNguoiDung).Count();
             var totalInvestment = startupInfo.HopDongDauTus
-                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet)
+                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true)
                                 .Sum(x => x.TongTien);
 
             DashboardViewModel viewModel = new DashboardViewModel()

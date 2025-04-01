@@ -3,6 +3,8 @@
     ViewData["Title"] = "Dashboard";
 }
 
+@model RiskChance.Areas.Investor.Models.InvestorDashboardViewModel
+
 <div class="mt-4 mb-3 container">
     <h1 class="h1 fw-bold mb-4 text-center">Dashboard</h1>
 
@@ -12,7 +14,7 @@
             <div class="">
                 <div class="box mb-3 p-3">
                     <h5 class="h5 fw-bold">Total amount invested</h5>
-                    <h6 class="h6" id="totalInvestment">0 VNĐ</h6>
+                    <h6 class="h6" id="totalInvestment">@Model.TotalInvestment VNĐ</h6>
                 </div>
             </div>
 
@@ -20,7 +22,7 @@
             <div class="">
                 <div class="ex-pro-box box p-3 mb-3">
                     <h5 class="h5 fw-bold">Expected profit</h5>
-                    <h6 class="h6" id="expectedProfit">0 VNĐ</h6>
+                    <h6 class="h6" id="expectedProfit">@Model.ExpectProfit VNĐ</h6>
                 </div>
             </div>
         </div>
@@ -46,54 +48,23 @@
                 <p class="col-3">Startup</p>
                 <p class="col-3">Investment amount</p>
                 <p class="col-3">Expected return</p>
-                <p class="col-2">Investment date</p>
+                <p class="col-2">Payment</p>
                 <p class="col-1"></p>
             </div>
 
-            <!-- Thêm bằng vòng lặplặp -->
-            <a href="#"
-               class="doc-item row text-decoration-none align-items-center">
-                <p class="col-3">Startup</p>
-                <p class="col-3">Investment amount</p>
-                <p class="col-3">Expected return</p>
-                <p class="col-2">Investment date</p>
-
-                <div class="col-1">
-                    <div class="non-success-status"></div>
-                </div>
-            </a>
-            <!--  -->
+            @if (Model.HopDongDauTus != null && Model.HopDongDauTus.Any())
+            {
+                @await Html.PartialAsync("_ContractList", Model.HopDongDauTus)
+            }
+            else
+            {
+                <p class="text-muted mt-3 text-center">None Contract</p>
+            }
         </section>
     </div>
 
-    <!-- <table class="table-hover table">
-      <thead class="fw-bold">
-        <tr>
-          <th class="text-center">Startup</th>
-          <th class="text-center">Investment amount</th>
-          <th class="text-center">Investment date</th>
-          <th class="text-center">Expected return</th>
-          <th class="text-center">Status</th>
-        </tr>
-      </thead>
-      <tbody id="investmentList">
-        <tr>
-          <th>Startup</th>
-          <th>Investment amount</th>
-          <th>Investment date</th>
-          <th>Expected return</th>
-          <th class="">
-            <div
-              class="d-flex justify-content-center aligin-items-center"
-            >
-              <div class="update-status"></div>
-            </div>
-          </th>
-        </tr>
-      </tbody>
-    </table> -->
 </div>
-
+@* 
 @section Scripts {
     <script>
         // Load Pie Chart - Số lượng Startup theo lĩnh vực
@@ -136,4 +107,4 @@
             loadLinhVucChart();
         });
     </script>
-}
+} *@

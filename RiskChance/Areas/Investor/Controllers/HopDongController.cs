@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -173,9 +174,30 @@ namespace RiskChance.Areas.Investor.Controllers
             contractExist.NgayKyKet = DateTime.Now;
             contractExist.FileUrl = fileUrl;
 
-            await _contractRepo.UpdateAsync(contractExist);
+            try
+            {
+                await _contractRepo.UpdateAsync(contractExist);
 
-            TempData["Message"] = "Successful Sign";
+                var userID = HttpContext.Session.GetString("UserId");
+                // tao thanh cong thi minh thong bao
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = userID,
+                    NoiDung = $"Your contract has been signed in. Please make the payment for your contract.",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = contractExist.IDNguoiDung
+                };
+
+                await _notificationService.SendNotification(notif);
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Sign Unsuccess";
+
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
+            }
+
+            TempData["Message"] = "Sign Success";
 
             return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
         }
@@ -200,9 +222,29 @@ namespace RiskChance.Areas.Investor.Controllers
             contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.BiTuChoi;
             contractExist.NgayKyKet = DateTime.Now;
 
-            await _contractRepo.UpdateAsync(contractExist);
+            try
+            {
+                await _contractRepo.UpdateAsync(contractExist);
 
-            TempData["Message"] = "Successful Deny";
+                var userID = HttpContext.Session.GetString("UserId");
+                // tao thanh cong thi minh thong bao
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = userID,
+                    NoiDung = $"Your contract has been signed in. Please make the payment for your contract.",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = contractExist.IDNguoiDung
+                };
+
+                await _notificationService.SendNotification(notif);
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Deny Unsuccess";
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = id });
+            }
+
+            TempData["Message"] = "Deny Success";
             return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = id });
         }
 
@@ -258,6 +300,60 @@ namespace RiskChance.Areas.Investor.Controllers
             await _contractRepo.UpdateAsync(contractExist);
 
             TempData["Message"] = "Successful Update";
+
+            return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
+        }
+
+        public async Task<IActionResult> ThanhToan(HopDongDauTu hopDong, IFormFile? MinhChungThanhToan)
+        {
+            if (hopDong.IDHopDong == null) return NotFound();
+
+            var existingContract = await _contractRepo.GetByIdAsync(hopDong.IDHopDong);
+
+            if (existingContract == null)
+            {
+                TempData["Message"] = "Don't find your contract";
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
+            }
+
+            string fileUrl = null;
+            if (MinhChungThanhToan != null && MinhChungThanhToan.Length > 0)
+            {
+                try
+                {
+                    fileUrl = await DocumentUtil.SaveAsync(MinhChungThanhToan);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Fail when update: " + ex.Message);
+                    return View(hopDong);
+                }
+            }
+
+            try
+            {
+                existingContract.ThanhToan = true;
+                existingContract.MinhChungThanhToan = fileUrl;
+                await _context.SaveChangesAsync();
+
+                var userID = HttpContext.Session.GetString("UserId");
+                var startup = await _startupRepo.GetByIdAsync(existingContract.IDStartup);
+                // tao thanh cong thi minh thong bao
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = userID,
+                    NoiDung = $"Your contract has been paid",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = startup.IDNguoiDung
+                };
+
+                await _notificationService.SendNotification(notif);
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Error payment";
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
+            }
 
             return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
         }

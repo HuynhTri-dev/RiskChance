@@ -1,0 +1,31 @@
+﻿@model IEnumerable<RiskChance.Models.HopDongDauTu>
+
+@{
+    string GetContractStatusClass(TrangThaiKyKetEnum status)
+    {
+        if (status == TrangThaiKyKetEnum.DaDuyet) return "success-status";
+        if (status == TrangThaiKyKetEnum.DaGui) return "update-status";
+        return "non-success-status";             
+    }
+}
+
+@if (Model != null)
+{
+    foreach (var contract in Model)
+    {
+        <a class="doc-item row text-decoration-none align-items-center"
+           asp-area="Investor" asp-controller="HopDong" asp-action="Details" asp-route-idContract="@contract.IDHopDong">
+            <p class="col-3">@contract.Startup?.TenStartup</p>
+            <p class="col-3">@contract.TongTien</p>
+            <p class="col-3">@contract.PhanTramLoiNhuan</p>
+            <p class="col-2">@(contract.ThanhToan == true ? "Paid" : "Unpaid")</p>
+            <div class="col-1">
+                <div class="@GetContractStatusClass(contract.TrangThaiKyKet)"></div>
+            </div>
+        </a>
+    }
+}
+else
+{
+    <p>No contracts available.</p>
+}
