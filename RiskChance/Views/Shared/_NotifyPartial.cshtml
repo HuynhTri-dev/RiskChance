@@ -12,7 +12,7 @@
         <a id="wrapper-@noti.IDNoti" href="#" onclick="markAsRead(@noti.IDNoti)" class="container-fluid notify-box d-flex align-items-center text-decoration-none">
             <div class="avatar-box d-none d-sm-block">
                 <img class="rounded-circle user-img"
-                     src="@(!string.IsNullOrEmpty(noti.NguoiGui.AvatarUrl) ? noti.NguoiGui.AvatarUrl : "/images/default-avatar.png")"
+                     src="@(!string.IsNullOrEmpty(noti.NguoiGui.AvatarUrl) ? noti.NguoiGui.AvatarUrl : Url.Content("~/assets/user/image.png"))"
                      alt="avatar" />
             </div>
 
