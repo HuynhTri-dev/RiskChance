@@ -187,9 +187,9 @@ namespace QuanLyStartup.Controllers
             //            .ToListAsync();
 
             var amount = (await _contractRepo.GetAllAsync())
-                        .Where(x => x.IDStartup == startup.IDStartup)
+                        .Where(x => x.IDStartup == startup.IDStartup && x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet)
                         .Sum(x => x.TongTien);
-            
+
 
             DetailOfStartupViewModel model = new DetailOfStartupViewModel(){
                 IDStartup = startup.IDStartup,

@@ -19,16 +19,19 @@ namespace RiskChance.Areas.Investor.Controllers
         private readonly IRepository<Startup> _startupRepo;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly ApplicationDBContext _context;
+        private readonly NotificationService _notificationService;
 
         public HopDongController(IRepository<HopDongDauTu> contract,
                                 UserManager<NguoiDung> userManager,
                                 IRepository<Startup> startupRepo,
-                                ApplicationDBContext context)
+                                ApplicationDBContext context,
+                                NotificationService notificationService)
         {
             _contractRepo = contract;
             _userManager = userManager;
             _startupRepo = startupRepo;
             _context = context;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -95,8 +98,28 @@ namespace RiskChance.Areas.Investor.Controllers
             hopDong.NgayKyKet = DateTime.Now;
             hopDong.FileUrl = fileUrl;
             hopDong.IDNguoiDung = investorId;
+            hopDong.ThanhToan = false;
 
-            await _contractRepo.AddAsync(hopDong);
+            try
+            {
+                await _contractRepo.AddAsync(hopDong);
+
+                // tao thanh cong thi minh thong bao
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = investorId,
+                    NoiDung = $"You have a new contract from new investor",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = startup.IDNguoiDung
+                };
+
+                await _notificationService.SendNotification(notif);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Unsuccess: " + ex.Message);
+                return View(hopDong);
+            }
 
             return RedirectToAction("Index", "Startup", new { area = "" });
         }
@@ -110,6 +133,7 @@ namespace RiskChance.Areas.Investor.Controllers
             var contract = await _context.HopDongDauTus
                                     .Include(x => x.NguoiDung)
                                     .Include(x => x.Startup)
+                                        .ThenInclude(x => x.NguoiDung)
                                     .FirstOrDefaultAsync(x => x.IDHopDong == idContract);
 
             if (contract == null)

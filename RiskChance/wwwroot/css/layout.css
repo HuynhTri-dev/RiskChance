@@ -163,3 +163,8 @@ footer a:hover {
 footer .fa-brands {
   font-size: 30px;
 }
+
+.read {
+    opacity: 0.5;
+    pointer-events: none;
+}

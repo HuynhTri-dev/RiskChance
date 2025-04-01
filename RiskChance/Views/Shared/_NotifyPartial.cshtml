@@ -1,0 +1,31 @@
+﻿@model IEnumerable<RiskChance.Models.ThongBao>
+
+@{
+    Layout = null;  // Nếu bạn cần tắt layout trong partial view
+}
+
+
+@if(Model != null && Model.Any())
+{
+    foreach(var noti in Model)
+    {
+        <a id="wrapper-@noti.IDNoti" href="#" onclick="markAsRead(@noti.IDNoti)" class="container-fluid notify-box d-flex align-items-center text-decoration-none">
+            <div class="avatar-box d-none d-sm-block">
+                <img class="rounded-circle user-img"
+                     src="@(!string.IsNullOrEmpty(noti.NguoiGui.AvatarUrl) ? noti.NguoiGui.AvatarUrl : "/images/default-avatar.png")"
+                     alt="avatar" />
+            </div>
+
+            <div class="notify-content">
+                <p class="line-clamp-2">
+                    @noti.NoiDung
+                </p>
+                <span class="date-text">@noti.NgayGui.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <div class="notify-status d-none d-sm-block">
+                <div id="status-@noti.IDNoti" class="status rounded-circle"></div>
+            </div>
+        </a>
+    }
+}

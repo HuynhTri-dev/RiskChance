@@ -5,7 +5,7 @@
 
     if (Model.AmountInvested > 0 && Model.Target > 0)
     {
-        progress = Math.Round((double)(Model.AmountInvested / Model.Target * 100), 2);
+        progress = Math.Round((double)Model.AmountInvested / (double)Model.Target * 100, 2);
     }
     else
     {
@@ -54,7 +54,7 @@
             <div class="target-box mb-3">
                 <p><span class="fw-bold">Amount Invented:</span> @Model.AmountInvested?.ToString("N0") VNĐ</p>
                 <div class="progress mt-2" style="height: 20px">
-                    <div class="progress-bar" style="width: @(progress)">
+                    <div class="progress-bar" style="width: @(progress)%">
                         <p class="fw-bold">@(progress)%</p>
                     </div>
                 </div>

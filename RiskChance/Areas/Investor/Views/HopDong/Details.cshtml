@@ -37,42 +37,62 @@
         <div class="contact-info-box p-2">
             <!-- Tao noi dung -->
             <div class="contract-paper" id="contractDisplay">
-                    <h5 class="h5 fw-bold">ID Contract: #@Model.IDHopDong</h5>
-                    <p><strong>Date:</strong> @Model.NgayKyKet.ToString("dd/MM/yyyy")</p>
-                    <p><strong>Total Investment:</strong> @(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " VNĐ" : "Updating")</p>
-                    <p><strong>Percent of Profit:</strong> @(Model.PhanTramLoiNhuan.HasValue ? Model.PhanTramLoiNhuan.Value + "%" : "Updating")</p>
-                    <p><strong>Content:</strong> @Model.NoiDung</p>
-                    <p><strong>Contract Content:</strong> @GetStatusText(Model.TrangThaiKyKet)</p>
+                <h5 class="h5 fw-bold">ID Contract: #@Model.IDHopDong</h5>
+                <p><strong>Date:</strong> @Model.NgayKyKet.ToString("dd/MM/yyyy")</p>
+                <p><strong>Total Investment:</strong> @(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " VNĐ" : "Updating")</p>
+                <p><strong>Percent of Profit:</strong> @(Model.PhanTramLoiNhuan.HasValue ? Model.PhanTramLoiNhuan.Value + "%" : "Updating")</p>
+                <p><strong>Content:</strong> @Model.NoiDung</p>
+                <p><strong>Status:</strong> @GetStatusText(Model.TrangThaiKyKet)</p>
+                <p><strong>Payment: </strong>@(Model.ThanhToan == true ? "Paid" : "Unpaid")</p>
 
-                    @if (!string.IsNullOrEmpty(Model.FileUrl))
-                    {
-                        <p><strong>File Contract:</strong> <a href="@Model.FileUrl" target="_blank">Watch/Download</a></p>
-                    }
-                    <hr>
-                    <h5 class="fw-bold h5">Information Startup</h5>
-                    <p><strong>Startup:</strong> @(Model.Startup != null ? Model.Startup.TenStartup : "None Information")</p>
+                @if (!string.IsNullOrEmpty(Model.FileUrl))
+                {
+                    <p><strong>File Contract:</strong> <a href="@Model.FileUrl" target="_blank">Watch/Download</a></p>
+                }
+                <hr>
+                <div class="d-flex justify-content-around align-items-center">
+                    <div>
+                        <h6 class="fw-bold h6">Information Startup</h6>
+                        <a asp-area="" asp-controller="Startup" asp-action="Details" asp-route-id="@Model.IDStartup">
+                            <p><strong>Startup:</strong> @(Model.Startup != null ? Model.Startup.TenStartup : "None Information")</p>
+                        </a>
+                        <a>
+                            <p><strong>Founder:</strong> @(Model.Startup != null ? Model.Startup.NguoiDung.HoTen : "None Information")</p>
+                        </a>
+                    </div>
 
-                    <h5 class="fw-bold h5">Information Investment</h5>
-                <p><strong>Signatory:</strong> @(Model.NguoiDung != null ? Model.NguoiDung.HoTen : "None Information")</p>
+                    <div>
+                        <h6 class="fw-bold h6">Information Investment</h6>
+                        <a>
+                            <p><strong>Signatory:</strong> @(Model.NguoiDung != null ? Model.NguoiDung.HoTen : "None Information")</p>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Nut chuc nang -->
         <div class="d-flex justify-content-around mt-4">
             @* Ky *@
-            <button type="button" data-bs-toggle="modal" data-bs-target="#signModal"
-                    class="btn btn-success fw-bold p-2 text-white">
-                Sign Confirmation
-            </button>
+            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.DaDuyet)
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#signModal"
+                        class="btn btn-success fw-bold p-2 text-white">
+                    Sign Confirmation
+                </button>
+            }
             @* Cap nhat *@
             <a asp-area="Investor" asp-controller="HopDong" asp-action="Edit" asp-route-id="@Model.IDHopDong"
                class="btn btn-warning fw-bold p-2 text-decoration-none text-white">
                 Contact Update
             </a>
             @* Tu choi *@
-            <button type="button" data-bs-toggle="modal" data-bs-target="#denyModal"
-               class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
-                Deny the Contract
-            </button>
+            @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.BiTuChoi)
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#denyModal"
+                        class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
+                    Deny the Contract
+                </button>
+            }
 
             @if (User.IsInRole("Founder"))
             {
@@ -84,9 +104,27 @@
             }
         </div>
     </div>
-    <!-- Thong tin nha dau tu -->
+    <!-- Chuc nang phu -->
     <div class="col-lg-4 mx-auto">
-        <div id="userInfo"></div>
+        @if (User.IsInRole("Investor"))
+        {
+            <form asp-area="Investor" asp-controller="HopDong" asp-action="ThanhToan" method="post">
+                <input type="hidden" name="id" value="@Model.IDHopDong">
+                <button type="submit" class="btn btn-primary w-100 mt-3">
+                    <i class="fa-solid fa-credit-card"></i> Pay Contract
+                </button>
+            </form>
+        }
+
+        @if (User.IsInRole("Founder"))
+        {
+            <form asp-area="Founder" asp-controller="HopDong" asp-action="TraLai" method="post">
+                <input type="hidden" name="id" value="@Model.IDHopDong">
+                <button type="submit" class="btn btn-success w-100 mt-3">
+                    <i class="fa-solid fa-money-bill-wave"></i> Pay Profit
+                </button>
+            </form>
+        }
     </div>
 </div>
 

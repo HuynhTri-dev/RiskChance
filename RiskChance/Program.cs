@@ -36,6 +36,8 @@ builder.Services.AddSignalR();
 //builder.WebHost.UseUrls("http://0.0.0.0:7078");
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(TRepository<>));
+builder.Services.AddScoped<NotificationService>();
+
 
 var app = builder.Build();
 
@@ -94,7 +96,7 @@ app.MapHub<StatusStartupHub>("/statusStartupHub");
 app.MapHub<StatusStartupHub>("/statusNewsHub");
 app.MapHub<PostCommentStartupHub>("/postCommentStartupHub");
 app.MapHub<PostCommentNewsHub>("/commentHub");
-
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.MapRazorPages();
 

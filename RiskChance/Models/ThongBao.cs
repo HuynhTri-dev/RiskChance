@@ -18,9 +18,13 @@ namespace RiskChance.Models
         public TrangThaiThongBao TrangThai { get; set; } = TrangThaiThongBao.ChuaDoc;
 
         // Khóa ngoại
-        public string? IDNguoiDung { get; set; }
-        [ForeignKey("IDNguoiDung")]
-        public NguoiDung? NguoiDung { get; set; }
+        public string? IDNguoiNhan { get; set; }
+        [ForeignKey("IDNguoiNhan")]
+        public NguoiDung? NguoiNhan { get; set; }
+
+        public string? IDNguoiGui { get; set; }
+        [ForeignKey("IDNguoiGui")]
+        public NguoiDung? NguoiGui { get; set; }
     }
 
     public enum TrangThaiThongBao
