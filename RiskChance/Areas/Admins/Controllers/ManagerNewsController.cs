@@ -20,18 +20,21 @@ namespace RiskChance.Areas.Admins.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IRepository<TinTuc> _newsRepo;
         private readonly IRepository<BinhLuanTinTuc> _commentNewsRepo;
+        private readonly NotificationService _notificationService;
 
         public ManagerNewsController(ApplicationDBContext context,
                                         IHubContext<StatusNewHub> hubContext,
                                         UserManager<NguoiDung> userManager,
                                         IRepository<TinTuc> newsRepo,
-                                        IRepository<BinhLuanTinTuc> commentNewsRepo)
+                                        IRepository<BinhLuanTinTuc> commentNewsRepo,
+                                        NotificationService notificationService)
         {
             _context = context;
             _hubContext = hubContext;
             _userManager = userManager;
             _newsRepo = newsRepo;
             _commentNewsRepo = commentNewsRepo;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index(string search = "")
@@ -78,11 +81,33 @@ namespace RiskChance.Areas.Admins.Controllers
                 };
 
                 await _commentNewsRepo.AddAsync(danhGiaMacDinh);
+
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout news has been accepted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = news.IDNguoiDung,
+                };
+
+                await _notificationService.SendNotification(notif);
             }
             else
             {
+                
                 var danhGias = await _context.BinhLuanTinTucs.Where(d => d.IDTinTuc == id).ToListAsync();
                 _context.BinhLuanTinTucs.RemoveRange(danhGias);
+
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout news has been unaccepted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = news.IDNguoiDung,
+                };
+
+                await _notificationService.SendNotification(notif);
+
                 await _context.SaveChangesAsync();
             }
 
@@ -110,7 +135,15 @@ namespace RiskChance.Areas.Admins.Controllers
 
                 await _newsRepo.DeleteAsync(id);
 
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout news has been deleted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = news.IDNguoiDung,
+                };
 
+                await _notificationService.SendNotification(notif);
 
                 // Gửi sự kiện qua SignalR
                 await _hubContext.Clients.All.SendAsync("ReceiveStatusNews", id, (int)news.TrangThaiXetDuyet);
@@ -157,10 +190,30 @@ namespace RiskChance.Areas.Admins.Controllers
                             IDNguoiDung = HttpContext.Session.GetString("UserId")
                         };
 
+                        var notif = new ThongBao
+                        {
+                            IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                            NoiDung = $"Yout news has been accepted",
+                            NgayGui = DateTime.Now,
+                            IDNguoiNhan = news.IDNguoiDung,
+                        };
+
+                        await _notificationService.SendNotification(notif);
+
                         await _commentNewsRepo.AddAsync(danhGiaMacDinh);
                     }
                     else
                     {
+                        var notif = new ThongBao
+                        {
+                            IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                            NoiDung = $"Yout news has been unaccepted",
+                            NgayGui = DateTime.Now,
+                            IDNguoiNhan = news.IDNguoiDung,
+                        };
+
+                        await _notificationService.SendNotification(notif);
+
                         var danhGias = await _context.BinhLuanTinTucs.Where(d => d.IDTinTuc == id).ToListAsync();
                         _context.BinhLuanTinTucs.RemoveRange(danhGias);
                         await _context.SaveChangesAsync();

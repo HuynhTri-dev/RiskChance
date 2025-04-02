@@ -94,6 +94,16 @@
                 </button>
             }
 
+             @* Xoa *@
+            @if (Model.TrangThaiKyKet == TrangThaiKyKetEnum.BiTuChoi && Model.ThanhToan == false)
+            {
+                <button type="button" onclick="confirmDelete('@Model.IDHopDong', '@Url.Action("Delete", "HopDong", new { area = "Investor" })')"
+                        class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
+                    Delete Contract
+                </button>
+            }
+
+            @* Quay lai dashboard *@
             @if (User.IsInRole("Founder"))
             {
                 <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" asp-route-id="@Model.IDStartup"
@@ -110,6 +120,7 @@
                     <i class="fa-solid fa-backward"></i>
                 </a>
             }
+           
         </div>
     </div>
     <!-- Chuc nang phu -->
@@ -132,7 +143,7 @@
 
         @if (User.IsInRole("Founder") && Model.ThanhToan == true)
         {
-            
+            @await Html.PartialAsync("~/Areas/Founder/Views/PayProfit/Create.cshtml", new ThanhToanLoiNhuan { IDHopDong = Model.IDHopDong })
         }
     </div>
 </div>

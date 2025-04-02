@@ -13,7 +13,7 @@ using System.Diagnostics.Contracts;
 namespace RiskChance.Areas.Investor.Controllers
 {
     [Area("Investor")]
-    [Authorize(Roles="Investor, Founder")]
+    [Authorize(Roles="Investor, Founder, Admin")]
     public class HopDongController : Controller
     {
         private readonly IRepository<HopDongDauTu> _contractRepo;
@@ -103,6 +103,7 @@ namespace RiskChance.Areas.Investor.Controllers
 
             try
             {
+
                 await _contractRepo.AddAsync(hopDong);
 
                 // tao thanh cong thi minh thong bao
@@ -304,6 +305,7 @@ namespace RiskChance.Areas.Investor.Controllers
             return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
         }
 
+        [HttpPost]
         public async Task<IActionResult> ThanhToan(HopDongDauTu hopDong, IFormFile? MinhChungThanhToan)
         {
             if (hopDong.IDHopDong == null) return NotFound();
@@ -356,6 +358,29 @@ namespace RiskChance.Areas.Investor.Controllers
             }
 
             return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = hopDong.IDHopDong });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var contract = await _contractRepo.GetByIdAsync(id);
+
+            if (contract == null) return NotFound();
+
+            try
+            {
+                await _contractRepo.DeleteAsync(contract);
+                TempData["Message"] = "Delete Success";
+
+                return RedirectToAction("Index", "Dashboard", new { area = "Investor" });
+            }
+            catch
+            {
+                TempData["Message"] = "Delete Unsuccess";
+                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = contract.IDHopDong });
+            }
         }
     }
 }

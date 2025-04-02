@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RiskChance.Data;
 using RiskChance.Models;
 using RiskChance.Repositories;
+using RiskChance.Utils;
 using System.Data;
 using System.Security.Claims;
 namespace RiskChance.Areas.User.Controllers
@@ -14,14 +16,17 @@ namespace RiskChance.Areas.User.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly IRepository<NguoiDung > _userRepo;
+        private readonly ApplicationDBContext _context;
 
         public ProfileController(UserManager<NguoiDung> userManager, 
                                  SignInManager<NguoiDung> signInManager,
-                                 IRepository<NguoiDung> userRepo)
+                                 IRepository<NguoiDung> userRepo,
+                                 ApplicationDBContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userRepo = userRepo;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -77,14 +82,65 @@ namespace RiskChance.Areas.User.Controllers
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Update failed!");
-                return View("Index", model);
+                return RedirectToAction("Index");
             }
 
             // Làm mới thông tin đăng nhập
             await _signInManager.RefreshSignInAsync(user);
             TempData["Success"] = "Profile updated successfully!";
 
-            return View("Index", model);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAvatar(IFormFile? AvatarUrl)
+        {
+            if (AvatarUrl == null)
+            {
+                ModelState.AddModelError("", "Update failed!");
+                return RedirectToAction("Index");
+            }
+
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (userId == null)
+            {
+                ModelState.AddModelError("", "Update failed!");
+                return RedirectToAction("Index");
+            }
+
+            var user = await _userRepo.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Update failed!");
+                return RedirectToAction("Index");
+            }
+
+            string? fileUrl = null;
+
+            if (AvatarUrl != null && AvatarUrl.Length > 0)
+            {
+                try
+                {
+                    fileUrl = await ImageUtil.SaveAsync(AvatarUrl);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Cannot upload your image!");
+                    return RedirectToAction("Index");
+                }
+            }
+
+            if (fileUrl != null)
+            {
+                user.AvatarUrl = fileUrl;
+
+                _context.SaveChanges();
+                TempData["Success"] = "Avatar updated successfully!";
+                return RedirectToAction("Index");
+            }
+            else { return RedirectToAction("Index"); }
         }
 
         [HttpPost]

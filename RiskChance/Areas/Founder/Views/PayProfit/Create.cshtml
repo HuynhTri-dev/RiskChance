@@ -1,0 +1,19 @@
+﻿@model RiskChance.Models.ThanhToanLoiNhuan
+
+<h2 class="text-center">Pay Profit</h2>
+
+<form asp-area="Founder" asp-controller="PayProfit" asp-action="Create" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="IDHopDong"/>
+
+    <div class="mb-3">
+        <label asp-for="SoTien" class="form-label">Số Tiền</label>
+        <input asp-for="SoTien" type="number" step="1000" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MinhChungFile" class="form-label">Số Tiền</label>
+        <input asp-for="MinhChungFile" type="file" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Pay</button>
+</form>

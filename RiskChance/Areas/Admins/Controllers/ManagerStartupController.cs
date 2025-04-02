@@ -19,18 +19,21 @@ namespace RiskChance.Areas.Admins.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IRepository<Startup> _startupRepo;
         private readonly IRepository<DanhGiaStartup> _danhGiaStartupRepo;
+        private readonly NotificationService _notificationService;
 
         public ManagerStartupController(ApplicationDBContext context, 
                                         IHubContext<StatusStartupHub> hubContext,
                                         UserManager<NguoiDung> userManager,
                                         IRepository<Startup> startupRepo,
-                                        IRepository<DanhGiaStartup> danhGiaStartupRepo)
+                                        IRepository<DanhGiaStartup> danhGiaStartupRepo,
+                                        NotificationService notificationService)
         {
             _context = context;
             _hubContext = hubContext;
             _userManager = userManager;
             _startupRepo = startupRepo;
             _danhGiaStartupRepo = danhGiaStartupRepo;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -73,11 +76,33 @@ namespace RiskChance.Areas.Admins.Controllers
                 };
 
                 await _danhGiaStartupRepo.AddAsync(danhGiaMacDinh);
+
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout startup has been accepted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = startup.IDNguoiDung,
+                };
+
+                await _notificationService.SendNotification(notif);
+
             }
             else
             {
                 var danhGias = _context.DanhGiaStartups.Where(d => d.IDStartup == id);
                 _context.DanhGiaStartups.RemoveRange(danhGias);
+
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout startup has been unaccepted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = startup.IDNguoiDung,
+                };
+
+                await _notificationService.SendNotification(notif);
+
                 await _context.SaveChangesAsync();
             }
 
@@ -121,11 +146,31 @@ namespace RiskChance.Areas.Admins.Controllers
                         };
 
                         await _danhGiaStartupRepo.AddAsync(danhGiaMacDinh);
+
+                        var notif = new ThongBao
+                        {
+                            IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                            NoiDung = $"Yout startup has been accepted",
+                            NgayGui = DateTime.Now,
+                            IDNguoiNhan = startup.IDNguoiDung,
+                        };
+
+                        await _notificationService.SendNotification(notif);
                     }
                     else
                     {
                         var danhGias = _context.DanhGiaStartups.Where(d => d.IDStartup == id);
                         _context.DanhGiaStartups.RemoveRange(danhGias);
+
+                        var notif = new ThongBao
+                        {
+                            IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                            NoiDung = $"Yout startup has been unaccepted",
+                            NgayGui = DateTime.Now,
+                            IDNguoiNhan = startup.IDNguoiDung,
+                        };
+
+                        await _notificationService.SendNotification(notif);
                     }
                 }
             }
@@ -168,6 +213,16 @@ namespace RiskChance.Areas.Admins.Controllers
                 _context.GiayTos.RemoveRange(startup.GiayTos);
                 _context.DanhGiaStartups.RemoveRange(startup.DanhGiaStartups);
                 await _startupRepo.DeleteAsync(id);
+
+                var notif = new ThongBao
+                {
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    NoiDung = $"Yout startup has been deleted",
+                    NgayGui = DateTime.Now,
+                    IDNguoiNhan = startup.IDNguoiDung,
+                };
+
+                await _notificationService.SendNotification(notif);
 
                 // Gửi sự kiện qua SignalR
                 await _hubContext.Clients.All.SendAsync("ReceiveStatusUpdate", id, (int)startup.TrangThaiXetDuyet);
