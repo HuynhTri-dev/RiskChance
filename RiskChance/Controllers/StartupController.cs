@@ -49,7 +49,6 @@ namespace QuanLyStartup.Controllers
                 if (user != null)
                 {
                     HttpContext.Session.SetString("UserId", user.Id);
-                    ViewBag.User = user;
                 }
             }
 
@@ -102,7 +101,7 @@ namespace QuanLyStartup.Controllers
                                              .ToListAsync();
 
             model.TopInvestors = await _context.HopDongDauTus
-                                                .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true && x.TongTien > 0) 
+                                                 .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true && x.TongTien > 0) 
                                                  .GroupBy(x => x.IDNguoiDung)
                                                  .Select(g => new
                                                  {
@@ -121,6 +120,7 @@ namespace QuanLyStartup.Controllers
                                                            Email = nd.Email,
                                                            Profit = top.TongSoTien,
                                                            NumberOfContract = top.NumberOfContract,
+                                                           AvatartUrl = nd.AvatarUrl,
                                                        })
                                                  .ToListAsync();
 

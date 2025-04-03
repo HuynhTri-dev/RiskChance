@@ -31,13 +31,15 @@ builder.Services.AddSession(options =>
 });
 
 // Build SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 10 * 1024 * 1024;  // 10 MB
+});
 
 //builder.WebHost.UseUrls("http://0.0.0.0:7078");
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(TRepository<>));
 builder.Services.AddScoped<NotificationService>();
-
 
 var app = builder.Build();
 
@@ -95,7 +97,7 @@ app.MapControllerRoute(
 app.MapHub<StatusStartupHub>("/statusStartupHub");
 app.MapHub<StatusStartupHub>("/statusNewsHub");
 app.MapHub<PostCommentStartupHub>("/postCommentStartupHub");
-app.MapHub<PostCommentNewsHub>("/commentHub");
+app.MapHub<PostCommentNewsHub>("/postCommentNewsHub");
 app.MapHub<NotificationHub>("/notificationHub");
 
 app.MapRazorPages();

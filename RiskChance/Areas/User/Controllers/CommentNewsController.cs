@@ -47,8 +47,6 @@ namespace RiskChance.Areas.User.Controllers
             var tinTuc = await _context.TinTucs.FindAsync(model.IDTinTuc);
             if (tinTuc == null)
             {
-                // Log lỗi
-                Console.WriteLine($"Lỗi: Không tìm thấy IDTinTuc = {model.IDTinTuc}");
                 return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
             }
 
@@ -57,10 +55,10 @@ namespace RiskChance.Areas.User.Controllers
 
             await _commentNewsRepo.AddAsync(model);
 
-            var commentNews = await _context.BinhLuanTinTucs.Include(x => x.NguoiDung)
-                .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
+            //var commentNews = await _context.BinhLuanTinTucs.Include(x => x.NguoiDung)
+            //    .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
 
-            await _hubContext.Clients.All.SendAsync("ReceiveComment", commentNews);
+            await _hubContext.Clients.All.SendAsync("ReceiveCommentNews", model);
 
             return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
         }
@@ -103,9 +101,9 @@ namespace RiskChance.Areas.User.Controllers
             await _commentNewsRepo.UpdateAsync(model);
 
             var commentNews = await _context.BinhLuanTinTucs.Include(x => x.NguoiDung)
-                .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
+                                    .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
 
-            await _hubContext.Clients.All.SendAsync("ReceiveComment", commentNews);
+            await _hubContext.Clients.All.SendAsync("ReceiveCommentNews", model);
 
             return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
         }

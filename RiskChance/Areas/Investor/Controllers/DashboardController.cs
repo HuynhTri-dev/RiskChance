@@ -37,12 +37,10 @@ namespace RiskChance.Areas.Investor.Controllers
                 userId = HttpContext.Session.GetString("UserId");
             }
 
-
             if (string.IsNullOrEmpty(userId))
             {
                 return NotFound();
             }
-
 
             var contracts = await _context.HopDongDauTus
                                     .Include(x => x.Startup)
@@ -50,8 +48,25 @@ namespace RiskChance.Areas.Investor.Controllers
                                     .OrderByDescending(x => x.TrangThaiKyKet)
                                     .ToListAsync();
 
+            var totalInvestment = await _context.HopDongDauTus
+                                            .Where(x => x.ThanhToan == true && x.IDNguoiDung == userId)
+                                            .SumAsync(x => x.TongTien ?? 0);
+
+            var expectProfit = await _context.HopDongDauTus
+                                    .Where(x => x.ThanhToan == true && x.IDNguoiDung == userId)
+                                    .SumAsync(x => (x.TongTien ?? 0) * (decimal)((x.PhanTramLoiNhuan ?? 0) / 100));
+
+            var profitReceived = await _context.ThanhToanLoiNhuans
+                                            //.Include(x => x.HopDongDauTu)
+                                            .Where(tt => tt.HopDongDauTu.IDNguoiDung == userId && tt.HopDongDauTu.ThanhToan == true)  // Lọc theo nhà đầu tư và thanh toán đã thực hiện
+                                            .SumAsync(tt => tt.SoTien);
+
+
             InvestorDashboardViewModel model = new InvestorDashboardViewModel()
             {
+                TotalInvestment = totalInvestment,
+                ExpectProfit = expectProfit,
+                ProfitReceived = profitReceived,
                 HopDongDauTus = contracts
             };
 

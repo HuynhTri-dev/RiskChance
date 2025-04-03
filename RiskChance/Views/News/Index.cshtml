@@ -1,12 +1,15 @@
-﻿@{
-    ViewData["Title"] = "News Page";
-}
-
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using RiskChance.Models
 @model RiskChance.Models.ViewModel.TinTucViewModel.TinTucPageViewModel
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
+
+@{
+    ViewData["Title"] = "News Page";
+    var currentUser = await UserManager.GetUserAsync(User); // Lấy thông tin user đang đăng nhập
+    var userAvatar = currentUser?.AvatarUrl ?? Url.Content("~/assets/user/image.png");
+    var userName = currentUser?.HoTen ?? "User";
+}
 
 @section Styles {
     <link rel="stylesheet" href="~/css/news.css" asp-append-version="true" />
@@ -18,18 +21,9 @@
     <!-- Dang bai -->
     <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="post-box d-flex justify-content-center align-items-center">
-                @if (ViewBag.User != null && !string.IsNullOrEmpty(ViewBag.User.AvatarUrl))
-                {
-                    <img src="@ViewBag.User.AvatarUrl"
-                         alt="anh dai dien"
-                         class="user-image rounded-circle" />
-                }
-                else
-                {
-                    <img src="@Url.Content("~/assets/user/image.png")"
-                         alt="anh dai dien"
-                         class="user-image rounded-circle" />
-                }
+                <img src="@userAvatar"
+                     alt="anh dai dien"
+                     class="user-image rounded-circle" />
                 <a asp-area="User" asp-controller="News" asp-action="Add" class="btn btn-outline-primary fw-bold text-white d-flex align-items-center justify-content-center">
                     <i class="fa-solid fa-pen" style="margin-right:10px"></i>
                     <p>Post News</p>

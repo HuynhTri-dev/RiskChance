@@ -1,5 +1,15 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using RiskChance.Models.ViewModel.StartupViewModel
+
+
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+@model StartupPageViewModel
+
+@{
     ViewData["Title"] = "Startup Page";
+    var currentUser = await UserManager.GetUserAsync(User); // Lấy thông tin user đang đăng nhập
+    var userAvatar = currentUser?.AvatarUrl ?? Url.Content("~/assets/user/image.png");
 }
 
 @section Styles {
@@ -7,13 +17,6 @@
     <link rel="stylesheet" href="~/css/startup.css" asp-append-version="true" />
 }
 
-@using Microsoft.AspNetCore.Identity
-@using RiskChance.Models.ViewModel.StartupViewModel
-                
-
-@inject SignInManager<NguoiDung> SignInManager
-@inject UserManager<NguoiDung> UserManager
-@model StartupPageViewModel
 
 <div class="main-container row mt-4 mb-4 mx-auto">
     <!-- Startup -->
@@ -29,18 +32,9 @@
         <!-- Chỉ có startup mới hiện khung này -->
         <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="post-box d-flex justify-content-center align-items-center">
-                @if (ViewBag.User != null && !string.IsNullOrEmpty(ViewBag.User.AvatarUrl))
-                {
-                    <img src="@ViewBag.User.AvatarUrl"
-                         alt="anh dai dien"
-                         class="user-image rounded-circle" />
-                }
-                else
-                {
-                    <img src="@Url.Content("~/assets/user/image.png")"
-                         alt="anh dai dien"
-                         class="user-image rounded-circle" />
-                }
+                <img src="@userAvatar"
+                      alt="anh dai dien"
+                      class="user-image rounded-circle" />
                 <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-outline-primary fw-bold text-white d-flex align-items-center justify-content-center">
                     <i class="fa-solid fa-rocket"  style="margin-right:10px"></i>
                     <p>Create Startup</p>

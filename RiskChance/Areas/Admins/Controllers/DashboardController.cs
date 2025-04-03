@@ -94,5 +94,49 @@ namespace RiskChance.Areas.Admins.Controllers
 
             return Json(data); // Trả về dữ liệu dưới dạng JSON
         }
+        // Phương thức lấy số lượng lượt truy cập theo ngày
+        [HttpGet]
+        public async Task<JsonResult> GetAccessLogsByDay()
+        {
+            // Lấy tất cả UserId có vai trò là Founder hoặc Investor
+            var founderRoleId = await _context.Roles.Where(r => r.Name == "Founder").Select(r => r.Id).FirstOrDefaultAsync();
+            var investorRoleId = await _context.Roles.Where(r => r.Name == "Investor").Select(r => r.Id).FirstOrDefaultAsync();
+
+            var userIds = await _context.UserRoles
+                .Where(ur => ur.RoleId == founderRoleId || ur.RoleId == investorRoleId)
+                .Select(ur => ur.UserId)
+                .ToListAsync();
+
+            // Lấy lượt truy cập trong năm 2025 theo ngày
+            var accessLogs = await _context.AccessLogs
+                .Where(log => log.AccessTime.Year == 2025 && userIds.Contains(log.UserId))
+                .GroupBy(log => log.AccessTime.Date)
+                .Select(g => new {
+                    Date = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            return Json(accessLogs);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetContractStatistics()
+        {
+            var contracts = await _context.HopDongDauTus.ToListAsync();
+
+            var contractStats = contracts
+                                .GroupBy(c => new { c.NgayKyKet.Year, c.NgayKyKet.Month, c.TrangThaiKyKet })
+                                .Select(g => new
+                                {
+                                    Year = g.Key.Year,
+                                    Month = g.Key.Month,
+                                    Status = g.Key.TrangThaiKyKet,
+                                    Count = g.Count()
+                                })
+                                .ToList();
+
+            return Json(contractStats);
+        }
     }
 }

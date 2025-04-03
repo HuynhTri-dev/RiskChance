@@ -78,7 +78,7 @@
                                             <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                         </li>
                                     }
-                                    <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                    <li class="nav-item"><a class="nav-link fw-bold" href="#about">About</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                                         <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                     </li>
                                 }
-                                <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                <li class="nav-item"><a class="dropdown-item fw-bold" href="#about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -271,7 +271,8 @@
     @await Html.PartialAsync("~/Views/Shared/_DeleteConfirmPopUp.cshtml")
     <script src="~/js/CallConfirmBox.js" asp-append-version="true"></script>
 
-    <script src="~/js//Notification.js"></script>
+    @* Test truoc ti sua sau *@
+    @* <script src="~/js//Notification.js"></script> *@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

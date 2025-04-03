@@ -7,7 +7,7 @@ namespace RiskChance.Hubs
     {
         public async Task SendComment(BinhLuanTinTuc comment)
         {
-            await Clients.All.SendAsync("ReceiveComment", comment);
+            await Clients.All.SendAsync("ReceiveCommentNews", comment);
         }
     }
 }

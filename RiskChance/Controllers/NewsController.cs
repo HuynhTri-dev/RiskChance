@@ -46,7 +46,6 @@ namespace QuanLyStartup.Controllers
                 if (user != null)
                 {
                     HttpContext.Session.SetString("UserId", user.Id);
-                    ViewBag.User = user;
                 }
             }
 

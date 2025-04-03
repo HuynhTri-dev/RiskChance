@@ -11,8 +11,7 @@
         .withUrl("/notificationHub")
         .build();
     connection.on("ReceiveNotification", function (message) {
-        console.log(typeof (message));
-        console.log("Received message:", message);
+        //console.log("Received message:", message);
 
         // Tạo một thẻ div mới
         var notificationDiv = document.createElement("div");

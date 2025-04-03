@@ -5,26 +5,25 @@
     const observer = new MutationObserver(() => {
         if (document.querySelector('.rating-start-edit')) {
             handleStarRating('rating-start-edit', 'ratingValueEdit');
-            observer.disconnect(); // Ngừng theo dõi sau khi chạy script
+            observer.disconnect(); 
         }
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
 
+    // can sua lai them ve loi disconnection khi nhan
     // Comment
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/commentHub")
+        .withUrl("/postCommentNewsHub")
         .build();
-
-    connection.start()
-        .then(() => console.log("SignalR Connected"))
-        .catch(err => console.error(err));
-
-    connection.on("ReceiveComment", function (comment) {
-        addCommentToUI(comment);
-        console.log(comment);
+    connection.on("ReceiveCommentNews", function (comment) {
+        console.log("Comment news: ", comment);
+        //addCommentToUI(comment);
     });
 
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
 });
 
 function CallEditBox(id) {

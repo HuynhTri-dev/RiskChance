@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiskChance.Data;
 
@@ -11,9 +12,11 @@ using RiskChance.Data;
 namespace RiskChance.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250403190829_AccessLogTable")]
+    partial class AccessLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -490,6 +493,9 @@ namespace RiskChance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdThanhToan"));
 
+                    b.Property<int?>("HopDongDauTuIDHopDong")
+                        .HasColumnType("int");
+
                     b.Property<int?>("IDHopDong")
                         .HasColumnType("int");
 
@@ -503,6 +509,8 @@ namespace RiskChance.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdThanhToan");
+
+                    b.HasIndex("HopDongDauTuIDHopDong");
 
                     b.HasIndex("IDHopDong");
 
@@ -772,6 +780,10 @@ namespace RiskChance.Migrations
                 {
                     b.HasOne("RiskChance.Models.HopDongDauTu", "HopDongDauTu")
                         .WithMany("ThanhToanLoiNhuans")
+                        .HasForeignKey("HopDongDauTuIDHopDong");
+
+                    b.HasOne("RiskChance.Models.HopDongDauTu", null)
+                        .WithMany()
                         .HasForeignKey("IDHopDong")
                         .OnDelete(DeleteBehavior.SetNull);
 

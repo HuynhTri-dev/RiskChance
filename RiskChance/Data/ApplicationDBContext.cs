@@ -10,7 +10,7 @@ namespace RiskChance.Data
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
         }
-
+        public DbSet<AccessLog> AccessLogs { get; set; }
         public DbSet<NguoiDung> NguoiDungs { get; set; }
         public DbSet<Startup> Startups { get; set; }
         public DbSet<HopDongDauTu> HopDongDauTus { get; set; }
@@ -107,8 +107,8 @@ namespace RiskChance.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ThanhToanLoiNhuan>()
-                .HasOne<HopDongDauTu>()
-                .WithMany()
+                .HasOne(tt => tt.HopDongDauTu)
+                .WithMany(h => h.ThanhToanLoiNhuans)
                 .HasForeignKey(p => p.IDHopDong)
                 .OnDelete(DeleteBehavior.SetNull);
 
