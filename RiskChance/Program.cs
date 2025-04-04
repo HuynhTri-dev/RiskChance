@@ -69,16 +69,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+//Thêm Middleware
 app.UseRouting();
 
-app.UseSession();
 
+app.UseSession();   
 app.UseAuthentication();
 app.UseAuthorization();
 
-//Thêm Middleware   
 app.UseMiddleware<AccessLogMiddleware>();
-
 
 // sử dụng pattern : là tên đường dẫn. còn defaults: new {} : là tên điwonfg dẫn
 // Định tuyến cho các khu vực (Areas)

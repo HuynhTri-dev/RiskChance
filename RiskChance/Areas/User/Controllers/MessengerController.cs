@@ -30,8 +30,8 @@ namespace RiskChance.Areas.User.Controllers
             _hubContext = hubContext;
             _userManager = userManager;
         }
-
-        public async Task<IActionResult> SendMess(TinNhan mess)
+        [HttpPost]
+        public async Task<IActionResult> SendMess(string id, string mess)
         {
             if (!ModelState.IsValid)
             {
@@ -40,11 +40,20 @@ namespace RiskChance.Areas.User.Controllers
 
             try
             {
-                await _messRepo.AddAsync(mess);
+                var messenger = new TinNhan()
+                {
+                    NoiDung = mess,
+                    ThoiGian = DateTime.Now,
+                    TrangThai = "Chưa đọc",
+                    IDNguoiGui = HttpContext.Session.GetString("UserId"),
+                    IDNguoiNhan = id
+                };
 
-                await _hubContext.Clients.User(mess.IDNguoiNhan).SendAsync("ReceiveMess", mess);
+                await _messRepo.AddAsync(messenger);
 
-                return Json(mess);
+                await _hubContext.Clients.User(id).SendAsync("ReceiveMess", messenger);
+
+                return Json(messenger);
             }
             catch (Exception ex)
             {
@@ -52,7 +61,7 @@ namespace RiskChance.Areas.User.Controllers
 
             }
         }
-
+        [HttpGet]
         public async Task<IActionResult> ListFriend()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -71,18 +80,10 @@ namespace RiskChance.Areas.User.Controllers
                 .Where(u => friends.Contains(u.Id))
                 .ToListAsync();
 
-            var firstFriend = friendUsers.Select(x => x.Id).First();
-
-            var model = new ChatBoxViewModel()
-            {
-                ListFriend = friendUsers,
-                IDNguoiNhan = userId,
-            };
-
-            return PartialView("_FriendListPartial", model);
+            return PartialView("~/Views/Shared/Messenger/_FriendListPartial.cshtml", friendUsers);
         }
-
-        public async Task<IActionResult> GetMessages(string receiverId)
+        [HttpGet]
+        public async Task<IActionResult> ListMessages(string receiverId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
@@ -93,7 +94,25 @@ namespace RiskChance.Areas.User.Controllers
                 .OrderBy(m => m.ThoiGian)
                 .ToListAsync();
 
-            return PartialView("_MessageBoxPartial", messages);
+            return PartialView("~/Views/Shared/Messenger/_MessListPartial.cshtml", messages);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FindName(string name)
+        {
+            var userList = await _context.NguoiDungs
+                .Where(u => u.HoTen.Contains(name))
+                .ToListAsync();
+
+            return PartialView("~/Views/Shared/Messenger/_FriendListPartial.cshtml", userList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInfo(string id)
+        {
+            var user = await _context.NguoiDungs.FirstOrDefaultAsync(u => u.Id == id);
+
+            return PartialView("~/Views/Shared/Messenger/_InforReceivePartial.cshtml", user);
         }
     }
 }
