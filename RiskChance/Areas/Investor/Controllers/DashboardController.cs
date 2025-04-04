@@ -17,7 +17,7 @@ namespace RiskChance.Areas.Investor.Controllers
         private readonly ApplicationDBContext _context;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public DashboardController(IRepository<HopDongDauTu> contractRepo, 
+        public DashboardController(IRepository<HopDongDauTu> contractRepo,
             ApplicationDBContext context,
             UserManager<NguoiDung> userManager)
         {
@@ -74,5 +74,31 @@ namespace RiskChance.Areas.Investor.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> PercentInvest()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+
+            var investments = await _context.HopDongDauTus
+                .Include(x => x.Startup)
+                .Where(x => x.IDNguoiDung == userId && x.ThanhToan == true)
+                .GroupBy(x => x.Startup.TenStartup)
+                .Select(group => new
+                {
+                    StartupName = group.Key,
+                    TotalInvested = group.Sum(x => x.TongTien)
+                })
+                .ToListAsync();
+
+            var totalInvestedAmount = investments.Sum(x => x.TotalInvested);
+
+            var percentageData = investments.Select(x => new
+            {
+                x.StartupName,
+                x.TotalInvested,
+                Percentage = totalInvestedAmount > 0 ? (x.TotalInvested / totalInvestedAmount) * 100 : 0
+            });
+
+            return Json(percentageData);
+        }
     }
 }

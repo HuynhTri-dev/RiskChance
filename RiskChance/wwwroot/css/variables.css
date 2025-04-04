@@ -134,10 +134,11 @@ a {
   width: 55px;
   height: 55px;
   border-radius: 50%;
-  background-color: var(--primary-light);
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 2px solid var(--primary-light)
 }
 
 .btn-light:hover {

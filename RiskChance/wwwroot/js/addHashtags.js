@@ -3,15 +3,11 @@ $(document).ready(function () {
 
     let hashtagsJson = $("#hiddenHashtags").val();
 
-    if (hashtagsJson == null) {
-        let hashtags = [];
-    }
-    else
-    {
+    let hashtags = [];
+
+    if (hashtagsJson) {
         hashtags = JSON.parse(hashtagsJson);
     }
-
-    
 
     $("#hashtagInput").on("keypress", function (e) {
         if (e.which === 13) {  // Enter key

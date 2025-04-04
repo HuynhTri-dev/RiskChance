@@ -27,11 +27,11 @@
     <form asp-area="User" asp-controller="News" asp-action="Add" id="postForm" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <input type="hidden" asp-for="IDTinTuc" />
-            <input type="hidden" asp-for="IDNguoiDung"/>
+            <input type="hidden" asp-for="IDNguoiDung" />
             <label asp-for="TieuDe" class="form-label">Title:</label>
             <input asp-for="TieuDe"
-                      class="form-control"
-                      required />
+                   class="form-control"
+                   required />
             <span asp-validation-for="TieuDe" class="text-danger"></span>
         </div>
 
@@ -41,7 +41,7 @@
                       id="NoiDung"
                       class="form-control ckeditor">
                   </textarea>
-            
+
             <span asp-validation-for="NoiDung" class="text-danger"></span>
         </div>
 
@@ -84,8 +84,8 @@
 
 
 
- @section Scripts {
-     <script src="~/js/addHashtags.js" asp-append-version="true"></script>
+@section Scripts {
+    <script src="~/js/addHashtags.js" asp-append-version="true"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.umd.js"></script>
     <script>
         const {
@@ -124,4 +124,4 @@
             document.getElementById("NoiDung").value = content;
         });
     </script>
- }
+}

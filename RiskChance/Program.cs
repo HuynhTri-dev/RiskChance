@@ -4,6 +4,7 @@ using RiskChance.Data;
 using RiskChance.Hubs;
 using RiskChance.Models;
 using RiskChance.Repositories;
+using RiskChance.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,9 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+//Thêm Middleware   
+app.UseMiddleware<AccessLogMiddleware>();
+
 
 // sử dụng pattern : là tên đường dẫn. còn defaults: new {} : là tên điwonfg dẫn
 // Định tuyến cho các khu vực (Areas)
@@ -99,6 +103,7 @@ app.MapHub<StatusStartupHub>("/statusNewsHub");
 app.MapHub<PostCommentStartupHub>("/postCommentStartupHub");
 app.MapHub<PostCommentNewsHub>("/postCommentNewsHub");
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<MessengerHub>("/messengerHub");
 
 app.MapRazorPages();
 

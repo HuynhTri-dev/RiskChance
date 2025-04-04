@@ -1,0 +1,98 @@
+﻿@section Styles {
+
+    <link rel="stylesheet" href="~/css/messenger.css" />
+}
+
+<!-- Popup Messenger -->
+<div class="modal fade"
+     id="messengerModal"
+     aria-labelledby="messengerModalLabel"
+     data-bs-backdrop="false"
+     data-bs-keyboard="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messengerModalLabel">Messenger</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Danh sách người dùng -->
+                    <div class="col-sm-3 border-end">
+                        <input type="text"
+                               class="form-control mb-2"
+                               id="searchUser"
+                               placeholder="Tìm kiếm..." />
+                        <ul class="nav flex-column" id="userList">
+
+                            @* Them danh sach ban be *@
+
+                        </ul>
+                    </div>
+                    <!-- Tin nhắn -->
+                    <div class="col-sm-9 d-flex flex-column">
+                        <!-- Thông tin người nhận -->
+                        <div class="receiver-info d-flex align-items-center p-2 border-bottom">
+                            <img class="rounded-circle"
+                                 width="30px"
+                                 height="30px"
+                                 src="../assets/user/image.png"
+                                 alt="User" />
+                            <p class="ms-2 mb-0" id="receiverName">Chọn người để chat</p>
+                        </div>
+                        <!-- Nội dung chat -->
+                        <div class="mess-container flex-grow-1 p-2 overflow-auto"
+                             id="chatBox">
+                            <!-- Tin nhắn của B (bên phải) -->
+                            <div class="mess-box mb-2 receive d-flex justify-content-start">
+                                <div class="p-2 bg-light rounded">
+                                    <p>
+                                        Tin nhắn bên B. Lorem ipsum dolor sit amet consectetur
+                                        adipisicing elit. Odit quis odio minus ullam dicta, vero ab
+                                        at? Reiciendis deleniti nostrum vel temporibus
+                                        reprehenderit, quo aliquam voluptatum necessitatibus,
+                                        delectus at tempore!
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Tin nhắn của A (bên trái) -->
+                            <div class="mess-box mb-2 sender d-flex justify-content-end">
+                                <div class="p-2 bg-primary text-white rounded">
+                                    <p>Tin nhắn bên A</p>
+                                </div>
+                            </div>
+
+                            <p class="text-muted">Chưa có tin nhắn</p>
+                        </div>
+                        <!-- Ô nhập tin nhắn -->
+                        <div class="p-2 border-top">
+                            <div class="input-group">
+                                <textarea class="form-control"
+                                          id="messageInput"
+                                          placeholder="Nhập tin nhắn..."
+                                          rows="1"></textarea>
+
+                                <button class="btn btn-primary" id="sendMessageBtn">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                                <button class="btn btn-success" id="sendMessageBtn">
+                                    <i class="fa-solid fa-file-import"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

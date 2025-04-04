@@ -5,6 +5,9 @@ async function loadStartupChart() {
         if (!response.ok) throw new Error('Lỗi khi tải dữ liệu Startup theo tháng.');
 
         const data = await response.json();
+
+        console.log(data);
+
         const labels = data.map(d => 'Tháng ' + d.month);
         const counts = data.map(d => d.count);
 
@@ -52,6 +55,9 @@ async function loadLinhVucChart() {
 
         const data = await response.json();
         const labels = data.map(item => item.linhVuc);
+
+        console.log(data);
+
         const counts = data.map(item => item.startupCount);
 
         const backgroundColors = ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'];
@@ -79,12 +85,14 @@ async function loadLinhVucChart() {
     }
 }
 
-
 // Line Chart - Lượt truy cập theo ngày
 async function loadAccessLogChart() {
     try {
         const response = await fetch('/Admins/Dashboard/GetAccessLogsByDay');
+        if (!response.ok) throw new Error('Lỗi khi tải dữ liệu lĩnh vực.');
         const data = await response.json();
+
+        console.log(data);
 
         const chartData = data.map(x => ({ x: new Date(x.date), y: x.count }));
         const ctx = document.getElementById('accessLogChart').getContext('2d');

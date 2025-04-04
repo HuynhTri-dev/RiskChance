@@ -13,7 +13,7 @@ using System.Diagnostics.Contracts;
 namespace RiskChance.Areas.Investor.Controllers
 {
     [Area("Investor")]
-    [Authorize(Roles="Investor, Founder, Admin")]
+    [Authorize]
     public class HopDongController : Controller
     {
         private readonly IRepository<HopDongDauTu> _contractRepo;
@@ -54,6 +54,7 @@ namespace RiskChance.Areas.Investor.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Investor")]
         public async Task<IActionResult> Create(HopDongDauTu hopDong, IFormFile FileUrl)
         {
             if (!ModelState.IsValid)

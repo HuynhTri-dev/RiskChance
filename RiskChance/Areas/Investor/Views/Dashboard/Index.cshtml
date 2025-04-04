@@ -3,49 +3,51 @@
     ViewData["Title"] = "Dashboard";
 }
 
+@section Styles {
+    <style>
+        #investmentChart {
+            max-height: 100%; /* Giới hạn chiều cao tối đa */
+            height: auto !important;
+            display: block; /* Tránh bị kéo giãn */
+        }
+    </style>
+}
+
 @model RiskChance.Areas.Investor.Models.InvestorDashboardViewModel
 
 <div class="mt-4 mb-3 container">
     <h1 class="h1 fw-bold mb-4 text-center">Dashboard</h1>
 
-    <div class="row">
-        <div class="col-md-5">
-            <!-- Tổng tiền đầu tư -->
-            <div class="">
-                <div class="box mb-3 p-3">
-                    <h5 class="h5 fw-bold">Total amount invested</h5>
-                    <h6 class="h6" id="totalInvestment">@Model.TotalInvestment.ToString("N0") VNĐ</h6>
-                </div>
+    <div class="row align-items-stretch">
+        <!-- Cột bên trái -->
+        <div class="col-md-5 d-flex flex-column h-100">
+            <div class="box mb-3 p-3 flex-grow-1">
+                <h5 class="h5 fw-bold">Total amount invested</h5>
+                <h6 class="h6" id="totalInvestment">@Model.TotalInvestment.ToString("N0") VNĐ</h6>
             </div>
 
-            <!-- Tổng lợi nhuận dự kiến -->
-            <div class="">
-                <div class="ex-pro-box box p-3 mb-3">
-                    <h5 class="h5 fw-bold">Expected profit</h5>
-                    <h6 class="h6" id="expectedProfit">@Model.ExpectProfit.ToString("N0") VNĐ</h6>
-                </div>
+            <div class="box p-3 mb-3 flex-grow-1">
+                <h5 class="h5 fw-bold">Expected profit</h5>
+                <h6 class="h6" id="expectedProfit">@Model.ExpectProfit.ToString("N0") VNĐ</h6>
             </div>
 
-            <!-- Loi nhuan da nhan -->
-            <div class="">
-                <div class="ex-pro-box box p-3 mb-3">
-                    <h5 class="h5 fw-bold">Profit Received</h5>
-                    <h6 class="h6" id="expectedProfit">@Model.ProfitReceived.ToString("N0") VNĐ</h6>
-                </div>
+            <div class="box p-3 mb-3 flex-grow-1">
+                <h5 class="h5 fw-bold">Profit Received</h5>
+                <h6 class="h6" id="profitReceived">@Model.ProfitReceived.ToString("N0") VNĐ</h6>
             </div>
         </div>
 
-        <!-- Biểu đồ tỷ lệ đầu tư -->
-        <div class="col-md-7">
-            <div class="box p-3 mb-3">
+        <!-- Cột bên phải -->
+        <div class="col-md-7 d-flex flex-column h-100">
+            <div class="box p-3 mb-3 flex-grow-1">
                 <h5 class="h5 fw-bold text-center">Investment allocation</h5>
-                <div class="box-body">
-                    <!-- Se ve bieu do tron -->
+                <div class="box-body d-flex justify-content-center align-items-center h-100">
                     <canvas id="investmentChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Danh sách khoản đầu tư -->
     <div class="startup-doc-box box container-fluid p-3">
@@ -72,47 +74,48 @@
     </div>
 
 </div>
-@* 
-@section Scripts {
-    <script>
-        // Load Pie Chart - Số lượng Startup theo lĩnh vực
-        async function loadLinhVucChart() {
-            try {
-                const response = await fetch('/Admins/Dashboard/GetStartupCountByLinhVuc');
-                if (!response.ok) throw new Error('Lỗi khi tải dữ liệu lĩnh vực.');
+ 
+ @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script>
+         // Load Pie Chart - Số lượng Startup theo lĩnh vực
+        async function percentInvest() {
+             try {
+                const response = await fetch('/Investor/Dashboard/PercentInvest');
+                 if (!response.ok) throw new Error('Lỗi khi tải dữ liệu lĩnh vực.');
 
-                const data = await response.json();
-                const labels = data.map(item => item.linhVuc);
-                const counts = data.map(item => item.startupCount);
+                 const data = await response.json();
+                 console.log(data);
+                const labels = data.map(item => item.startupName);
+                const counts = data.map(item => item.totalInvested);
 
-                const backgroundColors = ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'];
+                 const backgroundColors = ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'];
 
-                const ctx = document.getElementById('startupLinhVucChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Số lượng Startup theo lĩnh vực',
-                            data: counts,
-                            backgroundColor: backgroundColors.slice(0, labels.length)
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'right' },
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
+                const ctx = document.getElementById('investmentChart').getContext('2d');
+                 new Chart(ctx, {
+                     type: 'pie',
+                     data: {
+                         labels: labels,
+                         datasets: [{
+                             label: 'Số lượng Startup theo lĩnh vực',
+                             data: counts,
+                             backgroundColor: backgroundColors.slice(0, labels.length)
+                         }]
+                     },
+                     options: {
+                         responsive: true,
+                         plugins: {
+                             legend: { position: 'right' },
+                         }
+                     }
+                 });
+             } catch (error) {
+                 console.error(error);
+             }
+         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            loadStartupChart();
-            loadLinhVucChart();
-        });
-    </script>
-} *@
+         document.addEventListener("DOMContentLoaded", function () {
+             percentInvest();
+         });
+     </script>
+ }

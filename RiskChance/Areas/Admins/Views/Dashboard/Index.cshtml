@@ -56,71 +56,75 @@
     </div>
 </div>
 
-<!-- Chart Card for Bar Chart (Số lượng Startup theo tháng) -->
-<div class="chart-startup-data">
-    <!-- Header -->
-    <div class="chart-startup-data-header">
-        <h4>
-            <i class="fa-solid fa-chart-simple"></i>
-            Bar Chart - Số lượng Startup theo tháng trong năm 2025
-        </h4>
+<section>
+    <!-- Chart Card for Bar Chart (Số lượng Startup theo tháng) -->
+    <div class="chart-startup-data">
+        <!-- Header -->
+        <div class="chart-startup-data-header">
+            <h4>
+                <i class="fa-solid fa-chart-simple"></i>
+                Bar Chart - Số lượng Startup theo tháng trong năm 2025
+            </h4>
+        </div>
+
+        <!-- Chart Canvas -->
+        <div class="canvas-wrapper">
+            <canvas id="startupChart"></canvas>
+        </div>
+
+        <!-- Footer-->
+        <div class="chart-startup-data-footer">
+            Thống kê số lượng Startup đăng ký theo tháng trong năm 2025.
+        </div>
     </div>
 
-    <!-- Chart Canvas -->
-    <div class="canvas-wrapper">
-        <canvas id="startupChart" style="width: 100%; height: 100%;"></canvas>
+    <!-- Chart Card for Pie Chart (Số lượng Startup theo lĩnh vực) -->
+    <div class="chart-startup-business-data">
+        <!-- Header -->
+        <div class="chart-startup-business-data-header">
+            <h4>
+                <i class="fa-solid fa-chart-pie"></i>
+                Pie Chart - Số lượng Startup theo lĩnh vực
+            </h4>
+        </div>
+
+        <!-- Chart Canvas - Centered and enlarged -->
+        <div class="canvas-pie-wrapper">
+            <canvas id="startupLinhVucChart"></canvas>
+        </div>
+
+        <!-- Footer-->
+        <div class="chart-startup-business-data-footer">
+            Thống kê số lượng Startup theo lĩnh vực.
+        </div>
+    </div>
+</section>
+
+<section>
+    <!-- Stacked Bar Chart - Số lượng hợp đồng theo trạng thái -->
+    <div class="chart-box col-md-6">
+        <div class="chart-startup-data-header">
+            <h4><i class="fa-solid fa-chart-bar"></i> Stacked Bar Chart - Số lượng hợp đồng theo trạng thái</h4>
+        </div>
+        <div class="canvas-wrapper">
+            <canvas id="contractStatusChart"></canvas>
+        </div>
     </div>
 
-    <!-- Footer-->
-    <div class="chart-startup-data-footer">
-        Thống kê số lượng Startup đăng ký theo tháng trong năm 2025.
+    <!-- Line Chart - Lượt truy cập -->
+    <div class="chart-box">
+        <div class="chart-startup-data-header">
+            <h4><i class="fa-solid fa-chart-line"></i> Line Chart - Lượt truy cập Founder & Investor theo ngày</h4>
+        </div>
+        <div class="canvas-wrapper">
+            <canvas id="accessLogChart"></canvas>
+        </div>
     </div>
-</div>
-
-<!-- Chart Card for Pie Chart (Số lượng Startup theo lĩnh vực) -->
-<div class="chart-startup-business-data">
-
-    <!-- Header -->
-    <div class="chart-startup-business-data-header">
-        <h4>
-            <i class="fa-solid fa-chart-pie"></i>
-            Pie Chart - Số lượng Startup theo lĩnh vực
-        </h4>
-    </div>
-
-    <!-- Chart Canvas - Centered and enlarged -->
-    <div class="canvas-pie-wrapper">
-        <canvas id="startupLinhVucChart" style="max-width: 400px; max-height: 400px;"></canvas>
-    </div>
-
-    <!-- Footer-->
-    <div class="chart-startup-business-data-footer">
-        Thống kê số lượng Startup theo lĩnh vực.
-    </div>
-</div>
-
-<!-- Stacked Bar Chart - Số lượng hợp đồng theo trạng thái -->
-<div class="chart-box col-md-6">
-    <div class="chart-startup-data-header">
-        <h4><i class="fa-solid fa-chart-bar"></i> Stacked Bar Chart - Số lượng hợp đồng theo trạng thái</h4>
-    </div>
-    <div class="canvas-wrapper" style="height: 300px;">
-        <canvas id="contractStatusChart" style="width: 100%; height: 100%;"></canvas>
-    </div>
-</div>
-
-<!-- Line Chart - Lượt truy cập -->
-<div class="chart-box">
-    <div class="chart-startup-data-header">
-        <h4><i class="fa-solid fa-chart-line"></i> Line Chart - Lượt truy cập Founder & Investor theo ngày</h4>
-    </div>
-    <div class="canvas-wrapper">
-        <canvas id="accessLogChart"></canvas>
-    </div>
-</div>
+</section>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="~/js/AdminDashboard.js"></script>
 }
 

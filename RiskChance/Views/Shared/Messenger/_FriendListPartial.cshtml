@@ -1,0 +1,11 @@
+﻿@model IEnumerable<NguoiDung>
+
+@foreach (var friend in Model)
+{
+    <li class="nav-item">
+        <a href="#" class="nav-link container-fluid"
+           onclick="openChatPopup('@friend.Id')" style="font-size: 14px">
+            @friend.UserName
+        </a>
+    </li>
+}
