@@ -1,31 +1,5 @@
-﻿.basic-data-item {
-    flex: 1;
-    min-width: 200px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin: 10px;
-}
-
-/* Đảm bảo các item xuống dòng khi màn hình nhỏ */
-@media (max-width: 768px) {
-    .basic-data-item {
-        width: 100%;
-    }
-}
-
-.basic-data-item h4 {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.basic-data-item p {
-    font-size: 18px;
-    font-weight: bold;
+﻿.bs-data-item {
+    margin-right: 10px;
 }
 
 .chart-startup-data {
@@ -63,8 +37,8 @@
 }
 
 .canvas-wrapper {
-    padding: 16px 20px;
-    text-align: left;
+    width: 100%;
+    padding: 10px;
 }
 
 .chart-startup-business-data {

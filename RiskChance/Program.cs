@@ -76,7 +76,6 @@ app.UseRouting();
 app.UseSession();   
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseMiddleware<AccessLogMiddleware>();
 
 // sử dụng pattern : là tên đường dẫn. còn defaults: new {} : là tên điwonfg dẫn

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using RiskChance.Data;
-using RiskChance.Models;
+﻿    using Microsoft.AspNetCore.Identity;
+    using RiskChance.Data;
+    using RiskChance.Models;
 
 namespace RiskChance.Middleware
 {
@@ -11,8 +11,8 @@ namespace RiskChance.Middleware
 
         public AccessLogMiddleware(RequestDelegate next, ILogger<AccessLogMiddleware> logger)
         {
-            _next = next;
-            _logger = logger;
+            _next = next ?? throw new ArgumentNullException(nameof(next));  // Đảm bảo next không phải là null
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task InvokeAsync(HttpContext context, ApplicationDBContext db, UserManager<NguoiDung> userManager)
@@ -45,13 +45,22 @@ namespace RiskChance.Middleware
                         await db.SaveChangesAsync();
                     }
                 }
+
+                // Kiểm tra _next trước khi gọi
+                if (_next != null)
+                {
+                    await _next(context); // Gọi middleware tiếp theo trong pipeline
+                }
+                else
+                {
+                    _logger.LogError("RequestDelegate _next is null in AccessLogMiddleware.");
+                    context.Response.StatusCode = 500; // Trả về lỗi Server nếu _next là null
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi khi ghi AccessLog.");
             }
-
-            await _next(context);
         }
     }
 }
