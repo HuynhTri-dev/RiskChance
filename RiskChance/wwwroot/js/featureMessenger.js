@@ -21,15 +21,21 @@ $(document).ready(function () {
             }
         }
     });
+    // goi rieng cho detail
+    $('#contactBtn').click(function () {
+        var receiverId = $(this).data('id');
+        getMessage(receiverId);
+        getInfo(receiverId);
+    });
 
     $('#sendMessageBtn').click(function (e) {
-        e.preventDefault(); // Chặn reload trang
+        e.preventDefault(); 
 
         var message = $('#messageInput').val().trim();
         var receiverId = $('#receiverId').val();
 
         if (message === "" || receiverId === "") {
-            alert("Vui lòng nhập tin nhắn và chọn người nhận.");
+            alert("Sign in to send message");
             return;
         }
 

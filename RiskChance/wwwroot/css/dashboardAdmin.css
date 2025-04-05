@@ -1,28 +1,22 @@
 ﻿.bs-data-item {
-    margin-right: 10px;
+    padding: 10px;
 }
-
-.chart-startup-data {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    max-width: 800px;
-    margin: 30px auto;
-    margin-left: 30px
-}
+    .chart-startup-data {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        max-width: 800px;
+        margin: 30px auto;
+        margin-left: 30px
+    }
 
 .chart-startup-data-header {
     padding: 10px 15px;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f9fafe;
 }
 
     .chart-startup-data-header h4 {
-        font-size: 16px;
-        font-weight: bold;
         color: #375cb3;
-        margin: 0;
     }
 
 .chart-startup-data-footer {
@@ -41,44 +35,16 @@
     padding: 10px;
 }
 
-.chart-startup-business-data {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    max-width: 800px;
-    margin: 30px auto;
-    margin-left: 30px
+#contractStatusChart {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+    max-height: 250px !important;
 }
 
-.chart-startup-business-data-header {
-    padding: 12px 18px;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f9fafe;
+#startupChart, #startupLinhVucChart {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 300px !important;
+    max-height: 400px !important;
 }
-
-    .chart-startup-business-data-header h4 {
-        font-size: 16px;
-        font-weight: bold;
-        color: #375cb3;
-        margin: 0;
-    }
-
-.canvas-pie-wrapper {
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    height:auto;
-}
-
-.chart-startup-business-data-footer {
-    font-size: 14px;
-    color: #6c757d;
-    font-style: italic;
-    text-align: center;
-    padding: 10px 12px;
-    border-top: 1px solid #dee2e6;
-    background: linear-gradient(to right, #f8f9fa, #ffffff);
-    border-radius: 0 0 8px 8px;
-}
-

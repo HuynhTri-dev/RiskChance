@@ -6,13 +6,13 @@
     <input type="hidden" asp-for="IDHopDong"/>
 
     <div class="mb-3">
-        <label asp-for="SoTien" class="form-label">Số Tiền</label>
+        <label asp-for="SoTien" class="form-label">Profit</label>
         <input asp-for="SoTien" type="number" step="1000" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label asp-for="MinhChungFile" class="form-label">Số Tiền</label>
-        <input asp-for="MinhChungFile" type="file" class="form-control">
+        <label asp-for="MinhChungFile" class="form-label">Image Check: </label>
+        <input asp-for="MinhChungFile" type="file" class="form-control" accept="image/*">
     </div>
 
     <button type="submit" class="btn btn-primary">Pay</button>

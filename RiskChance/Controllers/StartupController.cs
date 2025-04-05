@@ -181,10 +181,6 @@ namespace QuanLyStartup.Controllers
                         .Where(x => x.IDStartup == startup.IDStartup)
                         .ToList();
 
-            //var comStartup = await _context.DanhGiaStartups
-            //            .Include(x => x.NguoiDung)
-            //            .Where(x => x.IDStartup == startup.IDStartup)
-            //            .ToListAsync();
 
             var amount = (await _contractRepo.GetAllAsync())
                         .Where(x => x.IDStartup == startup.IDStartup && x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true)
@@ -199,12 +195,12 @@ namespace QuanLyStartup.Controllers
                 Description = startup.MoTa,
                 Target = startup.MucTieu,
                 PercentOfCompany = startup.PhanTramCoPhan,
-                AmountInvested = amount
+                AmountInvested = amount,
+                DocumentList = doc,
+                FounderId = startup.IDNguoiDung,
             };
 
-            model.DocumentList = doc;
 
-            //model.CommentList = comStartup;
 
             return View(model);
         }

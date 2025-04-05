@@ -64,6 +64,8 @@
                 <button data-bs-toggle="modal"
                         data-bs-target="#messengerModal"
                         class="btn btn-primary fw-bold"
+                        id="contactBtn"
+                        data-id="@Model.FounderId"
                         style="margin-right: 10px">
                     Contact
                 </button>
@@ -81,30 +83,32 @@
     <!-- Danh sách giấy tờ pháp lý -->
     <h3 class="h3 fw-bold mt-4">List of Documents</h3>
     <div id="legalDocs" class="mt-3 mb-3 container mx-auto">
-        <section class="row">
+        <section class="row g-2">
             @foreach (var doc in Model.DocumentList)
             {
-                <div class="card p-2 col-md-6 shadow-sm">
-                    <div class="card-body">
-                        <div class="doc-info">
-                            <h4 class="h4 card-title mb-1 fw-bold">@doc.TenGiayTo</h4>
-                            <p class="card-text text-muted">
-                                @doc.LoaiFile
-                            </p>
-                            <p class="card-text text-muted">
-                                @doc.NoiDung
-                            </p>
-                            <p class="card-text text-muted">
-                                @doc.NgayTao.ToString("dd/MM/yyyy HH:mm")
-                            </p>
-                        </div>
-                        <div class="download-btn mt-3 d-flex justify-content-end">
-                            
-                            <a href="@doc.FileGiayTo"
-                               class="btn btn-primary fw-bold text-white"
-                               target="_blank">
-                                Download
-                            </a>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="doc-info">
+                                <h4 class="h4 card-title mb-1 fw-bold">@doc.TenGiayTo</h4>
+                                <p class="card-text text-muted">
+                                    @doc.LoaiFile
+                                </p>
+                                <p class="card-text text-muted">
+                                    @doc.NoiDung
+                                </p>
+                                <p class="card-text text-muted">
+                                    @doc.NgayTao.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+                            <div class="download-btn mt-3 d-flex justify-content-end">
+
+                                <a href="@doc.FileGiayTo"
+                                   class="btn btn-primary fw-bold text-white"
+                                   target="_blank">
+                                    Download
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -95,7 +95,7 @@
             }
 
              @* Xoa *@
-            @if (Model.TrangThaiKyKet == TrangThaiKyKetEnum.BiTuChoi && Model.ThanhToan == false)
+            @if ((Model.TrangThaiKyKet == TrangThaiKyKetEnum.BiTuChoi || Model.TrangThaiKyKet == TrangThaiKyKetEnum.DaGui) && Model.ThanhToan == false)
             {
                 <button type="button" onclick="confirmDelete('@Model.IDHopDong', '@Url.Action("Delete", "HopDong", new { area = "Investor" })')"
                         class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
@@ -132,7 +132,7 @@
                 <input type="hidden" asp-for="@Model.IDHopDong">
                 <div class="mb-3">
                     <label asp-for="MinhChungThanhToan" class="form-label">Payment receipt</label>
-                    <input asp-for="MinhChungThanhToan" type="file" class="form-control" />
+                    <input asp-for="MinhChungThanhToan" type="file" class="form-control" accept="image/*"/>
                     <span asp-validation-for="MinhChungThanhToan" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3">
@@ -161,7 +161,7 @@
                     <input asp-for="IDHopDong" type="hidden">
                     <div class="mb-3">
                         <label asp-for="FileUrl" class="form-label">File Contact</label>
-                        <input asp-for="FileUrl" type="file" class="form-control" id="fileUrlInput" />
+                        <input asp-for="FileUrl" type="file" class="form-control" id="fileUrlInput" accept=".pdf, .doc, .docx" />
                         <span asp-validation-for="FileUrl" class="text-danger"></span>
                     </div>
                     <button class="btn btn-success">Upload</button>

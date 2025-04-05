@@ -17,29 +17,28 @@
             <div class="modal-body">
                 <div class="row">
                     <!-- Danh sách người dùng -->
-                    <div class="col-sm-3 border-end">
+                    <div class="col-md-3 col-sm-4 border-end">
                         <input type="text"
                                class="form-control mb-2"
                                id="searchUser"
                                placeholder="Tìm kiếm..." />
-                        <ul class="nav flex-column" id="userList">
 
+                        <div id="userList">
                             @* Them danh sach ban be *@
-
-                        </ul>
+                        </div>
+                 
                     </div>
                     <!-- Tin nhắn -->
-                    <div class="col-sm-9 d-flex flex-column">
+                    <div class="col-md-9 col-sm-8 d-flex flex-column">
                         <!-- Thông tin người nhận -->
                         <div id="receiverInfo" class="receiver-info d-flex align-items-center p-2 border-bottom">
                             @* thong tin nguoi dung *@
                         </div>
-
                         <!-- Nội dung chat -->
-                        <div class="mess-container flex-grow-1 p-2 overflow-auto"
-                             id="chatBox">
+                        <div id="chatBox">
                             @*  tin nhan *@
                         </div>
+
                         <!-- Ô nhập tin nhắn -->
                         <div class="p-2 border-top">
                             <form method="post" class="input-group">
@@ -60,11 +59,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    Đóng
-                </button>
             </div>
         </div>
     </div>

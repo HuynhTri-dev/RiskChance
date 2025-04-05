@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/messenger.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/RiskChance.styles.css" asp-append-version="true" />
 
@@ -41,7 +42,7 @@
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Logo -->
                 <div class="logo-container">
-                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center gap-2">
                         <img class="logo-img rounded-circle"
                              src="~/assets/home/logo.png"
                              alt="logo"
@@ -82,7 +83,7 @@
                                             <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                         </li>
                                     }
-                                    <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                    <li class="nav-item"><a class="nav-link fw-bold" href="#about">About</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -105,7 +106,7 @@
                                         <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                     </li>
                                 }
-                                <li><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                <li class="nav-item"><a class="dropdown-item fw-bold" href="#about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -114,17 +115,18 @@
                 <!-- Tài khoản và các chức năng cần thiết -->
                 <div class="d-flex align-items-center justify-content-between p-2">
                     <button type="button"
-                            class="text-dark position-relative btn btn-light"
+                            class="text-dark position-relative nav-link"
                             data-bs-toggle="modal"
-                            data-bs-target="#messengerModal">
+                            data-bs-target="#messengerModal"
+                            style="margin-right: 10px">
                         <i class="fa-brands fa-signal-messenger fs-4"></i>
                         <span id="msgBadge"
                               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
                     </button>
 
-                    <div class="notification dropdown">
+                    <div class="notification dropdown" style="margin-right: 10px">
                         <button type="button"
-                                class="text-dark position-relative btn btn-light"
+                                class="text-dark position-relative nav-link"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false">
                             <i class="fa-solid fa-bell fs-4"></i>
@@ -174,10 +176,8 @@
 
                     <!-- Các icon chỉ hiện trên màn hình lớn -->
                     <div class="d-none d-lg-flex align-items-center gap-3">
-
-
                         <a asp-area="User" asp-controller="News" asp-action="Add"
-                           class="text-dark btn btn-light"
+                           class="text-dark nav-link"
                            id="postIcon">
                             <i class="fa-solid fa-pen fs-4"></i>
                         </a>
@@ -194,7 +194,6 @@
                                 Dashboard
                             </a>
                         }
-
                     </div>
 
                     <!-- Thong tin ca nhan -->
@@ -220,7 +219,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "profile" ? "active-feature" : "")">
+                            <a asp-area="User" asp-controller="Profile" asp-action="Index" class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "profile" ? "active-feature" : "")">
                                 <i class="fa-solid fa-address-card"></i>
                                 <p style="margin-left: 5px" class="d-none d-lg-block">
                                     Profile
@@ -230,8 +229,8 @@
                         <li class="nav-item">
                             @if (User.IsInRole("Founder"))
                             {
-                                <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" 
-                                    class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboardFounder" ? "active-feature" : "")">
+                                <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index"
+                                   class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboardFounder" ? "active-feature" : "")">
                                     <i class="fa-solid fa-chart-simple"></i>
                                     <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
@@ -241,7 +240,7 @@
                             else if (User.IsInRole("Investor"))
                             {
                                 <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index"
-                                    class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboardInvestor" ? "active-feature" : "")">
+                                   class="btn nav-link d-flex justify-content-center align-items-center @(ViewBag.FeatureActive == "dashboardInvestor" ? "active-feature" : "")">
                                     <i class="fa-solid fa-chart-simple"></i>
                                     <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
@@ -250,8 +249,8 @@
                             }
                             else if (User.IsInRole("Admin"))
                             {
-                                <a asp-area="Admins" asp-controller="Dashboard" asp-action="Index" 
-                                    class="btn nav-link d-flex justify-content-center align-items-center">
+                                <a asp-area="Admins" asp-controller="Dashboard" asp-action="Index"
+                                   class="btn nav-link d-flex justify-content-center align-items-center">
                                     <i class="fa-solid fa-chart-simple"></i>
                                     <p style="margin-left: 5px" class="d-none d-lg-block">
                                         Dashboard
@@ -332,6 +331,10 @@
             </div>
         </div>
     </footer>
+
+    @* Model mess *@
+    @await Html.PartialAsync("_MessengerPartial")
+    <script src="~/js/featureMessenger.js" asp-append-version="true"></script>
 
     @await Html.PartialAsync("~/Views/Shared/_DeleteConfirmPopUp.cshtml")
     <script src="~/js/CallConfirmBox.js" asp-append-version="true"></script>

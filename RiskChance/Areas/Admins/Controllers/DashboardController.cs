@@ -36,22 +36,13 @@ namespace RiskChance.Areas.Admins.Controllers
             ViewBag.PendingStartups = await _context.Startups.Where(s => s.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet).CountAsync();
 
 
-            var founderRoleId = await _context.Roles
-                .Where(r => r.Name == "Founder")
+            var adminRoleID = await _context.Roles
+                .Where(r => r.Name == "Admin")
                 .Select(r => r.Id)
                 .FirstOrDefaultAsync();
 
-            var investorRoleId = await _context.Roles
-                .Where(r => r.Name == "Investor")
-                .Select(r => r.Id)
-                .FirstOrDefaultAsync();
-
-            ViewBag.founderCount = await _context.UserRoles
-                .Where(ur => ur.RoleId == founderRoleId)
-                .CountAsync();
-
-            ViewBag.investorCount = await _context.UserRoles
-                .Where(ur => ur.RoleId == investorRoleId)
+            ViewBag.UserAccount = await _context.UserRoles
+                .Where(ur => ur.RoleId != adminRoleID)
                 .CountAsync();
 
             ViewBag.ActiveFeature = "dashboard";

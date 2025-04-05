@@ -1,18 +1,26 @@
 ﻿@model IEnumerable<NguoiDung>
 
-@if (Model.Any() && Model != null)
-{
-    @foreach (var friend in Model)
+<ul class="nav flex-column">
+    @if (Model.Any() && Model != null)
     {
-        <li class="nav-item">
-            <a href="#" class="nav-link container-fluid"
-               onclick="getMessage('@friend.Id')" style="font-size: 14px">
-                @friend.HoTen
-            </a>
-        </li>
+        @foreach (var friend in Model)
+        {
+            <li class="nav-item">
+                <a href="#" class="nav-link container-fluid d-flex align-items-center"
+                   onclick="getMessage('@friend.Id')" style="font-size: 16px">
+                    <img src="@(friend.AvatarUrl ?? "../assets/user/image.png")"
+                         class="rounded-circle me-2"
+                         alt="Avatar"
+                         style="width: 30px; height: 30px" />
+                    <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @friend.HoTen
+                    </p>
+                </a>
+            </li>
+        }
     }
-}
-else
-{
-    <li class="nav-item"><p>Find your friend</p></li>
-}
+    else
+    {
+        <li class="nav-item"><p>Find your friend</p></li>
+    }
+</ul>

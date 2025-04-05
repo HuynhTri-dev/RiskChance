@@ -1,6 +1,6 @@
 .modal-dialog {
-  width: 50%;
-  min-width: 500px;
+  width: 60%;
+  min-width: 650px;
   box-shadow: 5px 5px 10px 5px var(--shadow-light);
   border-radius: 5px;
 }
@@ -13,7 +13,7 @@
 }
 
 .mess-container::-webkit-scrollbar {
-  display: none; /* Ẩn thanh cuộn trên Chrome & Edge */
+  display: none;
 }
 
 textarea#messageInput {

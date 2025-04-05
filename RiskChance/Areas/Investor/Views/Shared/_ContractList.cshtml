@@ -16,7 +16,7 @@
         <a class="doc-item row text-decoration-none align-items-center"
            asp-area="Investor" asp-controller="HopDong" asp-action="Details" asp-route-idContract="@contract.IDHopDong">
             <p class="col-3">@contract.Startup?.TenStartup</p>
-            <p class="col-3">@contract.TongTien</p>
+            <p class="col-3">@contract.TongTien?.ToString("N0") VNĐ</p>
             <p class="col-3">@contract.PhanTramLoiNhuan</p>
             <p class="col-2">@(contract.ThanhToan == true ? "Paid" : "Unpaid")</p>
             <div class="col-1">

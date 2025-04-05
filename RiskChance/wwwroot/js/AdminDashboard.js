@@ -6,7 +6,7 @@ async function loadStartupChart() {
 
         const data = await response.json();
 
-        console.log(data);
+        //console.log(data);
 
         const labels = data.map(d => 'Tháng ' + d.month);
         const counts = data.map(d => d.count);
@@ -39,7 +39,8 @@ async function loadStartupChart() {
                 },
                 plugins: {
                     legend: { labels: { font: { size: 12 } } }
-                }
+                },
+                maintainAspectRatio: false
             }
         });
     } catch (error) {
@@ -56,7 +57,7 @@ async function loadLinhVucChart() {
         const data = await response.json();
         const labels = data.map(item => item.linhVuc);
 
-        console.log(data);
+        //console.log(data);
 
         const counts = data.map(item => item.startupCount);
 
@@ -77,7 +78,8 @@ async function loadLinhVucChart() {
                 responsive: true,
                 plugins: {
                     legend: { position: 'right' },
-                }
+                },
+                maintainAspectRatio: false
             }
         });
     } catch (error) {
@@ -92,7 +94,7 @@ async function loadAccessLogChart() {
         if (!response.ok) throw new Error('Lỗi khi tải dữ liệu lĩnh vực.');
         const data = await response.json();
 
-        console.log(data);
+        //console.log(data);
 
         const chartData = data.map(x => ({ x: new Date(x.date), y: x.count }));
         const ctx = document.getElementById('accessLogChart').getContext('2d');
@@ -105,7 +107,6 @@ async function loadAccessLogChart() {
             type: 'line',
             data: {
                 datasets: [{
-                    label: 'Lượt truy cập Founder & Investor',
                     data: chartData,
                     borderColor: '#007bff',
                     backgroundColor: gradient,
@@ -137,11 +138,7 @@ async function loadAccessLogChart() {
                 plugins: {
                     tooltip: { mode: 'index', intersect: false },
                     legend: {
-                        labels: {
-                            font: { size: 14 },
-                            boxWidth: 20,
-                            color: '#333'
-                        }
+                        display: false
                     }
                 }
             }
@@ -156,7 +153,7 @@ async function loadContractStatusChart() {
     try {
         const response = await fetch('/Admins/Dashboard/GetContractStatistics');
         const data = await response.json();
-        //console.log(data); // Kiểm tra dữ liệu trả về
+        console.log(data); // Kiểm tra dữ liệu trả về
 
         const labels = [];
         const daGuiData = [];
@@ -170,9 +167,15 @@ async function loadContractStatusChart() {
                 labels.push(monthLabel);
             }
 
-            daGuiData.push(item.status === 0 ? item.count : 0);
-            daDuyetData.push(item.status === 1 ? item.count : 0);
-            biTuChoiData.push(item.status === 2 ? item.count : 0);
+            if (item.status === 0) {
+                daGuiData.push(item.count);
+            }
+            else if (item.status === 1) {
+                daDuyetData.push(item.count);
+            }
+            else if (item.status === 2) {
+                biTuChoiData.push(item.count);
+            }
         });
 
         const ctx = document.getElementById('contractStatusChart').getContext('2d');
@@ -182,22 +185,23 @@ async function loadContractStatusChart() {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Đã Gửi',
-                        data: daGuiData,
+                        label: 'Denied',
+                        data: biTuChoiData,
+                        
                         backgroundColor: 'rgba(255, 99, 132, 0.7)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
                     },
                     {
-                        label: 'Đã Duyệt',
-                        data: daDuyetData,
+                        label: 'Updating',
+                        data: daGuiData,
                         backgroundColor: 'rgba(54, 162, 235, 0.7)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
                     {
-                        label: 'Bị Từ Chối',
-                        data: biTuChoiData,
+                        label: 'Signed',
+                        data: daDuyetData,
                         backgroundColor: 'rgba(75, 192, 192, 0.7)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -207,12 +211,44 @@ async function loadContractStatusChart() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        bottom: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 12 },
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
                 scales: {
-                    x: { ticks: { font: { size: 10 } } },
-                    y: { beginAtZero: true, stacked: true, ticks: { stepSize: 1, font: { size: 10 } } }
+                    x: {
+                        ticks: {
+                            font: { size: 10 }
+                        },
+                        stacked: true
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 10 }
+                        }
+                    }
                 }
             }
         });
+
     } catch (error) {
         console.error(error);
     }

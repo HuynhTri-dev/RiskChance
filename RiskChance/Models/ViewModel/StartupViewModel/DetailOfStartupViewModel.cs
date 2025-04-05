@@ -3,6 +3,7 @@
     public class DetailOfStartupViewModel
     {
         public int IDStartup { get; set; }
+        public string? FounderId { get; set; }
         public string? Business { get; set; }
         public string? LogoUrl { get; set; }
         public string? Name { get; set; }
@@ -11,6 +12,6 @@
         public double? PercentOfCompany { get; set; }
         public decimal? AmountInvested { get; set; }
         public List<GiayTo> DocumentList { get; set; } = new List<GiayTo>();
-        //public List<DanhGiaStartup> CommentList { get; set; } = new List<DanhGiaStartup>();
+       
     }
 }

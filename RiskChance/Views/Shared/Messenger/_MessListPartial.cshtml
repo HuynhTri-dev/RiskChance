@@ -3,36 +3,35 @@
 @{
     var currentUserId = Context.Session.GetString("UserId");
 }
-
-@if (Model.Any() && Model != null)
-{
-    @foreach (var mess in Model)
+<div class="mess-container flex-grow-1 p-2 overflow-auto">
+    @if (Model.Any() && Model != null)
     {
-        if (mess.IDNguoiGui == currentUserId)
+        @foreach (var mess in Model)
         {
-            <!-- Tin nhắn của A (bên trái) -->
-            <div class="mess-box mb-2 sender d-flex justify-content-end">
-                <div class="p-2 bg-primary text-white rounded">
-                    <p>@mess.NoiDung</p>
+            if (mess.IDNguoiGui == currentUserId)
+            {
+                <!-- Tin nhắn của A (bên trái) -->
+                <div class="mess-box mb-2 sender d-flex justify-content-end">
+                    <div class="p-2 bg-primary text-white rounded">
+                        <p>@mess.NoiDung</p>
+                    </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <!-- Tin nhắn của B (bên phải) -->
-            <div class="mess-box mb-2 receive d-flex justify-content-start">
-                <div class="p-2 bg-light rounded">
-                    <p>
-                        @mess.NoiDung
-                    </p>
+            }
+            else
+            {
+                <!-- Tin nhắn của B (bên phải) -->
+                <div class="mess-box mb-2 receive d-flex justify-content-start">
+                    <div class="p-2 bg-light rounded">
+                        <p>
+                            @mess.NoiDung
+                        </p>
+                    </div>
                 </div>
-            </div>
+            }
         }
     }
-}
-else
-{
-    <p class="text-muted">Chưa có tin nhắn</p>
-}
-
-
+    else
+    {
+        <p class="text-muted">Chưa có tin nhắn</p>
+    }
+</div>

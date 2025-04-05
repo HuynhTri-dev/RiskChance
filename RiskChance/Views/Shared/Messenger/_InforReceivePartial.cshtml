@@ -1,9 +1,10 @@
 ﻿@model RiskChance.Models.NguoiDung;
 
+
 <img class="rounded-circle"
      width="50"
      height="50"
      src="@(Model.AvatarUrl != null ? Model.AvatarUrl : "../assets/user/image.png")"
      alt="User" />
-<p class="ms-2 mb-0" id="receiverName">@(Model.HoTen != null ? Model.HoTen : "Chọn người để chat")</p>
+<p class="ms-2 mb-0"  id="receiverName">@(Model.HoTen != null ? Model.HoTen : "Chọn người để chat")</p>
 

@@ -213,10 +213,35 @@ namespace RiskChance.Areas.Founder.Controllers
             var existingStartup = await _startupRepo.GetByIdAsync(startup.IDStartup);
             if (existingStartup == null) return NotFound();
 
+            // Kiểm tra nếu lĩnh vực mới được nhập
+            LinhVuc linhVuc;
+            if (!string.IsNullOrEmpty(startup.TenLinhVuc))
+            {
+                linhVuc = await _context.LinhVucs.FirstOrDefaultAsync(x => x.TenLinhVuc == startup.TenLinhVuc);
+
+                if (linhVuc == null)
+                {
+                    linhVuc = new LinhVuc { TenLinhVuc = startup.TenLinhVuc };
+                    _context.LinhVucs.Add(linhVuc);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                linhVuc = await _context.LinhVucs.FindAsync(startup.IDLinhVuc);
+                if (linhVuc == null)
+                {
+                    ModelState.AddModelError("IDLinhVuc", "Lĩnh vực không hợp lệ.");
+                    ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
+                    return View(startup);
+                }
+            }
+
+
             // Cập nhật thông tin
             existingStartup.TenStartup = startup.TenStartup;
             existingStartup.MoTa = startup.MoTa;
-            existingStartup.IDLinhVuc = startup.IDLinhVuc;
+            existingStartup.IDLinhVuc = linhVuc.IDLinhVuc;
             existingStartup.MucTieu = startup.MucTieu ?? 0;
             existingStartup.PhanTramCoPhan = startup.PhanTramCoPhan ?? 0;
             existingStartup.TrangThaiXetDuyet = TrangThaiXetDuyetEnum.ChoDuyet;
@@ -235,12 +260,17 @@ namespace RiskChance.Areas.Founder.Controllers
             }
 
             // Cập nhật DB
-            await _startupRepo.UpdateAsync(existingStartup);
-
-            await _hubContext.Clients.All.SendAsync("ReceiveStatusUpdate", existingStartup.IDStartup, (int)existingStartup.TrangThaiXetDuyet);
-            TempData["Message"] = "Update Success!";
-            return RedirectToAction("Index", "Dashboard");
+            try
+            {
+                await _context.SaveChangesAsync();
+                TempData["Message"] = "Update Success!";
+                return RedirectToAction("Index", "Dashboard");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
+                return View(startup);
+            }
         }
-
     }
 }

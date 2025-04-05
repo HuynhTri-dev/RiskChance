@@ -37,6 +37,7 @@ namespace RiskChance.Areas.Investor.Controllers
 
         [HttpGet]
         [Route("HopDong/{idStartup:int}")]
+        [Authorize(Roles = "Investor")]
         public async Task<IActionResult> Create(int? idStartup)
         {
             if (idStartup == null)
@@ -294,12 +295,14 @@ namespace RiskChance.Areas.Investor.Controllers
 
             contractExist.TrangThaiKyKet = TrangThaiKyKetEnum.DaGui;
             contractExist.NgayKyKet = DateTime.Now;
+            contractExist.PhanTramLoiNhuan = hopDong.PhanTramLoiNhuan;
+            contractExist.NoiDung = hopDong.NoiDung;
             if (fileUrl != null)
             {
                 contractExist.FileUrl = fileUrl;
             }
 
-            await _contractRepo.UpdateAsync(contractExist);
+            await _context.SaveChangesAsync();
 
             TempData["Message"] = "Successful Update";
 
@@ -307,6 +310,7 @@ namespace RiskChance.Areas.Investor.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Investor")]
         public async Task<IActionResult> ThanhToan(HopDongDauTu hopDong, IFormFile? MinhChungThanhToan)
         {
             if (hopDong.IDHopDong == null) return NotFound();
@@ -324,7 +328,7 @@ namespace RiskChance.Areas.Investor.Controllers
             {
                 try
                 {
-                    fileUrl = await DocumentUtil.SaveAsync(MinhChungThanhToan);
+                    fileUrl = await ImageUtil.SaveAsync(MinhChungThanhToan);
                 }
                 catch (Exception ex)
                 {
@@ -372,15 +376,30 @@ namespace RiskChance.Areas.Investor.Controllers
 
             try
             {
-                await _contractRepo.DeleteAsync(contract);
+                await _contractRepo.DeleteAsync(id);
                 TempData["Message"] = "Delete Success";
 
-                return RedirectToAction("Index", "Dashboard", new { area = "Investor" });
+                if (User.IsInRole("Founder"))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Founder" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Investor" });
+                }
             }
             catch
             {
                 TempData["Message"] = "Delete Unsuccess";
-                return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = contract.IDHopDong });
+
+                if (User.IsInRole("Founder"))
+                {
+                    return RedirectToAction("Details", "HopDong", new { area = "Founder", idContract = contract.IDHopDong });
+                }
+                else
+                {
+                    return RedirectToAction("Details", "HopDong", new { area = "Investor", idContract = contract.IDHopDong });
+                }
             }
         }
     }
