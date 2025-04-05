@@ -60,9 +60,6 @@ function markAsRead(notificationId) {
         method: 'POST',
         data: { notificationId: notificationId },
         success: function () {
-            var statusElementId = '#status-' + notificationId;
-            $(statusElementId).removeClass('status');
-
             var wrapper = '#wrapper-' + notificationId;
             $(wrapper).addClass('read');
         }

@@ -15,7 +15,25 @@
         {
             progress = 0;
         }
-    }  
+    }
+
+    string? status = string.Empty;
+
+    if (Model != null)
+    {
+        if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet)
+        {
+            status = "Waiting to browse";
+        }
+        else if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
+        {
+            status = "Approved";
+        }
+        else if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.TuChoi)
+        {
+            status = "Rejected";
+        }
+    }
 }
 
 @model RiskChance.Areas.Founder.ViewModels.DashboardViewModel
@@ -70,7 +88,7 @@
                 <hr />
                 <p><span class="fw-bold">Target:</span> @Model.SelectStartup?.MucTieu.ToString("N0") VNĐ</p>
                 <p><span class="fw-bold">Percentage of shares:</span> @Model.SelectStartup?.PhanTramCoPhan</p>
-                <p><span class="fw-bold">Status:</span> @Model.SelectStartup?.TrangThaiXetDuyet</p>
+                <p><span class="fw-bold">Status:</span> @status</p>
                 <hr />
                 <div class="feature-box d-flex justify-content-around">
                     <a asp-controller="Startup" asp-action="Update" asp-route-idStartup="@Model.SelectStartup?.IDStartup" class="btn btn-primary fw-bold tex-decoration-none text-white">Update</a>
@@ -159,7 +177,7 @@ else
     <div class="d-flex align-items-center justify-content-center container mx-auto" style="height: 350px">
         <a asp-controller="Startup" asp-action="Add" class="btn btn-primary fw-bold text-white d-flex align-items-center justify-content-center p-3">
             <h3 class="h3 fw-bold text-center" style="margin: 0">CREATE YOUR OWN STARTUP NOW!</h3>
-            </a>
+        </a>
     </div>
 }
 

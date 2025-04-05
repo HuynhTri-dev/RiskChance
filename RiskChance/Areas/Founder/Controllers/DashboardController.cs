@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RiskChance.Areas.Founder.ViewModels;
 using RiskChance.Data;
 using RiskChance.Models;
+using RiskChance.Repositories;
 
 namespace RiskChance.Areas.Founder.Controllers
 {
@@ -15,12 +16,15 @@ namespace RiskChance.Areas.Founder.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IRepository<DanhGiaStartup> _commentStartupRepo;
 
         public DashboardController(ApplicationDBContext context,
-                                   UserManager<NguoiDung> userManager)
+                                   UserManager<NguoiDung> userManager,
+                                   IRepository<DanhGiaStartup> commentStartup)
         {
             _context = context;
             _userManager = userManager;
+            _commentStartupRepo = commentStartup;
         }
 
         [HttpGet]
@@ -72,13 +76,16 @@ namespace RiskChance.Areas.Founder.Controllers
                                 .Where(x => x.TrangThaiKyKet == TrangThaiKyKetEnum.DaDuyet && x.ThanhToan == true)
                                 .Sum(x => x.TongTien);
 
+            var interactView = await _context.DanhGiaStartups.CountAsync(x => x.IDStartup == selectedId);
+
             DashboardViewModel viewModel = new DashboardViewModel()
             {
                 startupSelectList = startupList,
                 SelectedStartupId = selectedId,
                 SelectStartup = startupInfo,
                 CoInvestors = coInvestor,
-                TotalInvestment = totalInvestment
+                TotalInvestment = totalInvestment,
+                InteractView = interactView
             };
 
             ViewBag.FeatureActive = "dashboardFounder";
