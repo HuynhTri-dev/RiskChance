@@ -32,10 +32,10 @@
         <div class="post-container mt-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="post-box d-flex justify-content-center align-items-center">
                 <img src="@userAvatar"
-                      alt="anh dai dien"
-                      class="user-image rounded-circle" />
+                     alt="anh dai dien"
+                     class="user-image rounded-circle" />
                 <a asp-area="Founder" asp-controller="Startup" asp-action="Add" class="btn btn-outline-primary fw-bold text-white d-flex align-items-center justify-content-center">
-                    <i class="fa-solid fa-rocket"  style="margin-right:10px"></i>
+                    <i class="fa-solid fa-rocket" style="margin-right:10px"></i>
                     <p>Create Startup</p>
                 </a>
             </div>
@@ -58,7 +58,7 @@
                                       rgba(0, 0, 0, 0.5)
                                     ),
                                     url('@topStartup.LogoUrl');
-                                ">
+                                        ">
                                 <h5 class="fw-bold">@topStartup.TenStartup</h5>
                                 <p class="line-clamp-2">
                                     @for (int i = 0; i < topStartup.DiemTrungBinh; i++)
@@ -93,7 +93,7 @@
             </section>
 
             <div class="mt-3 text-center">
-                <button id="load-more" class="btn btn-primary" data-page="1">Watch more</button>
+                <button id="load-more" class="btn btn-primary fw-bold" data-page="1">Watch more</button>
             </div>
         </div>
     </div>
@@ -221,5 +221,5 @@
         }
     }
 
-    
+
 </script>

@@ -6,6 +6,7 @@ using RiskChance.Models;
 using RiskChance.Repositories;
 using RiskChance.Utils;
 using System.Data;
+using RiskChance.Models.ViewModel.User;
 using System.Security.Claims;
 namespace RiskChance.Areas.User.Controllers
 {

@@ -1,8 +1,8 @@
-.modal-dialog {
-  width: 60%;
-  min-width: 650px;
-  box-shadow: 5px 5px 10px 5px var(--shadow-light);
-  border-radius: 5px;
+#messengerModal .modal-dialog {
+    width: 60%;
+    min-width: 650px;
+    box-shadow: 5px 5px 10px 5px var(--shadow-light);
+    border-radius: 5px;
 }
 
 #chatBox {

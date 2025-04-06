@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RiskChance.Models
+namespace RiskChance.Models.ViewModel.User
 {
     public class ProfileViewModel
     {
@@ -15,6 +15,6 @@ namespace RiskChance.Models
         public string? PhoneNumber { get; set; }
         public string? AvatarUrl { get; set; }
         [Required]
-        public string RoleAccount { get; set; } = string.Empty; 
+        public string RoleAccount { get; set; } = string.Empty;
     }
 }

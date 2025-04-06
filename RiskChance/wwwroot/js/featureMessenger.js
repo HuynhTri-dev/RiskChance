@@ -28,6 +28,17 @@ $(document).ready(function () {
         getInfo(receiverId);
     });
 
+    $('.user-info-trigger').click(function () {
+        var receiverId = $(this).data('id');
+        console.log("Receiver ID:", receiverId); // Debugging
+        if (!receiverId) {
+            alert("Receiver ID is missing!");
+            return;
+        }
+        getInfo(receiverId);
+        getMessage(receiverId);
+    });
+
     $('#sendMessageBtn').click(function (e) {
         e.preventDefault(); 
 

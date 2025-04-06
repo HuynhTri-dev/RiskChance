@@ -30,8 +30,9 @@
                 </div>
 
                 <!-- Tác giả -->
-                <a class="news-author d-flex align-items-center text-decoration-none"
-                   asp-area="" asp-controller="News" asp-action="Details">
+                <a class="news-author d-flex align-items-center text-decoration-none user-info-trigger"
+                    href="javascript:void(0);"
+                    data-id="@news.IDNguoiDang">
                     <img class="author-img rounded-circle me-2 border"
                          src="@(news.ImgNguoiDang ?? Url.Content("~/assets/user/image.png"))"
                          alt="Author - @news.NameNguoiDang"
@@ -39,6 +40,7 @@
                          height="40" />
                     <p class="author-name fw-bold text-dark">@news.NameNguoiDang</p>
                 </a>
+
             </div>
         </div>
     }
@@ -51,5 +53,3 @@ else
         </h3>
     </div>
 }
-
-
