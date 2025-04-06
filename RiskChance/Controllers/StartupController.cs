@@ -22,6 +22,7 @@ namespace QuanLyStartup.Controllers
         private readonly IRepository<GiayTo> _docRepo;
         private readonly IRepository<DanhGiaStartup> _comStartupRepo;
         private readonly IRepository<HopDongDauTu> _contractRepo;
+        private const int PageSize = 9;
 
         public StartupController(ApplicationDBContext context, 
                                  UserManager<NguoiDung> userManager,
@@ -75,10 +76,7 @@ namespace QuanLyStartup.Controllers
                                       })
                                 .ToListAsync();
 
-            model.StartupList = await _context.Startups
-                .Include(s => s.LinhVuc)
-                .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
-                .ToListAsync();
+            model.StartupList = await GetPagedAsync(1, PageSize);
 
             model.TopBusiness = await _context.Startups
                                              .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
@@ -129,6 +127,24 @@ namespace QuanLyStartup.Controllers
             return View(model);
         }
 
+        public async Task<IEnumerable<Startup>> GetPagedAsync(int pageIndex, int pageSize)
+        {
+            return await _context.Startups
+                .Where(s => s.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
+                .OrderByDescending(s => s.NgayTao)
+                .Include(s => s.LinhVuc)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LoadMore(int pageIndex = 1)
+        {
+            var products = await GetPagedAsync(pageIndex, PageSize);
+            return PartialView("_StartupListPartial", products);
+        }
+
         [HttpGet]
         public async Task<IActionResult> SearchStartups(string query)
         {
@@ -143,24 +159,6 @@ namespace QuanLyStartup.Controllers
             return PartialView("_StartupListPartial", startups);
         }
 
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> LoadMore(int page = 1)
-        //{
-        //    var pageSize = 12;
-        //    var startups = await _context.Startups
-        //        .Skip((page - 1) * pageSize)
-        //        .Take(pageSize + 1) // Lấy thêm 1 để kiểm tra còn dữ liệu không
-        //        .ToListAsync();
-
-        //    bool hasMore = startups.Count > pageSize;
-        //    if (hasMore) startups.RemoveAt(startups.Count - 1); // Xóa phần tử thừa
-
-        //    return Json(new { startups, hasMore });
-        //}
-
-        // Add
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
@@ -170,7 +168,10 @@ namespace QuanLyStartup.Controllers
                 return NotFound();
             }
 
-            var startup = await _context.Startups.Include(x => x.LinhVuc).FirstOrDefaultAsync(x => x.IDStartup == id);
+            var startup = await _context.Startups
+                .Include(x => x.NguoiDung)
+                .Include(x => x.LinhVuc)
+                .FirstOrDefaultAsync(x => x.IDStartup == id);
 
             if (startup == null)
             {
@@ -187,7 +188,8 @@ namespace QuanLyStartup.Controllers
                         .Sum(x => x.TongTien);
 
 
-            DetailOfStartupViewModel model = new DetailOfStartupViewModel(){
+            DetailOfStartupViewModel model = new DetailOfStartupViewModel()
+            {
                 IDStartup = startup.IDStartup,
                 LogoUrl = startup.LogoUrl,
                 Business = startup.LinhVuc?.TenLinhVuc,
@@ -198,9 +200,8 @@ namespace QuanLyStartup.Controllers
                 AmountInvested = amount,
                 DocumentList = doc,
                 FounderId = startup.IDNguoiDung,
+                FounderName = startup.NguoiDung?.HoTen
             };
-
-
 
             return View(model);
         }

@@ -19,21 +19,22 @@
 
     string? status = string.Empty;
 
-    if (Model != null)
+    if (Model?.SelectStartup != null)
     {
-        if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet)
+        if (Model.SelectStartup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet)
         {
             status = "Waiting to browse";
         }
-        else if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
+        else if (Model.SelectStartup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
         {
             status = "Approved";
         }
-        else if (Model.SelectStartup?.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.TuChoi)
+        else if (Model.SelectStartup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.TuChoi)
         {
             status = "Rejected";
         }
     }
+
 }
 
 @model RiskChance.Areas.Founder.ViewModels.DashboardViewModel
@@ -124,7 +125,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row g-2">
                     <!-- Số startup đăng ký -->
                     <div class="col-md-6">
                         <div class="card p-2">

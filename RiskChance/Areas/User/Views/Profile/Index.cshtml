@@ -5,6 +5,22 @@
     ViewData["Title"] = Model.FullName;
 }
 
+@section Styles {
+    <style>
+        .custom-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px; 
+        }
+
+        .list-group-item {
+            border: none; 
+            margin-bottom: 10px;
+        }
+    </style>
+}
+
 <div class="profile-container mb-3 container mx-auto">
     @if (TempData["Success"] != null)
     {
@@ -14,9 +30,9 @@
         </div>
     }
 
-    <h2 class="h2 fw-bold mb-3 text-center"> Personal Profile</h2>
     <div class="row">
         <div class="col-lg-8 mx-auto">
+            <h2 class="h2 fw-bold mb-3 text-center"> Personal Profile</h2>
             <form asp-action="UpdateAvatar" asp-controller="Profile" method="post" enctype="multipart/form-data">
                 <input type="file" asp-for="AvatarUrl" id="AvatarFile" accept="image/*" hidden onchange="previewImage(event)">
 
@@ -64,14 +80,16 @@
         </div>
 
         <div class="col-lg-3 mx-auto">
-            <ul class="list-group">
-                <li class="list-group-item">
+            <ul class="list-group text-center">
+                <li class="list-group-item custom-item">
                     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAccount">
                         Delete Account
                     </button>
                 </li>
-                <li class="list-group-item">
-                    <a asp-area="Identity" asp-page="/Account/Manage/SetPassword" class="btn btn-primary text-white fw-bold">Change Password</a>
+                <li class="list-group-item custom-item">
+                    <a asp-area="Identity" asp-page="/Account/Manage/SetPassword" class="btn btn-primary text-white fw-bold">
+                        Change Password
+                    </a>
                 </li>
             </ul>
         </div>

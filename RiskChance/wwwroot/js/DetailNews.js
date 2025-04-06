@@ -12,19 +12,59 @@
     observer.observe(document.body, { childList: true, subtree: true });
 
     // can sua lai them ve loi disconnection khi nhan
+    // haha de kiem duoc loi roi hehehe
+
+    //
     // Comment
+    const newsId = $("#news-id").val(); 
+
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/postCommentNewsHub")
+        .withUrl("/commentNewsHub")
+        .withAutomaticReconnect()
+        .configureLogging(signalR.LogLevel.Information)
         .build();
+
+    // Xử lý sự kiện nhận bình luận
     connection.on("ReceiveCommentNews", function (comment) {
-        console.log("Comment news: ", comment);
-        //addCommentToUI(comment);
+        try {
+            if (!comment || !comment.NguoiDung) {
+                console.error("Dữ liệu bình luận không hợp lệ:", comment);
+                return;
+            }
+            console.log("Nhận bình luận: ", comment);
+            addCommentToUI(comment);
+        } catch (err) {
+            console.error("Lỗi khi xử lý bình luận: ", err);
+        }
     });
 
-    connection.start().catch(function (err) {
-        return console.error(err.toString());
+    // Kết nối và tham gia nhóm
+    async function startConnection() {
+        try {
+            await connection.start();
+            console.log("SignalR đã kết nối.");
+            await connection.invoke("JoinGroup", newsId);
+            console.log("Đã tham gia nhóm:", newsId);
+        } catch (err) {
+            console.error("Lỗi kết nối SignalR:", err);
+            setTimeout(startConnection, 5000); // Thử lại sau 5 giây
+        }
+    }
+
+    startConnection();
+
+    // Rời nhóm khi đóng trang
+    window.addEventListener("beforeunload", () => {
+        if (connection.state === "Connected") {
+            connection.invoke("LeaveGroup", newsId).catch(err => {
+                console.error("Lỗi khi rời nhóm:", err);
+            });
+        }
     });
 });
+
+
+
 
 function CallEditBox(id) {
     console.log("Chỉnh sửa bình luận với ID: " + id);

@@ -19,7 +19,7 @@
 
         // Gán nội dung vào div
         notificationDiv.innerHTML = `
-            <a id="wrapper-${message.idNoti}" href="#" onclick="markAsRead(${message.idNoti})" 
+            <a id="wrapper-${message.idNoti}" href="#" onclick="markAsRead(event, ${message.idNoti})" 
                class="container-fluid notify-box d-flex align-items-center text-decoration-none">
                 <div class="avatar-box d-none d-sm-block">
                     <img class="rounded-circle user-img"
@@ -29,9 +29,6 @@
                 <div class="notify-content">
                     <p class="line-clamp-2">${message.noiDung}</p>
                     <span class="date-text">${new Date(message.ngayGui).toLocaleDateString('en-GB')}</span>
-                </div>
-                <div class="notify-status d-none d-sm-block">
-                    <div id="status-${message.idNoti}" class="status rounded-circle"></div>
                 </div>
             </a>
         `;
@@ -54,7 +51,9 @@
 });
 
 // Đánh dấu thông báo là đã đọc
-function markAsRead(notificationId) {
+function markAsRead(event, notificationId) {
+    event.preventDefault();     
+    event.stopPropagation();  
     $.ajax({
         url: '/User/Notification/MarkAsRead',
         method: 'POST',

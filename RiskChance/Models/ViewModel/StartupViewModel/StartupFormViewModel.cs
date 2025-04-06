@@ -18,7 +18,7 @@ namespace RiskChance.Models.ViewModel.StartupViewModel
         public string? TenLinhVuc { get; set; }
 
         [Required(ErrorMessage = "Mục tiêu không được để trống")]
-        [Range(1000000, 1000000000, ErrorMessage = "Mục tiêu phải từ 1 triệu đến 1 tỷ VNĐ")]
+        [Range(1000000, 1000000000000000,ErrorMessage = "Your target need more than 1.000.000 VND")]
         public decimal? MucTieu { get; set; }
 
         public double? PhanTramCoPhan { get; set; }

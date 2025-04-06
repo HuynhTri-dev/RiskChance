@@ -60,7 +60,10 @@ $(document).ready(function () {
         .withUrl("/messengerHub")
         .build();
     connection.on("ReceiveMess", function (message) {
+        //console.log(message);
+        getMessage(message.idNguoiGui);
         addMessToListB(message);
+        getInfo(message.idNguoiGui)
     });
     connection.start().catch(function (err) {
         return console.error(err.toString());
@@ -133,7 +136,6 @@ function getMessage(userid) {
         }
     });
 }
-
 
 function getInfo(userid) {
     $.ajax({

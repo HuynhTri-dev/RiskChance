@@ -12,11 +12,6 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/contact.css" asp-append-version="true" />
 
-    <style>
-        strong{
-            font-weight: bold;
-        }
-    </style>
 }
 
 @model RiskChance.Models.HopDongDauTu
@@ -70,57 +65,51 @@
                 </div>
             </div>
         </div>
-        <!-- Nut chuc nang -->
-        <div class="d-flex justify-content-around mt-4">
-            @* Ky *@
+        <div class="d-flex justify-content-around align-items-center gap-3 mt-4 button-group flex-wrap">
+            @* Ký *@
             @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.DaDuyet && User.IsInRole("Founder"))
             {
                 <button type="button" data-bs-toggle="modal" data-bs-target="#signModal"
-                        class="btn btn-success fw-bold p-2 text-white">
+                        class="btn btn-success fw-bold btn-responsive">
                     Sign Confirmation
                 </button>
             }
-            @* Cap nhat *@
+            @* Cập nhật *@
             <a asp-area="Investor" asp-controller="HopDong" asp-action="Edit" asp-route-id="@Model.IDHopDong"
-               class="btn btn-warning fw-bold p-2 text-decoration-none text-white">
+               class="btn btn-warning fw-bold btn-responsive text-decoration-none d-flex justify-content-center justify-content-center text-white">
                 Contact Update
             </a>
-            @* Tu choi *@
+            @* Từ chối *@
             @if (Model.TrangThaiKyKet != TrangThaiKyKetEnum.BiTuChoi && User.IsInRole("Founder"))
             {
                 <button type="button" data-bs-toggle="modal" data-bs-target="#denyModal"
-                        class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
+                        class="btn btn-danger fw-bold btn-responsive text-white">
                     Deny the Contract
                 </button>
             }
-
-             @* Xoa *@
+            @* Xóa *@
             @if ((Model.TrangThaiKyKet == TrangThaiKyKetEnum.BiTuChoi || Model.TrangThaiKyKet == TrangThaiKyKetEnum.DaGui) && Model.ThanhToan == false)
             {
                 <button type="button" onclick="confirmDelete('@Model.IDHopDong', '@Url.Action("Delete", "HopDong", new { area = "Investor" })')"
-                        class="btn btn-danger text-white fw-bold p-2 text-decoration-none">
+                        class="btn btn-danger fw-bold btn-responsive text-white">
                     Delete Contract
                 </button>
             }
-
-            @* Quay lai dashboard *@
+            @* Quay lại dashboard *@
             @if (User.IsInRole("Founder"))
             {
                 <a asp-area="Founder" asp-controller="Dashboard" asp-action="Index" asp-route-id="@Model.IDStartup"
-                   class="btn btn-secondary text-white d-flex align-items-center justify-content-center"
-                   style="width: 50px; height: 50px; border-radius: 8px;">
+                   class="btn btn-secondary text-white">
                     <i class="fa-solid fa-backward"></i>
                 </a>
             }
             else if (User.IsInRole("Investor"))
             {
                 <a asp-area="Investor" asp-controller="Dashboard" asp-action="Index"
-                   class="btn btn-secondary text-white d-flex align-items-center justify-content-center"
-                   style="width: 50px; height: 50px; border-radius: 8px;">
+                   class="btn btn-secondary text-white">
                     <i class="fa-solid fa-backward"></i>
                 </a>
             }
-           
         </div>
     </div>
     <!-- Chuc nang phu -->

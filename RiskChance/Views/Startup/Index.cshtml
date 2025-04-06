@@ -92,10 +92,9 @@
                 @await Html.PartialAsync("_StartupListPartial", Model.StartupList)
             </section>
 
-            <!-- Loading more -->
-            @* <div id="load-more-trigger" class="mt-3 text-center">
-            <div class="spinner-border"></div>
-            </div> *@
+            <div class="mt-3 text-center">
+                <button id="load-more" class="btn btn-primary" data-page="1">Watch more</button>
+            </div>
         </div>
     </div>
     <!-- Sidebar -->
@@ -154,6 +153,49 @@
     </aside>
 </div>
 <script>
+    $(document).ready(function () {
+        $('#load-more').on('click', function () {
+            var button = $(this);
+            var currentPage = parseInt(button.data('page')) + 1;
+
+            $.ajax({
+                url: '/Startup/LoadMore?pageIndex=' + currentPage,
+                method: 'GET',
+                success: function (data) {
+                    if (data.trim() === '') {
+                        button.hide(); // Không còn dữ liệu
+                    } else {
+                        $('#startupResults').append(data);
+                        button.data('page', currentPage);
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi tải thêm sản phẩm.");
+                }
+            });
+        });
+
+        // Kết nối SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/statusStartupHub")
+            .build();
+
+        // Nhận sự kiện cập nhật từ Admin
+        connection.on("ReceiveStatusUpdate", function () {
+            console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+            location.reload();
+        });
+
+        connection.on("ReceiveStartupAdd", function () {
+            console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
+            location.reload();
+        });
+
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR error:", err));
+    });
+
     function searchStartup(event) {
         let keyword = document.getElementById("searchInput").value.trim();
 
@@ -179,23 +221,5 @@
         }
     }
 
-    // Kết nối SignalR
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/statusStartupHub")
-        .build();
-
-    // Nhận sự kiện cập nhật từ Admin
-    connection.on("ReceiveStatusUpdate", function () {
-        console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
-        location.reload();
-    });
-
-    connection.on("ReceiveStartupAdd", function () {
-        console.log("Nhận cập nhật từ SignalR, tải lại danh sách startup...");
-        location.reload();
-    });
-
-    connection.start()
-        .then(() => console.log("SignalR connected"))
-        .catch(err => console.error("SignalR error:", err));
+    
 </script>

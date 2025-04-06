@@ -155,39 +155,43 @@ async function loadContractStatusChart() {
         const data = await response.json();
         console.log(data); // Kiểm tra dữ liệu trả về
 
-        const labels = [];
-        const daGuiData = [];
-        const daDuyetData = [];
-        const biTuChoiData = [];
+        // Define object to store data categorized by month and year
+        const contractData = {};
 
-        // Xử lý dữ liệu
+        // Process data for labels and datasets
         data.forEach(item => {
-            const monthLabel = `Tháng ${item.month} - ${item.year}`;
-            if (!labels.includes(monthLabel)) {
-                labels.push(monthLabel);
+            const monthYearLabel = `Tháng ${item.month} - ${item.year}`;
+
+            // Initialize label and its data if not already added
+            if (!contractData[monthYearLabel]) {
+                contractData[monthYearLabel] = { daGui: 0, daDuyet: 0, biTuChoi: 0 };
             }
 
+            // Add counts based on status
             if (item.status === 0) {
-                daGuiData.push(item.count);
-            }
-            else if (item.status === 1) {
-                daDuyetData.push(item.count);
-            }
-            else if (item.status === 2) {
-                biTuChoiData.push(item.count);
+                contractData[monthYearLabel].daGui += item.count;
+            } else if (item.status === 1) {
+                contractData[monthYearLabel].daDuyet += item.count;
+            } else if (item.status === 2) {
+                contractData[monthYearLabel].biTuChoi += item.count;
             }
         });
+
+        // Extract labels and datasets from processed data
+        const labelsData = Object.keys(contractData);
+        const daGuiData = labelsData.map(label => contractData[label].daGui);
+        const daDuyetData = labelsData.map(label => contractData[label].daDuyet);
+        const biTuChoiData = labelsData.map(label => contractData[label].biTuChoi);
 
         const ctx = document.getElementById('contractStatusChart').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: labelsData,
                 datasets: [
                     {
                         label: 'Denied',
                         data: biTuChoiData,
-                        
                         backgroundColor: 'rgba(255, 99, 132, 0.7)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1

@@ -4,6 +4,7 @@
     {
         public int IDStartup { get; set; }
         public string? FounderId { get; set; }
+        public string? FounderName { get; set; }
         public string? Business { get; set; }
         public string? LogoUrl { get; set; }
         public string? Name { get; set; }

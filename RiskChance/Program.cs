@@ -98,8 +98,8 @@ app.MapControllerRoute(
 
 app.MapHub<StatusStartupHub>("/statusStartupHub");
 app.MapHub<StatusStartupHub>("/statusNewsHub");
-app.MapHub<PostCommentStartupHub>("/postCommentStartupHub");
-app.MapHub<PostCommentNewsHub>("/postCommentNewsHub");
+app.MapHub<PostCommentStartupHub>("/commentStartupHub");
+app.MapHub<PostCommentNewsHub>("/commentNewsHub");
 app.MapHub<NotificationHub>("/notificationHub");
 app.MapHub<MessengerHub>("/messengerHub");
 

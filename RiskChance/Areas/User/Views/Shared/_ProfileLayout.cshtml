@@ -24,8 +24,9 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     @* SignalR *@
-    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script> *@
+    @*      <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script> *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.js" integrity="sha512-FzakzcmrNSXS5+DuuYSO6+5DcUZ417Na0vH1oAIo49mMBA8rHSgkKSjE2ALFOxdQ/kPqF3HZRzb0HQ+AvwXttg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
@@ -106,7 +107,7 @@
                                         <a class="nav-link fw-bold @(ViewBag.ActivePage == "admin" ? "active" : "")" asp-area="Admins" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
                                     </li>
                                 }
-                                <li class="nav-item"><a class="dropdown-item fw-bold" href="#about">About</a></li>
+                                <li class="nav-item"><a class="nav-link dropdown-item fw-bold" href="#about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -136,9 +137,8 @@
                         <div class="dropdown-menu dropdown-menu-end mw-200" id="notifDropdown">
                             <h5 class="h5 fw-bold">Thông báo</h5>
                             <hr />
-                            <section id="notificationListContainer">
-                                @* Hien thong bao o day *@
-                            </section>
+                            <div id="notificationListContainer">
+                            </div>
                         </div>
                     </div>
                     <!-- Dropdown menu khi thu nhỏ -->

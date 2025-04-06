@@ -245,7 +245,7 @@ namespace RiskChance.Areas.User.Controllers
             {
                 try
                 {
-                    model.ImgTinTuc = await ImageUtil.SaveAsync(ImgTinTuc);
+                    tinTuc.ImgTinTuc = await ImageUtil.SaveAsync(ImgTinTuc);
                 }
                 catch (Exception ex)
                 {

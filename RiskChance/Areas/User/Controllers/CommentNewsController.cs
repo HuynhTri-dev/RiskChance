@@ -17,15 +17,18 @@ namespace RiskChance.Areas.User.Controllers
         private readonly IRepository<BinhLuanTinTuc> _commentNewsRepo;
         private readonly IHubContext<PostCommentNewsHub> _hubContext;
         private readonly ApplicationDBContext _context;
+        private readonly ILogger<CommentNewsController> _logger;
 
 
         public CommentNewsController(IRepository<BinhLuanTinTuc> commentNewsRepo, 
                                     IHubContext<PostCommentNewsHub> hubContext, 
-                                    ApplicationDBContext context)
+                                    ApplicationDBContext context,
+                                    ILogger<CommentNewsController> logger)
         {
             _commentNewsRepo = commentNewsRepo;
             _hubContext = hubContext;
             _context = context;
+            _logger = logger;
         }
 
         // POST: CommentController/Create
@@ -34,19 +37,22 @@ namespace RiskChance.Areas.User.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc});
+                _logger.LogError("ModelState không hợp lệ");
+                return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
             }
 
             var userId = HttpContext.Session.GetString("UserId");
 
             if (string.IsNullOrEmpty(userId))
             {
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập để bình luận.";
                 return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
             }
 
             var tinTuc = await _context.TinTucs.FindAsync(model.IDTinTuc);
             if (tinTuc == null)
             {
+                _logger.LogWarning($"Tin tức không tìm thấy với ID: {model.IDTinTuc}");
                 return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
             }
 
@@ -55,13 +61,28 @@ namespace RiskChance.Areas.User.Controllers
 
             await _commentNewsRepo.AddAsync(model);
 
-            //var commentNews = await _context.BinhLuanTinTucs.Include(x => x.NguoiDung)
-            //    .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
+            var commentNews = await _context.BinhLuanTinTucs.Include(x => x.NguoiDung)
+                .FirstOrDefaultAsync(x => x.IDBinhLuan == model.IDBinhLuan);
 
-            await _hubContext.Clients.All.SendAsync("ReceiveCommentNews", model);
+            if (commentNews == null)
+            {
+                _logger.LogError("Không thể tải dữ liệu comment vừa thêm.");
+                return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
+            }
+
+            try
+            {
+                await _hubContext.Clients.Group(model.IDTinTuc.ToString()).SendAsync("ReceiveCommentNews", commentNews);
+                _logger.LogInformation("Đã gửi bình luận thành công đến nhóm.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Lỗi khi gửi bình luận qua SignalR: {ex.Message}");
+            }
 
             return RedirectToAction("Details", "News", new { area = "", id = model.IDTinTuc });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)

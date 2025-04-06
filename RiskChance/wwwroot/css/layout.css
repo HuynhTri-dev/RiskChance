@@ -168,3 +168,8 @@ footer .fa-brands {
     opacity: 0.5;
     pointer-events: none;
 }
+
+#notificationListContainer{
+    max-height: 400px;
+    overflow-y: auto;
+}
