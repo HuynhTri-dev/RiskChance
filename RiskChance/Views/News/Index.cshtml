@@ -66,10 +66,10 @@
             <section class="news-list row" id="newsContainer">
                     @await Html.PartialAsync("_NewsPartial", Model.NewsList)
             </section>
-            <!-- Loading more -->
-            @* <div id="load-more-trigger" class="mt-3 text-center">
-                <div class="spinner-border"></div>
-            </div> *@
+
+                <div class="mt-3 text-center">
+                    <button id="load-more" class="btn btn-primary" data-page="1">Watch more</button>
+                </div>
         </section>
     </div>
 </div>
@@ -107,6 +107,29 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $('#load-more').on('click', function () {
+            var button = $(this);
+            var currentPage = parseInt(button.data('page')) + 1;
+
+            $.ajax({
+                url: '/News/LoadMore?pageIndex=' + currentPage,
+                method: 'GET',
+                success: function (data) {
+                    if (data.trim() === '') {
+                        button.hide(); // Không còn dữ liệu
+                    } else {
+                        $('#newsContainer').append(data);
+                        button.data('page', currentPage);
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi tải thêm");
+                }
+            });
+        });
+    });
+
     function searchNews(event) {
         let keyword = document.getElementById("searchInput").value.trim();
 

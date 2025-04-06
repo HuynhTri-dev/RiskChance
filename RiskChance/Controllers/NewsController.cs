@@ -22,6 +22,7 @@ namespace QuanLyStartup.Controllers
         private readonly IRepository<Hashtag> _hashTagRepo;
         private readonly IRepository<TinTuc> _newsRepo;
         private readonly IRepository<NguoiDung> _userRepo;
+        private const int PageSize = 9;
 
         public NewsController(ApplicationDBContext context, 
             UserManager<NguoiDung> userManager, 
@@ -73,21 +74,7 @@ namespace QuanLyStartup.Controllers
 
 
             // list news
-            model.NewsList = await _context.TinTucs
-                                .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
-                                .OrderByDescending(x => x.NgayDang)
-                                .Select(x => new TinTucBoxViewModel
-                                {
-                                    IDTinTuc = x.IDTinTuc,
-                                    Title = x.TieuDe,
-                                    ImgTinTuc = x.ImgTinTuc,
-                                    NoiDung = TrimHtmlContent(x.NoiDung, 40),
-                                    NgayDang = x.NgayDang,
-                                    IDNguoiDang = x.IDNguoiDung,
-                                    NameNguoiDang = x.NguoiDung.HoTen,
-                                    ImgNguoiDang = x.NguoiDung.AvatarUrl
-                                })
-                                .ToListAsync();
+            model.NewsList = await GetPagedAsync(1, PageSize);
             // top news
             model.TopNews = await _context.TinTucs
                 .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
@@ -107,7 +94,34 @@ namespace QuanLyStartup.Controllers
 
             return View(model);
         }
-        
+
+        public async Task<IEnumerable<TinTucBoxViewModel>> GetPagedAsync(int pageIndex, int pageSize)
+        {
+            return await _context.TinTucs
+                                .Where(x => x.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet)
+                                .OrderByDescending(x => x.NgayDang)
+                                .Select(x => new TinTucBoxViewModel
+                                {
+                                    IDTinTuc = x.IDTinTuc,
+                                    Title = x.TieuDe,
+                                    ImgTinTuc = x.ImgTinTuc,
+                                    NoiDung = TrimHtmlContent(x.NoiDung, 40),
+                                    NgayDang = x.NgayDang,
+                                    IDNguoiDang = x.IDNguoiDung,
+                                    NameNguoiDang = x.NguoiDung.HoTen,
+                                    ImgNguoiDang = x.NguoiDung.AvatarUrl
+                                })
+                                .Skip((pageIndex - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+        }
+        [HttpGet]
+        public async Task<IActionResult> LoadMore(int pageIndex = 1)
+        {
+            var news = await GetPagedAsync(pageIndex, PageSize);
+            return PartialView("_NewsPartial", news);
+        }
+
         // hàm này để loại bỏ các thẻ html trong db
         public static string TrimHtmlContent(string? html, int wordLimit)
         {

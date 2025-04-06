@@ -141,8 +141,8 @@ namespace QuanLyStartup.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadMore(int pageIndex = 1)
         {
-            var products = await GetPagedAsync(pageIndex, PageSize);
-            return PartialView("_StartupListPartial", products);
+            var startups = await GetPagedAsync(pageIndex, PageSize);
+            return PartialView("_StartupListPartial", startups);
         }
 
         [HttpGet]
