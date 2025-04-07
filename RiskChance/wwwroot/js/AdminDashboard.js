@@ -56,12 +56,11 @@ async function loadLinhVucChart() {
 
         const data = await response.json();
         const labels = data.map(item => item.linhVuc);
-
-        //console.log(data);
-
         const counts = data.map(item => item.startupCount);
 
-        const backgroundColors = ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'];
+        // Tạo màu đẹp dùng chroma.js
+        const colorScale = chroma.scale(['#f72585', '#7209b7', '#3a0ca3', '#4361ee', '#4cc9f0']).mode('lch');
+        const backgroundColors = labels.map((_, i) => colorScale(i / (labels.length - 1)).hex());
 
         const ctx = document.getElementById('startupLinhVucChart').getContext('2d');
         new Chart(ctx, {
@@ -71,7 +70,7 @@ async function loadLinhVucChart() {
                 datasets: [{
                     label: 'Số lượng Startup theo lĩnh vực',
                     data: counts,
-                    backgroundColor: backgroundColors.slice(0, labels.length)
+                    backgroundColor: backgroundColors
                 }]
             },
             options: {
@@ -86,6 +85,7 @@ async function loadLinhVucChart() {
         console.error(error);
     }
 }
+
 
 // Line Chart - Lượt truy cập theo ngày
 async function loadAccessLogChart() {
