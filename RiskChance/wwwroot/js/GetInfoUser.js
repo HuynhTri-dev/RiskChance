@@ -1,10 +1,8 @@
 ﻿$(document).ready(function () {
-    
     $('.user-info-trigger').on('click', function (e) {
         e.preventDefault();
 
         const userId = $(this).data('id'); // Get user ID
-        console.log("User ID:", userId);
 
         if (!userId) {
             alert('User ID is missing.');
