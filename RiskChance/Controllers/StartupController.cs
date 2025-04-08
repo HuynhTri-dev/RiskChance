@@ -114,6 +114,7 @@ namespace QuanLyStartup.Controllers
                                                        nd => nd.Id,
                                                        (top, nd) => new TopInvestorViewModel
                                                        {
+                                                           Id = nd.Id,
                                                            FullName = nd.HoTen,
                                                            Email = nd.Email,
                                                            Profit = top.TongSoTien,

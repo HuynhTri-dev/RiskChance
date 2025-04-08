@@ -129,6 +129,8 @@
                     @foreach (var investor in Model.TopInvestors)
                     {
                         <a href="#"
+                           href="javascript:void(0);"
+                           data-id="@investor.Id"
                            class="user-link text-decoration-none d-flex align-items-center justify-content-between">
                             <div class="user-container d-flex justify-content-center align-items-center">
                                 <img class="user-image rounded-circle"
