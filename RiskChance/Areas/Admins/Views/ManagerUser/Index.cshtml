@@ -80,7 +80,7 @@
                         <td>@user.UserName</td>
                         <td>@user.Email</td>
                         <td>@string.Join(", ", user.Roles)</td>
-                        <td>
+                        <td class="d-flex justify-content-center align-items-center text-center align-middle">
                             <form asp-action="ChangeRole" asp-controller="ManagerUser" asp-area="Admins" method="post" class="d-flex">
                                 <input type="hidden" name="userId" value="@user.Id" />
 

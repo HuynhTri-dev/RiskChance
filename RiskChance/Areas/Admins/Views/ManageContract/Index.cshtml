@@ -1,0 +1,89 @@
+﻿@model List<RiskChance.Models.HopDongDauTu>
+@{
+    ViewData["Title"] = "Manage Contract";
+}
+
+@functions {
+    string GetBadgeClass(RiskChance.Models.TrangThaiKyKetEnum trangThai)
+    {
+        return trangThai switch
+        {
+            RiskChance.Models.TrangThaiKyKetEnum.DaGui => "secondary",
+            RiskChance.Models.TrangThaiKyKetEnum.DaDuyet => "success",
+            RiskChance.Models.TrangThaiKyKetEnum.BiTuChoi => "danger",
+            _ => "light"
+        };
+    }
+
+    string GetStatusText(TrangThaiKyKetEnum status)
+    {
+        if (status == TrangThaiKyKetEnum.DaDuyet) return "Success";
+        if (status == TrangThaiKyKetEnum.DaGui) return "Update";
+        return "Deny";
+    }
+}
+<h2>Manage Contract</h2>
+
+<div class="card p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Danh sách Hợp đồng</h4>
+        <input type="text" class="form-control w-25" placeholder="Tìm kiếm...">
+    </div>
+
+    <table class="table-hover table-bordered table">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Startup</th>
+                <th>Người dùng</th>
+                <th>Ngày ký kết</th>
+                <th>Trạng thái</th>
+                <th>Thanh toán</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var hd in Model)
+                {
+                    <tr>
+                        <td>@hd.IDHopDong</td>
+                        <td>@hd.Startup?.TenStartup</td>
+                        <td>@hd.NguoiDung?.HoTen</td>
+                        <td>@hd.NgayKyKet.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <form asp-action="ToggleTrangThaiKyKet" asp-controller="ManageContract" method="post" style="display:inline">
+                                <input type="hidden" name="id" value="@hd.IDHopDong" />
+                                <button type="submit" class="btn btn-sm btn-outline-@(GetBadgeClass(hd.TrangThaiKyKet)) fw-bold">
+                                    @GetStatusText(hd.TrangThaiKyKet)
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form asp-action="ToggleThanhToan" asp-controller="ManageContract" method="post" style="display:inline">
+                                <input type="hidden" name="id" value="@hd.IDHopDong" />
+                                <button type="submit" class="btn btn-sm fw-bold btn-outline-@(hd.ThanhToan == true ? "success":"warning")">
+                                    @(hd.ThanhToan == true ? "Paid" : "Unpaid")
+                                </button>
+                            </form>
+                        </td>
+
+                        <td class="d-flex justify-content-center align-items-center text-center align-middle">
+                            <button class="btn btn-danger btn-sm delete-btn text-white" data-id="@hd.IDHopDong" onclick="confirmDelete('@hd.IDHopDong', '@Url.Action("DeleteHopDong", "ManageContract", new {area = "Admins"})')">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-muted text-center">Không có dữ liệu hợp đồng.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

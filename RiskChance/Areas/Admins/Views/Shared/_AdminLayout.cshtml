@@ -62,6 +62,14 @@
                 .sidebar .nav-item:hover {
                     opacity: 1;
                 }
+
+        .table-custom td {
+            border-bottom: none !important;
+        }
+
+        .table-custom tr {
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 
     @RenderSection("Styles", required: false)
@@ -99,10 +107,10 @@
                 </a>
             </li>
 
-            <li class="nav-item @(ViewBag.ActiveFeature == "manageNews" ? "active" : "")">
-                <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManagerNews" asp-action="Index">
-                    <i class="fas fa-fw fa-file-alt"></i>
-                    <span>Manager News</span>
+            <li class="nav-item @(ViewBag.ActiveFeature == "manageContract" ? "active" : "")">
+                <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManageContract" asp-action="Index">
+                    <i class="fa-solid fa-file-contract"></i>
+                    <span>Manage Contract</span>
                 </a>
             </li>
 
@@ -110,6 +118,13 @@
                 <a class="nav-link menu-link" asp-area="Admins" asp-controller="LinhVucs" asp-action="Index">
                     <i class="fas fa-fw fa-list"></i>
                     <span>Manage Businesses</span>
+                </a>
+            </li>
+
+            <li class="nav-item @(ViewBag.ActiveFeature == "manageNews" ? "active" : "")">
+                <a class="nav-link menu-link" asp-area="Admins" asp-controller="ManagerNews" asp-action="Index">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Manager News</span>
                 </a>
             </li>
 
@@ -126,6 +141,8 @@
                     <span>Manage User</span>
                 </a>
             </li>
+
+            
 
             <li class="nav-item">
                 <hr class="sidebar-divider d-none d-md-block">

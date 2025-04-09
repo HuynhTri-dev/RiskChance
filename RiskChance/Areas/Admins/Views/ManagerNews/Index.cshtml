@@ -82,9 +82,9 @@
                     <tr id="row-@news.IDTinTuc">
                         <td class="checkbox-column"><input type="checkbox"></td>
                         <td class="id-column">@news.IDTinTuc</td>
-                        <td>@news.TieuDe</td>
+                        <td class="line-clamp-2" style="max-width: 500px">@news.TieuDe</td>
                         <td class="image-column"><img src="@news.ImgTinTuc" alt="Startup A" width="70" height="60" class="rounded"></td>
-                        <td>
+                        <td class="text-center align-middle">
                             <button class="btn @(news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "btn-warning":
                                                 news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "btn-success" : "btn-danger") btn-sm status-btn text-white fw-bold"
                                     data-id="@news.IDTinTuc"
@@ -94,7 +94,7 @@
                                     news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
                             </button>
                         </td>
-                        <td class="d-flex align-items-center justify-content-around">
+                        <td class="d-flex justify-content-center align-items-center text-center align-middle">
                             <a asp-area=""
                                asp-controller="News"
                                asp-action="Details"
