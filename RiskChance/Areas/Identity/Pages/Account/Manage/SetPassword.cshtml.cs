@@ -87,7 +87,7 @@ namespace RiskChance.Areas.Identity.Pages.Account.Manage
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your password has been set.";
 
-            return RedirectToAction("Index", "Profile", new { area = "User"});
+            return RedirectToPage();
         }
     }
 }

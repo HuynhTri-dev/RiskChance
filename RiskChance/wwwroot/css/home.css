@@ -1,4 +1,4 @@
-@import "./variables.css";
+﻿@import "./variables.css";
 
 /* Rocket Animation */
 .rocket-container {
@@ -190,17 +190,35 @@
 }
 
 .startup-item {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  padding: 0px;
-  width: 32%;
-  border-radius: 20px;
-  border: none;
+    transition: opacity 0.5s ease;
+    padding: 0px;
+    margin-right: 5px;
+    height: 400px;
+    border-radius: 20px;
+    border: none;
 }
 
-.startup-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-}
+    .startup-item.show {
+        display: block;
+        opacity: 1;
+    }
+.transition-slide {
+        transition: transform 0.6s ease;
+        will-change: transform;
+    }
+
+    .startup-item {
+        flex: 0 0 calc(100% / 3); /* 3 items mỗi slide */
+        max-width: calc(100% / 3);
+    }
+
+    #startup-box {
+        overflow: hidden;
+    }
+
+    .startup-list {
+        width: 100%;
+    }
 
 .startup-img {
   object-fit: cover;

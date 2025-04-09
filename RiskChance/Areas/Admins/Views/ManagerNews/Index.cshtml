@@ -42,6 +42,14 @@
             .table-custom tbody tr:hover {
                 background-color: #f1f1f1;
             }
+
+            .table-custom td {
+                border: none;
+            }
+
+            .table-custom tr {
+                border-bottom: 1px solid #ddd;
+            }
     </style>
 }
 
@@ -50,6 +58,7 @@
 @{
     ViewData["Title"] = "Manager News";
 }
+
 
 <div class="container">
     @* Cac tac vu *@
@@ -90,11 +99,11 @@
                                     data-id="@news.IDTinTuc"
                                     data-status="@((int)news.TrangThaiXetDuyet)"
                                     onclick="updateStatus(this)">
-                                @(news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Chờ duyệt" :
-                                    news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
+                                @(news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Waiting" :
+                                    news.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Accept" : "Deny")
                             </button>
                         </td>
-                        <td class="d-flex justify-content-center align-items-center text-center align-middle">
+                        <td class="d-flex align-items-center justify-content-around">
                             <a asp-area=""
                                asp-controller="News"
                                asp-action="Details"
@@ -157,13 +166,13 @@
         function updateButtonUI(button, newStatus) {
             button.dataset.status = newStatus;
             if (newStatus === 0) {
-                button.textContent = "Chờ duyệt";
+                button.textContent = "Waiting";
                 button.className = "btn btn-warning btn-sm status-btn text-white fw-bold";
             } else if (newStatus === 1) {
-                button.textContent = "Đã duyệt";
+                button.textContent = "Accept";
                 button.className = "btn btn-success btn-sm status-btn text-white fw-bold";
             } else {
-                button.textContent = "Từ chối";
+                button.textContent = "Deny";
                 button.className = "btn btn-danger btn-sm status-btn text-white fw-bold";
             }
         }

@@ -82,7 +82,20 @@ namespace RiskChance.Areas.Admins.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Search(string query)
+        {
+            var search = await _context.HopDongDauTus
+                .Include(x => x.NguoiDung)
+                .Include(h => h.Startup)
+                .Where(h =>
+                    string.IsNullOrEmpty(query) ||
+                    h.NguoiDung.HoTen.ToLower().Contains(query.ToLower()) ||
+                    h.Startup.TenStartup.ToLower().Contains(query.ToLower()))
+                .ToListAsync();
 
+            return View("Index", search);
+        }
 
     }
 }

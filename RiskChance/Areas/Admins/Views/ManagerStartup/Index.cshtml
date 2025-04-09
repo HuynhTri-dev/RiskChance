@@ -95,8 +95,8 @@
                                     data-id="@startup.IDStartup"
                                     data-status="@((int)startup.TrangThaiXetDuyet)"
                                     onclick="updateStatus(this)">
-                                @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Chờ duyệt" :
-                                    startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Đã duyệt" : "Từ chối")
+                                @(startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.ChoDuyet ? "Waiting" :
+                                    startup.TrangThaiXetDuyet == TrangThaiXetDuyetEnum.DaDuyet ? "Accept" : "Ddeny")
                             </button>
                         </td>
                         <td class="d-flex align-items-center justify-content-around text-center align-middle">
@@ -162,13 +162,13 @@
         function updateButtonUI(button, newStatus) {
             button.dataset.status = newStatus;
             if (newStatus === 0) {
-                button.textContent = "Chờ duyệt";
+                button.textContent = "Update";
                 button.className = "btn btn-warning btn-sm status-btn text-white fw-bold";
             } else if (newStatus === 1) {
-                button.textContent = "Đã duyệt";
+                button.textContent = "Accept";
                 button.className = "btn btn-success btn-sm status-btn text-white fw-bold";
             } else {
-                button.textContent = "Từ chối";
+                button.textContent = "Deny";
                 button.className = "btn btn-danger btn-sm status-btn text-white fw-bold";
             }
         }

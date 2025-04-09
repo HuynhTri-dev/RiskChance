@@ -118,7 +118,7 @@
 
 <!-- Bảng danh sách lĩnh vực -->
 <div class="table-container">
-    <table class="table-custom" id="linhVucTable">
+    <table class="table-custom">
         <thead>
             <tr>
                 <th class="text-center"><input type="checkbox" /></th>
@@ -150,30 +150,3 @@
         </tbody>
     </table>
 </div>
-
-
-
-@* <script>
-     function filterTable() {
-         let input = document.getElementById("searchInput").value.toLowerCase();
-         let table = document.getElementById("linhVucTable");
-         let rows = table.getElementsByTagName("tr");
-
-         for (let i = 1; i < rows.length; i++) {
-             let tenLinhVuc = rows[i].getElementsByTagName("td")[2]; // Cột "Tên lĩnh vực"
-             let tenStartup = rows[i].getElementsByTagName("td")[3]; // Cột "Startup"
-
-             if (tenLinhVuc && tenStartup) {
-                 let tenLinhVucText = tenLinhVuc.textContent.toLowerCase();
-                 let tenStartupText = tenStartup.textContent.toLowerCase();
-
-                 if (tenLinhVucText.includes(input) || tenStartupText.includes(input)) {
-                     rows[i].style.display = "";
-                 } else {
-                     rows[i].style.display = "none";
-                 }
-             }
-         }
-     }
- </script>
- *@

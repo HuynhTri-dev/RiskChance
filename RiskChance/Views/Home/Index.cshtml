@@ -1,9 +1,19 @@
-﻿    @{
+﻿@using Microsoft.AspNetCore.Identity;
+@using RiskChance.Models.ViewModel.StartupViewModel;
+
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@model RiskChance.Models.ViewModel.HomeViewModel.HomeViewModel;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/news.css" asp-append-version="true" />
+        
 }
 
 <main>
@@ -22,7 +32,14 @@
             challenge?" – Huỳnh Minh Trí
         </h5>
 
-        <button class="btn btn-primary fw-bold mb-3">Try Now</button>
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <a id="signInBtn"
+               class="signIn-btn text-white fw-bold btn btn-primary mb-3"
+               asp-area="Identity" asp-page="/Account/Login">
+                Try Now
+            </a>
+        }
 
         <p class="rocket-desc text-white mb-3">Cooperators</p>
         <ul class="rocket-desc list-group d-flex justify-content-left gap-3 flex-row">
@@ -67,30 +84,15 @@
 
     <!-- Search Input -->
     <!-- Search box -->
-    <div class="search-container d-flex justify-content-center container">
-        <div class="search-box">
-            <input type="text"
-                   class="form-control ps-4"
-                   placeholder="Tìm kiếm..." />
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        </div>
-    </div>
-
-    <!-- Danh sach cac tu khoa -->
-    <div class="keyword-container mt-4 d-none d-lg-block container">
-        <h3 class="mb-3 fw-bold text-center">Popular HashTag</h3>
-        <ul class="keyword-box d-flex justify-content-center gap-3 flex-wrap">
-            <!-- Cái này sẽ dò trên lịch sử tìm kiếm để có thể in ra -->
-            @if (ViewBag.TopHashtags != null)
-            {
-                @foreach (var hashtag in ViewBag.TopHashtags)
-                {
-                    <li class="keyword-item">@hashtag.Name (@hashtag.Count)</li>
-                }
-            }
-        </ul>
-    </div>
-
+     @* <div class="search-container d-flex justify-content-center container">
+         <div class="search-box">
+             <input type="text"
+                    class="form-control ps-4"
+                    placeholder="Tìm kiếm..." />
+             <i class="fa-solid fa-magnifying-glass search-icon"></i>
+         </div>
+     </div>
+ *@
     <!-- Startup nổi bật -->
     <div class="startup-container container-fluid py-4 mb-4">
         <div class="row mb-3 d-flex justify-content-center align-items-center">
@@ -104,50 +106,15 @@
                 </h5>
 
                 <a class="see-more-link text-decoration-none fw-bold d-flex align-items-center"
-                   href="#">
+                   asp-area="" asp-controller="Startup" asp-action="Index">
                     <span>See more startups </span>
                     <i class="fa-solid fa-forward"></i>
                 </a>
             </div>
         </div>
-        <div class="row d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center container">
             <!-- thông tin chi tiết startup -->
-            <div class="startup-info col-12 col-lg-4 mb-3">
-                <div class="startup-main-info-box">
-                    <!-- Anh -->
-                    <img class="startup-main-img"
-                         src="https://picsum.photos/300/200"
-                         alt="anh minh hoa" />
-
-                    <!-- thong tin -->
-                    <div class="startup-main-desc">
-                        <h4 class="h4 fw-bold">Name</h4>
-                        <p>Lĩnh vực:</p>
-                        <p>Tiến độ đầu tư:</p>
-                        <div class="progress mb-2">
-                            <div class="progress-bar" style="width: 70%"></div>
-                        </div>
-                        <p>Mô tả:</p>
-                        <div class="description-container mb-3 text-justify">
-                            <p class="description">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Quia reprehenderit fuga sint ea cum. Consequatur. Lorem
-                                ipsum dolor sit amet consectetur adipisicing elit. Illo
-                                fugiat sunt architecto adipisci veniam ipsam sapiente quae
-                                excepturi totam, est sequi iure. Quibusdam ducimus deserunt
-                                dolore id nobis. Vero, molestiae?
-                            </p>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-primary">Read more</button>
-                            <button class="btn btn-success">Invest</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <section class="startup-section col-12 col-lg-8">
+            <section class="startup-section col-12">
                 <div class="d-flex justify-content-center align-items-center container-fluid">
                     <!-- Nút Previous -->
                     <button id="prevBtn"
@@ -155,76 +122,38 @@
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
 
-                    <!-- Khung hiển thị startup -->
-                    <div class="startup-box px-2" id="startup-box">
-                        <div class="startup-list row d-flex justify-content-center gap-2">
-                            <!-- Startup Item 1 -->
-                            <div class="startup-item card col-sm-6 col-md-4">
-                                <img src="https://picsum.photos/300/200"
-                                     alt="Startup 1"
-                                     class="startup-img card-img-top" />
-                                <div class="card-body">
-                                    <h4 class="fw-bold card-title text-center">Startup 1</h4>
-                                    <p class="card-text line-clamp-2">
-                                        Lorem ipsum dolor sit amet.
-                                    </p>
-                                </div>
+                    <div id="startup-box" class="startup-box position-relative overflow-hidden">
+                        <div class="startup-list d-flex transition-slide" id="startup-list">
+                            @if (Model?.StartupList != null && Model.StartupList.Any())
+                            {
+                                 @foreach (var startup in Model.StartupList)
+                                {
+                                <div class="startup-item card"
+                                     data-name="@startup.TenStartup"
+                                     data-field="@startup.LinhVuc?.TenLinhVuc"
+                                     data-pic="@startup.LogoUrl"
+                                     data-description="@startup.MoTa"
+                                     >
+                                    <img src="@startup.LogoUrl" class="card-img-top" style="width: 100%; height: 200px; object-fit: contain" />
+                                    <div class="card-body">
+                                        <h4 class="fw-bold text-center">@startup.TenStartup</h4>
+                                        <p class="line-clamp-2">@startup.MoTa</p>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between">
+                                            <a asp-controller="Startup" asp-action="Details" asp-route-id="@startup.IDStartup" class="btn btn-outline-primary btn-sm fw-bold">
+                                                Startup
+                                            </a>
 
-                                <div class="card-footer d-flex justify-content-between">
-                                    <button href="#" class="btn btn-primary" type="button">
-                                        Read more
-                                    </button>
-                                    <button href="#" class="btn btn-success" type="button">
-                                        Invest
-                                    </button>
+                                            <a asp-area="Investor" asp-controller="HopDong" asp-action="Create" asp-route-idStartup="@startup.IDStartup" class="btn btn-outline-success btn-sm fw-bold">
+                                                Invest
+                                            </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- Startup Item 2 -->
-                            <div class="startup-item card col-sm-6 col-md-4">
-                                <img src="https://picsum.photos/300/200"
-                                     alt="Startup 2"
-                                     class="startup-img card-img-top" />
-                                <div class="card-body">
-                                    <h4 class="fw-bold card-title text-center">Startup 2</h4>
-                                    <p class="card-text line-clamp-2">
-                                        Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
-                                        ea cum. Consequatur.
-                                    </p>
-                                </div>
-
-                                <div class="card-footer d-flex justify-content-between">
-                                    <button href="#" class="btn btn-primary" type="button">
-                                        Read more
-                                    </button>
-                                    <button href="#" class="btn btn-success" type="button">
-                                        Invest
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Startup Item 3 -->
-                            <div class="startup-item card col-sm-6 col-md-4">
-                                <img src="https://picsum.photos/300/200"
-                                     alt="Startup 3"
-                                     class="startup-img card-img-top" />
-                                <div class="card-body">
-                                    <h4 class="fw-bold card-title text-center">Startup 3</h4>
-                                    <p class="card-text line-clamp-2">
-                                        Lorem ipsum dolor sit amet. Quia reprehenderit fuga sint
-                                        ea cum. Consequatur.
-                                    </p>
-                                </div>
-
-                                <div class="card-footer d-flex justify-content-between">
-                                    <button href="#" class="btn btn-primary" type="button">
-                                        Read more
-                                    </button>
-                                    <button href="#" class="btn btn-success" type="button">
-                                        Invest
-                                    </button>
-                                </div>
-                            </div>
+                                }
+                            }
                         </div>
                     </div>
+
 
                     <!-- Nút Next -->
                     <button id="nextBtn"
@@ -243,6 +172,22 @@
         </div>
     </div>
 
+    <!-- Danh sach cac tu khoa -->
+    <div class="keyword-container mt-4 d-none d-lg-block container">
+        <h3 class="mb-3 fw-bold text-center">Popular HashTag</h3>
+        <ul class="keyword-box d-flex justify-content-center gap-3 flex-wrap">
+            @if (Model?.TopHashTag != null && Model.TopHashTag.Any())
+            {
+                @foreach (var hashtag in Model.TopHashTag)
+                {
+                    <li class="keyword-item">
+                        <a href="javascript:void(0)" onclick="searchByTag('@hashtag.TenHashtag')" class="text-decoration-none">@hashtag.TenHashtag</a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+
     <!-- News -->
     <div class="news-container mb-4 container">
         <h3 class="h3 fw-bold mb-4">Market News</h3>
@@ -256,7 +201,7 @@
                     finance, and startups.
                 </p>
                 <a class="see-more-link text-decoration-none fw-bold d-flex align-items-center"
-                   href="#">
+                   asp-area="" asp-controller="News" asp-action="Index">
                     <span>See more news </span>
                     <i class="fa-solid fa-forward"></i>
                 </a>
@@ -264,82 +209,7 @@
 
             <!-- News list -->
             <section class="news-list row gap-4 col-12 col-lg-9 container">
-                <!-- News 1 -->
-                <div class="news-item row align-items-center mb-2">
-                    <!-- Hình ảnh tin tức -->
-                    <div class="col-4">
-                        <a href="#">
-                            <img src="https://picsum.photos/300/200"
-                                 alt="News Image"
-                                 class="news-img img-fluid rounded-3 shadow" />
-                        </a>
-                    </div>
-
-                    <!-- Nội dung tin tức -->
-                    <div class="news-content-box col-8">
-                        <div class="news-content mb-2">
-                            <a href="#" class="text-decoration-none">
-                                <h4 class="fw-bold news-title text-black">Title</h4>
-                            </a>
-                            <p class="news-desc text-muted">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Quia reprehenderit fuga sint ea cum. Consequatur.
-                            </p>
-                            <p class="news-date text-secondary small">
-                                <i class="fa-solid fa-calendar"></i>: 11/09/204
-                            </p>
-                        </div>
-
-                        <!-- Tác giả -->
-                        <a class="news-author d-flex align-items-center text-decoration-none"
-                           href="#">
-                            <img class="author-img rounded-circle me-2 border"
-                                 src="../assets/cooperators/TPS.png"
-                                 alt="Author"
-                                 width="40"
-                                 height="40" />
-                            <p class="author-name fw-bold text-dark">TPS</p>
-                        </a>
-                    </div>
-                </div>
-                <!-- News 2 -->
-                <div class="news-item row align-items-center mb-2">
-                    <!-- Hình ảnh tin tức -->
-                    <div class="col-4">
-                        <a href="#">
-                            <img src="https://picsum.photos/300/200"
-                                 alt="News Image"
-                                 class="news-img img-fluid rounded-3 shadow" />
-                        </a>
-                    </div>
-
-                    <!-- Nội dung tin tức -->
-                    <div class="news-content-box col-8">
-                        <div class="news-content mb-2">
-                            <a href="#" class="text-decoration-none">
-                                <h4 class="fw-bold news-title text-black">Title</h4>
-                            </a>
-                            <p class="news-desc text-muted">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Quia reprehenderit fuga sint ea cum. Consequatur.
-                            </p>
-                            <p class="news-date text-secondary small">
-                                <i class="fa-solid fa-calendar"></i>: 11/09/204
-                            </p>
-                        </div>
-
-                        <!-- Tác giả -->
-                        <a class="news-author d-flex align-items-center text-decoration-none"
-                           href="#">
-                            <img class="author-img rounded-circle me-2 border"
-                                 src="../assets/cooperators/TPS.png"
-                                 alt="Author"
-                                 width="40"
-                                 height="40" />
-                            <p class="author-name fw-bold text-dark">TPS</p>
-                        </a>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_NewsPartial", Model?.NewsList);
             </section>
         </div>
     </div>
@@ -347,4 +217,36 @@
 
 @section Scripts {
     <script src="~/js/animationHome.js" asp-append-version="true"></script>
+    <script>
+        const startupList = document.getElementById("startup-list");
+        const itemsPerPage = 3;
+        const startupItems = document.querySelectorAll(".startup-item");
+        const totalPages = Math.ceil(startupItems.length / itemsPerPage);
+        let currentPage = 0;
+
+        function slideToPage(page) {
+            const offset = -page * 100;
+            startupList.style.transform = `translateX(${offset}%)`;
+        }
+
+        // Slide tự động mỗi 3s
+        setInterval(() => {
+            currentPage = (currentPage + 1) % totalPages;
+            slideToPage(currentPage);
+        }, 3000);
+
+        // Nút điều hướng (nếu muốn)
+        document.getElementById("nextBtn").addEventListener("click", () => {
+            currentPage = (currentPage + 1) % totalPages;
+            slideToPage(currentPage);
+        });
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+            currentPage = (currentPage - 1 + totalPages) % totalPages;
+            slideToPage(currentPage);
+        });
+
+       
+    </script>
+
 }
