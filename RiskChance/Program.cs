@@ -37,7 +37,8 @@ builder.Services.AddSignalR(options =>
     options.MaximumReceiveMessageSize = 10 * 1024 * 1024;  // 10 MB
 });
 
-//builder.WebHost.UseUrls("http://0.0.0.0:7078");
+// Thầy cô có thể sử dụng cái này để share cùng mạng hoặc dùng tunnelling để share khác mạng cho zui nha
+builder.WebHost.UseUrls("https://0.0.0.0:7078");
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(TRepository<>));
 builder.Services.AddScoped<NotificationService>();
@@ -59,7 +60,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -71,8 +71,6 @@ app.UseStaticFiles();
 
 //Thêm Middleware
 app.UseRouting();
-
-
 app.UseSession();   
 app.UseAuthentication();
 app.UseAuthorization();
@@ -85,6 +83,7 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller}/{action}/{id?}"
 );
 
+
 // Định tuyến riêng cho HopDong
 app.MapControllerRoute(
     name: "HopDongRoute",
@@ -96,6 +95,7 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// đăng ký hub
 app.MapHub<StatusStartupHub>("/statusStartupHub");
 app.MapHub<StatusStartupHub>("/statusNewsHub");
 app.MapHub<PostCommentStartupHub>("/commentStartupHub");
