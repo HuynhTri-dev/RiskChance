@@ -10,7 +10,7 @@ namespace RiskChance.Models
         [Key]
         public int IDHopDong { get; set; }
 
-        [Url(ErrorMessage = "Vui lòng nhập URL hợp lệ.")]
+        [Url(ErrorMessage = "Cannot save this")]
         public string? FileUrl { get; set; }
 
         [Required]
@@ -25,7 +25,7 @@ namespace RiskChance.Models
         [Required]
         public TrangThaiKyKetEnum TrangThaiKyKet { get; set; } = TrangThaiKyKetEnum.DaGui;
         public bool? ThanhToan { get; set; }
-        [Url(ErrorMessage = "Vui lòng nhập URL hợp lệ.")]
+        [Url(ErrorMessage = "Cannot save this")]
         public string? MinhChungThanhToan { get; set; }
 
         // Khóa ngoại

@@ -9,7 +9,7 @@ namespace RiskChance.Models
         [Key]
         public int IDStartup { get; set; }
 
-        [Required(ErrorMessage = "Tên startup không được để trống")]
+        [Required(ErrorMessage = "Name startup cannot be empty")]
         public string TenStartup { get; set; } = string.Empty;
 
         public string? LogoUrl { get; set; }

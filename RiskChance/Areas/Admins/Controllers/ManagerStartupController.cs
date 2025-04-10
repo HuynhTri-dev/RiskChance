@@ -207,7 +207,7 @@ namespace RiskChance.Areas.Admins.Controllers
                 .FirstOrDefaultAsync(s => s.IDStartup == id);
 
                 if (startup == null)
-                    return Json(new { success = false, message = "Startup không tồn tại!" });
+                    return Json(new { success = false, message = "Startup is not valid!" });
 
 
                 _context.GiayTos.RemoveRange(startup.GiayTos);
@@ -231,7 +231,7 @@ namespace RiskChance.Areas.Admins.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Lỗi khi xóa startup: " + ex.Message });
+                return Json(new { success = false, message = "Error when delete startup: " + ex.Message });
             }
         }
 

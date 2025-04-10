@@ -77,7 +77,7 @@ namespace RiskChance.Areas.Founder.Controllers
                 linhVuc = await _context.LinhVucs.FindAsync(startup.IDLinhVuc);
                 if (linhVuc == null)
                 {
-                    ModelState.AddModelError("IDLinhVuc", "Lĩnh vực không hợp lệ.");
+                    ModelState.AddModelError("IDLinhVuc", "Bussiness is not valid");
                     ViewBag.LinhVuc = new SelectList(await _context.LinhVucs.ToListAsync(), "IDLinhVuc", "TenLinhVuc");
                     return View(startup);
                 }

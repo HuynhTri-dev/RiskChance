@@ -107,12 +107,12 @@ namespace RiskChance.Areas.Admins.Controllers
 
             if (linhVuc == null)
             {
-                return NotFound("Lĩnh vực này đã bị xóa hoặc không tồn tại.");
+                return NotFound();
             }
             try
             {
                 await _businessRepo.DeleteAsync(id);
-                TempData["SuccessMessage"] = "Xóa lĩnh vực thành công!";
+                TempData["SuccessMessage"] = "Delete success";
             }
             catch (DbUpdateException ex)
             {

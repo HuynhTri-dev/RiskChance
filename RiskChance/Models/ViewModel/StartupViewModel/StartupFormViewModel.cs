@@ -6,18 +6,18 @@ namespace RiskChance.Models.ViewModel.StartupViewModel
     {
         public int IDStartup { get; set; }
 
-        [Required(ErrorMessage = "Tên startup không được để trống")]
+        [Required(ErrorMessage = "Name startup cannot be empty")]
         public string TenStartup { get; set; } = string.Empty;
         public string? LogoUrl { get; set; }
 
-        [StringLength(1000, ErrorMessage = "Mô tả không được vượt quá 500 ký tự")]
+        [StringLength(1000, ErrorMessage = "Description cannot be length than 1000 letter")]
         public string? MoTa { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn lĩnh vực")]
+        [Required(ErrorMessage = "Please choose startup's bussiness")]
         public int IDLinhVuc { get; set; }
         public string? TenLinhVuc { get; set; }
 
-        [Required(ErrorMessage = "Mục tiêu không được để trống")]
+        [Required(ErrorMessage = "Target cannot be empty")]
         [Range(1000000, 1000000000000000,ErrorMessage = "Your target need more than 1.000.000 VND")]
         public decimal? MucTieu { get; set; }
 

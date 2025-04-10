@@ -34,7 +34,7 @@ namespace RiskChance.Areas.Admins.Controllers
 
             if (user == null)
             {
-                ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
+                ViewBag.Error = "Wrong password or email!";
                 return View();
             }
 
@@ -42,7 +42,7 @@ namespace RiskChance.Areas.Admins.Controllers
             var roles = await _userManager.GetRolesAsync(user);
             if (!roles.Contains("Admin"))
             {
-                ViewBag.Error = "Bạn không có quyền truy cập!";
+                ViewBag.Error = "You do not have access!";
                 return View();
             }
 
@@ -53,7 +53,7 @@ namespace RiskChance.Areas.Admins.Controllers
                 return RedirectToAction("Index", "Dashboard", new { area = "Admins" }   );
             }
 
-            ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
+            ViewBag.Error = "Wrong password or email!";
             return View();
         }
 

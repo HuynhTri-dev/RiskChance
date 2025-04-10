@@ -64,7 +64,7 @@ namespace RiskChance.Areas.Investor.Controllers
 
             if (hopDong.IDStartup == null)
             {
-                ModelState.AddModelError("", "Không có startup hợp lệ.");
+                ModelState.AddModelError("", "Startup is not valid");
                 return View(hopDong);
             }
 
@@ -72,14 +72,14 @@ namespace RiskChance.Areas.Investor.Controllers
 
             if (investorId == null)
             {
-                ModelState.AddModelError("", "Người dùng không hợp lệ.");
+                ModelState.AddModelError("", "User is not valid");
                 return View(hopDong);
             }
 
             var startup = await _startupRepo.GetByIdAsync(hopDong.IDStartup);
             if (startup == null)
             {
-                ModelState.AddModelError("", "Không có startup hợp lệ.");
+                ModelState.AddModelError("", "Startup is not valid");
                 return View(hopDong);
             }
 
@@ -92,7 +92,7 @@ namespace RiskChance.Areas.Investor.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Lỗi khi lưu tệp: " + ex.Message);
+                    ModelState.AddModelError("", "Error when save file: " + ex.Message);
                     return View(hopDong);
                 }
             }
